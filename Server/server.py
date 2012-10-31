@@ -4,6 +4,8 @@ import socket
 #import asyncore
 from multiprocessing import Process
 
+import db
+
 def start_server(host, port):
     # Setup socket
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -45,16 +47,15 @@ def accept_handler(conn, addr):
         
         print str(len(data_buffer)) + " bytes received"
         print "data = " + data_buffer
-        
-        data_buffer = ""
 
-        conn.send("dinmamma");
+        conn.send(db.request_handler(data_buffer))
+        data_buffer = ""
 
     conn.close()
     print "conn closed"
 
     
-start_server("127.0.0.1",8080)
+start_server("130.236.187.198",8080)
 
 
 
