@@ -9,6 +9,6 @@ s = socket(AF_INET, SOCK_STREAM)    # create a TCP socket
 
 
 s.connect((serverHost, serverPort)) # connect to server on the port
-s.send("Hello world")               # send the data
+s.send("3\n\nhej")               # send the data
 data = s.recv(1024)                 # receive up to 1K bytes
 print data

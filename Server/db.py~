@@ -1,0 +1,2 @@
+def request_handler(jsonStr):
+    jData = json.loads(jsonStr)

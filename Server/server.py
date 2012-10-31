@@ -1,8 +1,66 @@
 #!/usr/bin/python
 
 import socket
-import asyncore
-#from multiprocessing import Process
+#import asyncore
+from multiprocessing import Process
+
+def start_server(host, port):
+    # Setup socket
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    s.bind((host, port))
+    s.listen(1)
+
+    print "Listening on " + host +":"+ str(port)
+
+    while True:
+        conn, addr = s.accept()
+        p = Process(target = accept_handler, args = (conn, addr))
+        try:
+            
+            p.start()
+            print 'Connected by', addr
+            
+        except(e):
+            print e
+            
+    s.close()
+
+        
+
+def accept_handler(conn, addr):
+    data_buffer = ""
+    
+    while True:
+        data = conn.recv(1024)
+        if not data: break
+        
+        data_size, _, data_buffer = data.partition("\n\n")
+        data_size = int(data_size)
+            
+        while len(data_buffer) < data_size:
+            data = conn.recv(min(1024, data_size - len(data_buffer)))
+            data_buffer += data
+        
+        
+        print str(len(data_buffer)) + " bytes received"
+        print "data = " + data_buffer
+        
+        data_buffer = ""
+
+        conn.send("dinmamma");
+
+    conn.close()
+    print "conn closed"
+
+    
+start_server("127.0.0.1",8080)
+
+
+
+###############OLD
+
+
 
 class EchoHandler(asyncore.dispatcher_with_send):
 
@@ -30,75 +88,12 @@ class EchoServer(asyncore.dispatcher):
             print 'Incoming connection from %s' % repr(addr)
             handler = EchoHandler(sock)
 
-server = EchoServer('localhost', 8080)
-asyncore.loop()
 
 
 
+#server = EchoServer('localhost', 8080)
+#asyncore.loop()
 
 
 
-
-
-
-
-
-
-###############OLD
-
-
-
-
-
-def start_server(host, port):
-	# Setup socket
-	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-	s.bind((host, port))
-	s.listen(1)
-
-	print "Listening on " + host +":"+ str(port)
-
-	while True:
-		conn, addr = s.accept()
-		p = Process(target = accept_handler, args = (conn, addr))
-		p.start()
-		print 'Connected by', addr
-
-	s.close()
-
-
-
-        
-
-def accept_handler(conn, addr):
-        data_buffer = ""
-        has_received_header = False
-	header = None
-
-        while True:
-                if not has_received_header:
-			data = conn.recv(1024)
-			if not data: break
-			data_buffer += data
-                        
-                        if data_buffer.find("\n\n") != -1:
-				# We've received the header
-				header_data, _, data_buffer = data_buffer.partition("\n\n")
-                                data_size = int(header_data)
-				has_received_header = True
-
-		else:
-			
-			while len(data_buffer) < data_size:
-				data = conn.recv(min(1024, header.byte_size - len(data_buffer)))
-                                data_buffer += data
-
-                        print len(data_buffer) + "bytes received"
-                        print data_buffer
-
-                        data_buffer = ""
-                        has_received_header = False
-
-        conn.close()
 
