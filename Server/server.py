@@ -4,7 +4,9 @@ import socket
 #import asyncore
 from multiprocessing import Process
 
-import db
+import handler
+
+sessions = {}
 
 def start_server(host, port):
     # Setup socket
@@ -19,16 +21,12 @@ def start_server(host, port):
         conn, addr = s.accept()
         p = Process(target = accept_handler, args = (conn, addr))
         try:
-            
             p.start()
             print 'Connected by', addr
-            
         except(e):
             print e
             
     s.close()
-
-        
 
 def accept_handler(conn, addr):
     data_buffer = ""
@@ -48,14 +46,29 @@ def accept_handler(conn, addr):
         print str(len(data_buffer)) + " bytes received"
         print "data = " + data_buffer
 
-        conn.send(db.request_handler(data_buffer))
+        conn.send(handler.request_handler(data_buffer))
         data_buffer = ""
-
+    
     conn.close()
     print "conn closed"
-
     
 start_server("130.236.187.198",8080)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -2,6 +2,7 @@ LICENSE
 MANIFEST.in
 README.rst
 distribute_setup.py
+setup.cfg
 setup.py
 bson/__init__.py
 bson/_cbsonmodule.c
