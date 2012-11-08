@@ -11,7 +11,9 @@ def request_handler(jsonStr):
 
     func = handler[jData["type"]]
     return func(jData["data"])
-    
+
+
+#### Account Management ####
 
 def login(data):
     session = db.login(data["username"], data["password"])
@@ -32,6 +34,9 @@ def register(data):
     else:
         return "0" + "Username already in use!"
 
+    
+#### Requests ####        
+    
 def addReq(data):
     if db.addFriendReq(data["src"], data["target"]):
         return "1"
@@ -44,6 +49,9 @@ def acceptReq(data):
     else:
         return "0" + "Could not find request"
 
+
+#### Groups ####
+    
 def createGroup(data):
     if db.createGroup(data["user"], data["name"]):
         return "1"
@@ -69,6 +77,23 @@ def changeGroupOwner(data):
     else:
         return "0"
 
+
+#### Position ####
+
+def setPos(data):
+    if db.setPos(data["user"], data["pos"]):
+        return "1"
+    else:
+        return "0"
+
+def getPos(data):
+    res = db.getPos(data["user"]):
+    if res == False:
+        return "0"
+    else:
+        return "1"+res
+    
+
     
 handler["login"] = login
 handler["logoff"] = logoff
@@ -79,4 +104,6 @@ handler["createGroup"] = createGroup
 handler["addGroupMember"] = addGroupMember
 handler["getGroups"] = getGroups
 handler["changeGroupOwner"] = changeGroupOwner
+handler["setPos"] = setPos
+handler["getPos"] = getPos
 

@@ -15,7 +15,8 @@ groups = db.groups
 def register(username, password):
     if users.find_one({"username": username}) == None:
         new_user = {"username": username, "password": password,
-                    "friends":[], "active":False, "groups":[]}
+                    "friends":[], "active":False, "groups":[],
+                    "pos":[0,0]}
         users.insert(new_user)
         pri(users)
         return True
@@ -128,7 +129,20 @@ def changeGroupOwner(admin, groupID, newAdmin):
         return True
     else:
         return False
-    
+
+
+#### Position ####
+
+def setPos(user, pos):
+    users.update({"username":user}, {"$set":{"pos":pos}})
+    return True
+
+def getPos(user):
+    user = users.find_one({"username":user})
+    if user != None:
+        return user["pos"]
+    else:
+        return False
 
 #### Other ####
 
