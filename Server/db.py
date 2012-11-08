@@ -9,6 +9,19 @@ users = db.users
 sessions = db.sessions
 groups = db.groups
 
+
+#### Account Management #####
+
+def register(username, password):
+    if users.find_one({"username": username}) == None:
+        new_user = {"username": username, "password": password,
+                    "friends":[], "active":False, "groups":[]}
+        users.insert(new_user)
+        pri(users)
+        return True
+    else:
+        return False
+
 def login(username, password):
     user = users.find_one({"username": username})
     if user != None and user["password"] == password:
@@ -25,9 +38,9 @@ def logoff(session):
     else:
         return False
 
-def randomString():
-    return str(hex(int(time.time()*1000))[2:] + '-' + hex(random.randint(0, 0x7FFFFFFF))[2:])
     
+##### Session #####
+
 def setSession(user):
     session = randomString()
     sessions.insert({"session":session,"user":user})
@@ -46,16 +59,9 @@ def remSession(session):
 def getSession(session):
     return sessions.find_one({"session":session})
                        
-def register(username, password):
-    if users.find_one({"username": username}) == None:
-        new_user = {"username": username, "password": password,
-                    "friends":[], "active":False, "groups":[]}
-        users.insert(new_user)
-        pri(users)
-        return True
-    else:
-        return False
-
+    
+##### Friend #####
+    
 def isFriend(target, src):
     target = user_db.find_one({"username": target})
     print target["friends"]
@@ -80,10 +86,8 @@ def acceptFriendReq(src, requester):
     else:
         return False
     
-def pri(selected_db):
-    for entry in selected_db.find():
-        print entry
 
+###### Groups ######
 
 def createGroup(admin, name):
     groupID = randomString()
@@ -126,3 +130,12 @@ def changeGroupOwner(admin, groupID, newAdmin):
         return False
     
 
+#### Other ####
+
+def pri(selected_db):
+    for entry in selected_db.find():
+        print entry
+
+
+def randomString():
+    return str(hex(int(time.time()*1000))[2:] + '-' + hex(random.randint(0, 0x7FFFFFFF))[2:])
