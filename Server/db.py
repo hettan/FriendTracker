@@ -144,6 +144,16 @@ def getPos(user):
     else:
         return False
 
+def getGroupPos(user, groupID):
+    group = groups.findOne({"groupID":groupID})
+    if group != None and (user in group["members"]):
+        positions = {}
+        for member in group["members"]:
+            positions[member] = getPos(member)
+        return positions
+    else:
+        return False
+    
 #### Other ####
 
 def pri(selected_db):

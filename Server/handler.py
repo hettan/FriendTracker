@@ -87,7 +87,14 @@ def setPos(data):
         return "0"
 
 def getPos(data):
-    res = db.getPos(data["user"]):
+    res = db.getPos(data["user"])
+    if res == False:
+        return "0"
+    else:
+        return "1"+res
+
+def getGroupPos(data):
+    res = db.getGroupPos(data["user"], data["groupID"])
     if res == False:
         return "0"
     else:
@@ -106,4 +113,5 @@ handler["getGroups"] = getGroups
 handler["changeGroupOwner"] = changeGroupOwner
 handler["setPos"] = setPos
 handler["getPos"] = getPos
+handler["getGroupPos"] = getGroupPos
 
