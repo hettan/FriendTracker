@@ -14,122 +14,94 @@ def request_handler(jsonStr):
 
 
 #### Account Management ####
-
 def login(data):
-    session = db.login(data["username"], data["password"])
-    if session != None:
-        return "1" + session + "\n"
-    else:
-        return "0Wrong username or password!\n"
+    return db.login(data["username"], data["password"])
 
 def logoff(data):
-    if db.logoff(data["session"]):
-        return "1\n"
-    else:
-        return "0\n"
+    return db.logoff(data["session"])
 
 def register(data):
-    if db.register(data["username"], data["password"], data["mail"]):
-        return "1\n"
-    else:
-        return "0Username already in use!\n"
+    return db.register(data["username"], data["password"], data["mail"])
 
+def changePassword(data):
+    return db.changePassword(data["username"], data["old"], data["new"])
     
 #### Requests ####        
-    
 def addReq(data):
-    if db.addFriendReq(data["src"], data["target"]):
-        return "1\n"
-    else:
-        return "0User is already friend with you or you've aldready made a friend request!\n"
+    return db.addFriendReq(data["src"], data["target"])
     
 def acceptReq(data):
-    if db.acceptFriendReq(data["src"], data["requester"]):
-        return "1\n"
-    else:
-        return "0Could not find request\n"
-
+    return db.acceptFriendReq(data["src"], data["requester"])
 
 #### Groups ####
-    
 def createGroup(data):
-    if db.createGroup(data["user"], data["name"]):
-        return "1\n"
-    else:
-        return "0Session timeout\n"
+    return db.createGroup(data["username"], data["name"])
 
 def addGroupMember(data):
-    if db.addGroupMember(data["admin"], data["groupID"], data["user"]):
-        return "1\n"
-    else:
-        return "0\n"
+    return db.addGroupMember(data["admin"], data["groupID"], data["username"])
+
+def remFromGroup(data):
+    return db.remFromGroup(data["admin"], data["groupID"], data["username"])
+
+def leaveGroup(data):
+    return db.leaveGroup(data["username"], data["groupID"])
 
 def getGroups(data):
-    res = db.getGroups(data["user"])
-    if res != None:
-        return "1" + str(res) + "\n"
-    else:
-        return "0Cant find user in db\n"
+    return db.getGroups(data["username"])
+
+def getGroupInfo(data):
+    return db.getGroupInfo(data["username"], data["groupID"])
 
 def changeGroupOwner(data):
-    if db.changeGroupOwner(data["owner"],data["groupID"],data["newUser"]):
-        return "1\n"
-    else:
-        return "0\n"
+    return db.changeGroupOwner(data["owner"],data["groupID"],data["newUser"])
 
 def addRallyPoint(data):
-    if db.addRallyPoint(data["user"], data["groupID"], data["pos"], data["text"]):
-        return "1\n"
-    else:
-        return "0\n"
+    return db.addRallyPoint(data["username"], data["groupID"], data["pos"], data["text"])
 
 def remRallyPoint(data):
-    if db.remRallyPoint(data["user"], data["groupID"]):
-        return "1\n"
-    else:
-        return "0\n"
+    return db.remRallyPoint(data["username"], data["groupID"])
 
 def getRallyPoints(data):
-    res = db.getGroups(data["user"], data["groupID"])
-    if res != False:
-        return "1" + str(res) + "\n"
-    else:
-        return "0Cant find user in db\n"
+    return db.getGroups(data["username"], data["groupID"])
 
 #### Position ####
-
 def setPos(data):
-    if db.setPos(data["user"], data["pos"]):
-        return "1\n"
-    else:
-        return "0\n"
+    return db.setPos(data["username"], data["pos"])
 
 def getPos(data):
-    res = db.getPos(data["user"])
-    if res == False:
-        return "0\n"
-    else:
-        return "1" + str(res) + "\n"
+    return db.getPos(data["username"])
 
 def getGroupPos(data):
-    res = db.getGroupPos(data["user"], data["groupID"])
-    if res == False:
-        return "0\n"
-    else:
-        return "1" + str(res) + "\n"
-    
+    return db.getGroupPos(data["username"], data["groupID"])
 
-    
+#### Push ####
+def registerPush(data):
+    return db.registerPush(data["username"], data["pushID"])
+
+def removePush(data):
+    return db.removePush(data["username"])
+
+
+
 handler["login"] = login
 handler["logoff"] = logoff
 handler["register"] = register
+
 handler["request"] = addReq
 handler["acceptReq"] = acceptReq
+
 handler["createGroup"] = createGroup
 handler["addGroupMember"] = addGroupMember
+handler["remFromGroup"] = remFromGroup
+handler["leaveGroup"] = leaveGroup
 handler["getGroups"] = getGroups
+handler["getGroupInfo"] = getGroupInfo
 handler["changeGroupOwner"] = changeGroupOwner
+
 handler["setPos"] = setPos
 handler["getPos"] = getPos
 handler["getGroupPos"] = getGroupPos
+
+handler["registerPush"] = registerPush
+handler["removePush"] = removePush
 
