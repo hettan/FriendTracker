@@ -12,10 +12,10 @@ groups = db.groups
 
 #### Account Management #####
 
-def register(username, password):
+def register(username, password, mail):
     if users.find_one({"username": username}) == None:
-        new_user = {"username": username, "password": password,
-                    "friends":[], "active":False, "groups":[],
+        new_user = {"username": username, "password": password, "mail": mail,
+                    "friends":[], "active":False, "requests":[], "groups":[],
                     "pos":[0,0]}
         users.insert(new_user)
         pri(users)
@@ -92,7 +92,7 @@ def acceptFriendReq(src, requester):
 
 def createGroup(admin, name):
     groupID = randomString()
-    newGroup = {"groupID":groupID, "name":name, "admin":admin, "members": [admin]}
+    newGroup = {"groupID":groupID, "name":name, "admin":admin, "members": [admin], "rallypoints": []}
     groups.insert(newGroup)
     users.update({"username":admin}, {"$push":{"groups":groupID}})
     return groupID
@@ -130,6 +130,33 @@ def changeGroupOwner(admin, groupID, newAdmin):
     else:
         return False
 
+def addRallyPoint(user, groupID, pos, text):
+    group = groups.find_one({"groupID":groupID})
+    if group != None and (user in group["member"]):
+        #Dont know if this works
+        groups.update({"groupID":groupID}, {"$pop", {"rallypoints": {"created_by":user}}})
+        
+        rallyPoint = {"created_by":user, "pos":pos, "text":text}
+        groups.update({"groupID":groupID},{"$push", {"rallypoints":rallyPoint}})
+        return True
+    else:
+        return False
+
+def remRallyPoint(user, groupID):
+    group = groups.find_one({"groupID":groupID})
+    if group != None and (user in group["member"]):
+        #Dont know if this works
+        groups.update({"groupID":groupID}, {"$pop", {"rallypoints": {"created_by":user}}})
+        return True
+    else:
+        return False
+
+def getRallyPoints(user, groupID):
+    group = groups.find_one({"groupID":groupID})
+    if group != None and (user in group["member"]):
+        return group["rallypoints"]
+    else:
+        return False
 
 #### Position ####
 
