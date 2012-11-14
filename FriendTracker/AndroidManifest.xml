@@ -28,10 +28,20 @@
             android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="sv.teamAwesome.friendtracker.REGISTER" />
-
+				
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".FrontPage"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="sv.teamAwesome.friendtracker.FRONTPAGE" />
+				
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         
     </application>
 </manifest>
