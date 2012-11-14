@@ -20,5 +20,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <activity
+            android:name=".Register"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="sv.teamAwesome.friendtracker.REGISTER" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
     </application>
 </manifest>
