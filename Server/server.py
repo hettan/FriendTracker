@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import socket
+import socket, ssl
 #import asyncore
 from multiprocessing import Process
 
@@ -20,6 +20,29 @@ def start_server(host, port):
     while True:
         conn, addr = s.accept()
         p = Process(target = accept_handler, args = (conn, addr))
+        try:
+            p.start()
+            print 'Connected by', addr
+        except(e):
+            print e
+            
+    s.close()
+
+def start_encrypted_server(host, port):
+    # Setup socket
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    
+    s.bind((host, port))
+    s.listen(1)
+
+    print "Listening on " + host +":"+ str(port)
+
+    while True:
+        conn, addr = s.accept()
+        enc_conn = ssl.wrap_socket(conn, server_side=True,certfile="certificate.pem",
+                                   keyfile="key.pem", ssl_version=ssl.PROTOCOL_TLSv1)
+        p = Process(target = accept_handler, args = (enc_conn, addr))
         try:
             p.start()
             print 'Connected by', addr
@@ -52,7 +75,7 @@ def accept_handler(conn, addr):
     conn.close()
     print "conn closed"
     
-start_server("localhost",8080)
+start_encrypted_server("localhost",8080)
 
 
 

@@ -54,19 +54,21 @@ public class MainActivity extends Activity {
 				}
 			}
 		});
+		
 		register.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				Intent regis = new Intent("sv.teamAwesome.friendtracker.REGISTER");
+				Intent regis = new Intent("sv.teamAwesome.friendtracker.FRONTPAGE");
 				startActivity(regis);
-				
 			}
 		});
 	}
 	public void Callback(String res, Boolean error) {
+
 		Log.v(TAG, "Callback: " + res);
 		if(!error) {
 			Log.v(TAG, "Access Granted");
+
 		} else {
 			Log.v(TAG, "Access Denied");
 		}

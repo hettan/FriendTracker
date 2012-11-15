@@ -11,5 +11,5 @@
     <string name="email">E-mail</string>
     <string name="repass">Re-enter Password</string>
     <string name="regbtn">Submit</string>
-
+	<string	name="errorstring">CHECK</string>
 </resources>
