@@ -52,10 +52,6 @@ public class MainActivity extends Activity {
 				catch(Exception e) {
 					Log.v(TAG, "Error: " + e.toString());
 				}
-				
-				
-				
-				
 			}
 		});
 		register.setOnClickListener(new View.OnClickListener() {
