@@ -15,7 +15,7 @@
         android:layout_marginTop="50dp"
         android:onClick="MenuBtn"
         android:src="@drawable/friends"
-        android:tag="friends" />
+        android:tag="Friends" />
 
     <ImageButton
         android:id="@+id/groupmenu"
@@ -26,7 +26,7 @@
         android:layout_marginRight="50dp"
         android:onClick="MenuBtn"
         android:src="@drawable/group"
-        android:tag="group" />
+        android:tag="Groups" />
 
     <ImageButton
         android:id="@+id/mapmenu"
@@ -36,7 +36,7 @@
         android:layout_centerVertical="true"
         android:onClick="MenuBtn"
         android:src="@drawable/pin"
-        android:tag="map" />
+        android:tag="Map" />
 
     <ImageButton
         android:id="@+id/notificationmenu"
@@ -46,7 +46,7 @@
         android:layout_alignTop="@+id/mapmenu"
         android:onClick="MenuBtn"
         android:src="@drawable/ic_launcher"
-        android:tag="notification" />
+        android:tag="Notification" />
 
     <EditText
         android:id="@+id/err"
@@ -55,7 +55,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/notificationmenu"
         android:layout_marginBottom="27dp"
-        android:ems="10" />
+        android:ems="10"
+        android:tag="Notifications" />
 
     <ImageButton
         android:id="@+id/settingsmenu"
@@ -65,7 +66,7 @@
         android:layout_alignRight="@+id/err"
         android:onClick="MenuBtn"
         android:src="@drawable/settings"
-        android:tag="settings" />
+        android:tag="Settings" />
 
     <ImageButton
         android:id="@+id/exitmenu"
@@ -75,6 +76,6 @@
         android:layout_alignRight="@+id/friendmenu"
         android:onClick="MenuBtn"
         android:src="@drawable/exit"
-        android:tag="exit" />
+        android:tag="Exit" />
 
 </RelativeLayout>
