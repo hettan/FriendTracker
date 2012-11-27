@@ -10,9 +10,12 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
+import com.google.android.maps.MyLocationOverlay;
 
 public class Map extends MapActivity {
 
+	MyLocationOverlay me;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -21,6 +24,7 @@ public class Map extends MapActivity {
 		
 		final MapView mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
+		
 		
 		final MapController control = mapView.getController();
 		
@@ -47,6 +51,21 @@ public class Map extends MapActivity {
 		};
 		
 		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
+		
+		me = new MyLocationOverlay(this, mapView);
+		mapView.getOverlays().add(me);
+	}	
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		me.disableMyLocation();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		me.enableMyLocation();
 	}
 		
 		@Override

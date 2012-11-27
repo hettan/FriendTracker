@@ -56,13 +56,15 @@ public class MainActivity extends Activity {
 		});
 		
 		register.setOnClickListener(new View.OnClickListener() {
-			
+		
 			public void onClick(View v) {
-				Intent regis = new Intent("sv.teamAwesome.friendtracker.FRONTPAGE");
+				Log.v(TAG, "Fuck my lafiw");
+				Intent regis = new Intent("sv.teamAwesome.friendtracker.REGISTER");
 				startActivity(regis);
 			}
 		});
 	}
+
 	public void Callback(String res, Boolean error) {
 
 		Log.v(TAG, "Callback: " + res);
