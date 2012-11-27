@@ -56,7 +56,7 @@
         android:layout_alignRight="@+id/notificationmenu"
         android:layout_marginBottom="27dp"
         android:ems="10"
-        android:tag="Notifications" />
+        android:tag="derp" />
 
     <ImageButton
         android:id="@+id/settingsmenu"
@@ -66,7 +66,7 @@
         android:layout_alignRight="@+id/err"
         android:onClick="MenuBtn"
         android:src="@drawable/settings"
-        android:tag="Settings" />
+        android:tag="Setting" />
 
     <ImageButton
         android:id="@+id/exitmenu"

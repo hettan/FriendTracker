@@ -21,6 +21,8 @@ public class FrontPage extends Activity{
 		
 		err.setText(Target);
 		
+		
+		
 		ClassLoader classLoader = getClassLoader();
 		
     	Class<?> aClass = null;
