@@ -15,16 +15,21 @@ import android.content.Intent;
 
 public class MainActivity extends Activity {
 	private static final String TAG = "MAIN";
-
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
-		/*GCMRegistrar.checkDevice(this);
+		final Object me = this;
+		
+		GCMRegistrar.checkDevice(this);
 		GCMRegistrar.checkManifest(this);
 		final String regId = GCMRegistrar.getRegistrationId(this);
 		if (regId.equals("")) {
-			GCMRegistrar.register(this, "377927318664");
-		}*/
+			GCMRegistrar.register(this, Config.SENDER_ID);
+		} else {
+			GCMRegistrar.unregister(this);
+		}
 		
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
@@ -56,7 +61,9 @@ public class MainActivity extends Activity {
 				try {
 		            Class[] params = {String.class, Boolean.class};
 					
-					ConnectionData connData = new ConnectionData(MainActivity.class.getMethod("Callback", params), MainActivity.class.newInstance(), toSend);
+					ConnectionData connData = new ConnectionData(MainActivity.class.getMethod("Callback", params), me, toSend);
+					//ConnectionData connData = new ConnectionData(MainActivity.class.getMethod("Callback", params), MainActivity.class.newInstance(), toSend);
+
 					AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
 				}
 				catch(Exception e) {
@@ -76,15 +83,14 @@ public class MainActivity extends Activity {
 	}
 
 	public void Callback(String res, Boolean error) {
-
+		Intent granted = new Intent("sv.teamAwesome.friendtracker.FRONTPAGE");
 		Log.v(TAG, "Callback: " + res);
 		if(!error) {
+			startActivity(granted);
 			Log.v(TAG, "Access Granted");
 
 		} else {
 			Log.v(TAG, "Access Denied");
 		}
 	}
-
-
 }
