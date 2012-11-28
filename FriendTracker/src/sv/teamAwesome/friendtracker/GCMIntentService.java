@@ -21,6 +21,9 @@ public class GCMIntentService extends GCMBaseIntentService{
 
 	@Override
 	protected void onRegistered(Context context, String regId) {
+		
+		Log.v(TAG, "onRegistred");
+		
 		JSONObject toServer = new JSONObject();
 		JSONObject data = new JSONObject();
 		try {
@@ -45,6 +48,9 @@ public class GCMIntentService extends GCMBaseIntentService{
 
 	@Override
 	protected void onUnregistered(Context context, String regId) {
+		
+		Log.v(TAG, "onUnRegistred");
+		
 		JSONObject toServer = new JSONObject();
 		JSONObject data = new JSONObject();
 		try {

@@ -15,6 +15,8 @@ public class Groups extends ListActivity {
 	@Override
 	  public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
+	    Object me = this;
+	    
 	    Log.v(TAG, "1");
 		JSONObject toServer = new JSONObject();
 		Log.v(TAG, "2");
@@ -32,7 +34,7 @@ public class Groups extends ListActivity {
 		try {
             Class[] params = {String.class, Boolean.class};
 			
-			ConnectionData connData = new ConnectionData(Groups.class.getMethod("UpdateGroups", params), Groups.class.newInstance(), toSend);
+			ConnectionData connData = new ConnectionData(Groups.class.getMethod("UpdateGroups", params), me, toSend);
 			AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
 		}
 		catch(Exception e) {
@@ -100,7 +102,8 @@ public class Groups extends ListActivity {
 						listView.setAdapter(adapter); 
 				*/
 			} catch(Exception e){
-				Log.v(TAG, "Inte Error"+ e.toString());
+				Log.v(TAG, "Error: "+ e.toString());
+				Log.v(TAG, "Cause: "+ e.getCause());
 			}
 
 		} else {
