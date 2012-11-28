@@ -19,12 +19,12 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
-		GCMRegistrar.checkDevice(this);
+		/*GCMRegistrar.checkDevice(this);
 		GCMRegistrar.checkManifest(this);
 		final String regId = GCMRegistrar.getRegistrationId(this);
 		if (regId.equals("")) {
 			GCMRegistrar.register(this, "377927318664");
-		}
+		}*/
 		
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
