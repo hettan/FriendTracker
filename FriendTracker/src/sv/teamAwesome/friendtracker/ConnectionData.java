@@ -28,6 +28,7 @@ public class ConnectionData {
 		}
 		catch(Exception e){
 			Log.v(TAG, "Error: " + e.toString());
+			Log.v(TAG, "Cause: " + e.getCause());
 		}
 	}
 }

@@ -4,9 +4,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.ListActivity;
+import android.graphics.PixelFormat;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 
 public class Groups extends ListActivity {
@@ -92,7 +94,6 @@ public class Groups extends ListActivity {
 					list[i] = data.getString(i);
 				}
 				this.setListAdapter(new ArrayAdapter<String>(this, R.layout.groups, R.id.label, list));
-
 			    
 				Log.v(TAG, "15");
 				/*ArrayAdapter<String> adapter = new ArrayAdapter<String>(that,

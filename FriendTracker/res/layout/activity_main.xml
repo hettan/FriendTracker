@@ -2,8 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent" 
-     android:apiKey="0Hdk8ZATdfShGrjE3Vw0CQR8ecW0F_rqQNFp_Ew">
-    
+    android:apiKey="0Hdk8ZATdfShGrjE3Vw0CQR8ecW0F_rqQNFp_Ew"
+    android:background="@drawable/background">    
 
     <ImageView
         android:id="@+id/imageView1"

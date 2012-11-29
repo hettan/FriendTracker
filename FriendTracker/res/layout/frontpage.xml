@@ -3,79 +3,82 @@
     android:id="@+id/errorf"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     android:orientation="vertical" >
 
     <ImageButton
-        android:id="@+id/friendmenu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="50dp"
-        android:onClick="MenuBtn"
-        android:src="@drawable/friends"
-        android:tag="Friends" />
-
-    <ImageButton
         android:id="@+id/groupmenu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="160dp"
+        android:layout_height="140dp"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/friendmenu"
-        android:layout_marginRight="50dp"
         android:onClick="MenuBtn"
         android:src="@drawable/group"
-        android:tag="Groups" />
+        android:tag="Groups"
+        android:background="@null" />
+
+    <ImageButton
+        android:id="@+id/friendmenu"
+        android:layout_width="160dp"
+        android:layout_height="140dp"
+        android:onClick="MenuBtn"
+        android:src="@drawable/friends"
+        android:tag="FriendsTab"
+        android:background="@null" />
 
     <ImageButton
         android:id="@+id/mapmenu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/friendmenu"
-        android:layout_centerVertical="true"
+        android:layout_width="160dp"
+        android:layout_height="140dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/friendmenu"
         android:onClick="MenuBtn"
         android:src="@drawable/pin"
-        android:tag="Map" />
+        android:tag="Map"
+        android:background="@null" />
 
     <ImageButton
         android:id="@+id/notificationmenu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/groupmenu"
+        android:layout_width="160dp"
+        android:layout_height="140dp"
+        android:layout_alignLeft="@+id/groupmenu"
         android:layout_alignTop="@+id/mapmenu"
         android:onClick="MenuBtn"
         android:src="@drawable/ic_launcher"
-        android:tag="Notification" />
+        android:tag="Notification"
+        android:background="@null" />
+
+    <ImageButton
+        android:id="@+id/exitmenu"
+        android:layout_width="160dp"
+        android:layout_height="140dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/mapmenu"
+        android:onClick="MenuBtn"
+        android:src="@drawable/exit"
+        android:tag="Exit"
+        android:background="@null" />
+
+    <ImageButton
+        android:id="@+id/settingsmenu"
+        android:layout_width="160dp"
+        android:layout_height="140dp"
+        android:layout_alignLeft="@+id/notificationmenu"
+        android:layout_alignTop="@+id/exitmenu"
+        android:onClick="MenuBtn"
+        android:src="@drawable/settings"
+        android:tag="Setting"
+        android:background="@null" />
 
     <EditText
         android:id="@+id/err"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/notificationmenu"
-        android:layout_marginBottom="27dp"
+        android:layout_centerHorizontal="true"
         android:ems="10"
-        android:tag="derp" />
+        android:tag="derp" >
 
-    <ImageButton
-        android:id="@+id/settingsmenu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/err"
-        android:layout_alignRight="@+id/err"
-        android:onClick="MenuBtn"
-        android:src="@drawable/settings"
-        android:tag="Setting" />
-
-    <ImageButton
-        android:id="@+id/exitmenu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/err"
-        android:layout_alignRight="@+id/friendmenu"
-        android:onClick="MenuBtn"
-        android:src="@drawable/exit"
-        android:tag="Exit" />
+        <requestFocus />
+    </EditText>
 
 </RelativeLayout>

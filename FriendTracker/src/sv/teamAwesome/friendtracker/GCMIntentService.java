@@ -22,15 +22,18 @@ public class GCMIntentService extends GCMBaseIntentService{
 	@Override
 	protected void onRegistered(Context context, String regId) {
 		
-		Log.v(TAG, "onRegistred");
-		
 		JSONObject toServer = new JSONObject();
 		JSONObject data = new JSONObject();
 		try {
-			data.put("pushID", regId);
+			/*data.put("pushID", regId);
 			data.put("username", null);
 			toServer.put("type", "registerPush");
+			toServer.put("data", data);*/
+			
+			data.put("username", "1");
+			toServer.put("type", "getGroups");
 			toServer.put("data", data);
+			
 		} catch (Exception e) {
 			
 		}
@@ -38,7 +41,7 @@ public class GCMIntentService extends GCMBaseIntentService{
 		try {
             Class[] params = {String.class, Boolean.class};
 			
-			ConnectionData connData = new ConnectionData(GCMIntentService.class.getMethod("Callback", params), GCMIntentService.class.newInstance(), toSend);
+			ConnectionData connData = new ConnectionData(MainActivity.class.getMethod("Callback", params), MainActivity.class.newInstance(), toSend);
 			AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
 		}
 		catch(Exception e) {
@@ -49,13 +52,15 @@ public class GCMIntentService extends GCMBaseIntentService{
 	@Override
 	protected void onUnregistered(Context context, String regId) {
 		
-		Log.v(TAG, "onUnRegistred");
-		
 		JSONObject toServer = new JSONObject();
 		JSONObject data = new JSONObject();
 		try {
-			data.put("username", null);
+			/*data.put("username", null);
 			toServer.put("type", "unregisterPush");
+			toServer.put("data", data);*/
+			
+			data.put("username", "1");
+			toServer.put("type", "getGroups");
 			toServer.put("data", data);
 		} catch (Exception e) {
 			
@@ -64,7 +69,7 @@ public class GCMIntentService extends GCMBaseIntentService{
 		try {
             Class[] params = {String.class, Boolean.class};
 			
-			ConnectionData connData = new ConnectionData(GCMIntentService.class.getMethod("Callback", params), GCMIntentService.class.newInstance(), toSend);
+			ConnectionData connData = new ConnectionData(MainActivity.class.getMethod("Callback", params), MainActivity.class.newInstance(), toSend);
 			AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
 		}
 		catch(Exception e) {

@@ -67,9 +67,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Friends" >
+            android:name=".FriendsTab" >
             <intent-filter>
-                <action android:name="sv.teamAwesome.friendtracker.FRIENDS" />
+                <action android:name="sv.teamAwesome.friendtracker.FRIENDSTAB" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".OnlineTab" >
+            <intent-filter>
+                <action android:name="sv.teamAwesome.friendtracker.ONLINETAB" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".AllTab" >
+            <intent-filter>
+                <action android:name="sv.teamAwesome.friendtracker.ALLTAB" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
