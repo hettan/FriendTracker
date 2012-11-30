@@ -14,24 +14,36 @@ def request_handler(jsonStr):
 
 
 #### Account Management ####
-def login(data):
-    return db.login(data["username"], data["password"])
-
-def logoff(data):
-    return db.logoff(data["session"])
-
 def register(data):
     return db.register(data["username"], data["password"], data["mail"])
 
 def changePassword(data):
     return db.changePassword(data["username"], data["old"], data["new"])
+
+def login(data):
+    return db.login(data["username"], data["password"], data["pushID"])
+
+def logoff(data):
+    return db.logoff(data["session"])
     
-#### Requests ####        
+#### Requests/Friends ####        
 def addReq(data):
     return db.addFriendReq(data["src"], data["target"])
     
 def acceptReq(data):
-    return db.acceptFriendReq(data["src"], data["requester"])
+    return db.acceptFriendReq(data["src"], data["target"])
+
+def getFriendReq(data):
+    return db.getFriendReq(data["username"])
+
+def getFriends(data):
+    return db.getFriends(data["username"])
+
+def getFriendsIfMod(data):
+    return db.getFriends(data["username"], data["ts"])
+
+def userSearch(data):
+    return db.getFriends(data["query"])
 
 #### Groups ####
 def createGroup(data):
@@ -74,6 +86,9 @@ def getPos(data):
 def getGroupPos(data):
     return db.getGroupPos(data["username"], data["groupID"])
 
+def getFriendsPos(data):
+    return db.getFriendsPos(data["username"])
+
 #### Push ####
 def registerPush(data):
     return db.registerPush(data["username"], data["pushID"])
@@ -83,12 +98,17 @@ def removePush(data):
 
 
 
+handler["register"] = register
+handler["changePw"] = changePassword
 handler["login"] = login
 handler["logoff"] = logoff
-handler["register"] = register
 
 handler["request"] = addReq
 handler["acceptReq"] = acceptReq
+handler["getFriendReq"] = getFriendReq
+handler["getFriends"] = getFriends
+handler["getFriendsIfMod"] = getFriendsIfMod
+handler["userSearch"] = userSearch
 
 handler["createGroup"] = createGroup
 handler["addGroupMember"] = addGroupMember
@@ -101,6 +121,7 @@ handler["changeGroupOwner"] = changeGroupOwner
 handler["setPos"] = setPos
 handler["getPos"] = getPos
 handler["getGroupPos"] = getGroupPos
+handler["getFriendsPos"] = getFriendsPos
 
 handler["registerPush"] = registerPush
 handler["removePush"] = removePush
