@@ -2,22 +2,41 @@ package sv.teamAwesome.friendtracker;
 
 import org.json.JSONObject;
 
+import com.google.android.gcm.GCMRegistrar;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.PixelFormat;
 
 public class MainActivity extends Activity {
 	private static final String TAG = "MAIN";
-
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		
+		final Object me = this;
+		
+		/*GCMRegistrar.checkDevice(this);
+		GCMRegistrar.checkManifest(this);
+		final String regId = GCMRegistrar.getRegistrationId(this);
+		if (regId.equals("")) {
+			GCMRegistrar.register(this, Config.SENDER_ID);
+		} else {
+			GCMRegistrar.unregister(this);
+		}*/
+		
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		getWindow().setFormat(PixelFormat.RGBA_8888);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
 		setContentView(R.layout.activity_main);
 		
 		final EditText username = (EditText) findViewById(R.id.usernametv);
@@ -46,7 +65,8 @@ public class MainActivity extends Activity {
 				try {
 		            Class[] params = {String.class, Boolean.class};
 					
-					ConnectionData connData = new ConnectionData(MainActivity.class.getMethod("Callback", params), MainActivity.class.newInstance(), toSend);
+					ConnectionData connData = new ConnectionData(MainActivity.class.getMethod("Callback", params), me, toSend);
+
 					AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
 				}
 				catch(Exception e) {
@@ -56,23 +76,27 @@ public class MainActivity extends Activity {
 		});
 		
 		register.setOnClickListener(new View.OnClickListener() {
-			
+		
 			public void onClick(View v) {
-				Intent regis = new Intent("sv.teamAwesome.friendtracker.FRONTPAGE");
+				Log.v(TAG, "Fuck my lafiw");
+				Intent regis = new Intent("sv.teamAwesome.friendtracker.REGISTER");
 				startActivity(regis);
 			}
 		});
 	}
-	public void Callback(String res, Boolean error) {
 
+	public void Callback(String res, Boolean error) {
+		Intent granted = new Intent("sv.teamAwesome.friendtracker.FRONTPAGE");
 		Log.v(TAG, "Callback: " + res);
 		if(!error) {
+			final EditText username = (EditText) findViewById(R.id.usernametv);
+			Config.USERNAME = username.getText().toString();
+			Config.SESSION_ID = res;
+			startActivity(granted);
 			Log.v(TAG, "Access Granted");
 
 		} else {
 			Log.v(TAG, "Access Denied");
 		}
 	}
-
-
 }
