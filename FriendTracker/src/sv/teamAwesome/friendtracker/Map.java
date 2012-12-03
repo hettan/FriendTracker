@@ -1,5 +1,7 @@
 package sv.teamAwesome.friendtracker;
 
+import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -14,6 +16,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup.LayoutParams;
+import android.view.ViewStub;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -26,17 +31,28 @@ import com.readystatesoftware.mapviewballoons.BalloonOverlayView;
 
 public class Map extends MapActivity {
 	private static final String TAG = "MAIN";
+	String tmp;
 
 	MyLocationOverlay myLocation;
 	PointerOverlay pointerOverlay;
 	List<Overlay> mapOverlays;
 	MapView mapView;
+	View importPanel;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map);
+
+		View inflatedDrawerLayout = getLayoutInflater().inflate(R.layout.drawer, null);
+		int width = getWindow().getAttributes().width, height = getWindow().getAttributes().height;
+		LayoutParams params = new LayoutParams(width, height);
+		getWindow().addContentView(inflatedDrawerLayout, params);
+		
+		importPanel = ((ViewStub) findViewById(R.id.stub_import)).inflate();
+		importPanel.setVisibility(View.INVISIBLE);
+		
 		final Object me = this;
 		
 		mapView = (MapView) findViewById(R.id.mapview);
@@ -110,8 +126,10 @@ public class Map extends MapActivity {
 		friendPosLong = 15578195;
 		GeoPoint point = new GeoPoint(friendPosLat, friendPosLong);
 		
+		HashMap d = new HashMap();
+		d.put("Anders", "Sitter och skiter!");
 		
-		OverlayItem overlayitem = new OverlayItem(point, "Lunch", "Lunchar på pastavagnen");
+		OverlayItem overlayitem = new OverlayItem(point, "Anders", (String) d.get("Anders"));
 		
 		pointerOverlay.addOverlay(overlayitem);
 		mapOverlays.add(pointerOverlay);
@@ -139,22 +157,28 @@ public class Map extends MapActivity {
 		return false;
 	}
 	
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, 0, 1, "Remove Overlay");
+		menu.add(0, 0, 1, "Status");
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == 0) {
-			
+			/*
 			// example hiding balloon before removing overlay
 			if (pointerOverlay != null) {
 				pointerOverlay.hideBalloon();
 			}
 			mapOverlays.remove(pointerOverlay);
 			mapView.invalidate();
+			*/
+			if(importPanel.getVisibility() != View.VISIBLE)
+				importPanel.setVisibility(View.VISIBLE);
+			else
+				importPanel.setVisibility(View.INVISIBLE);
 		}
 		return true;
 	}
