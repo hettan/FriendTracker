@@ -1,6 +1,5 @@
 package sv.teamAwesome.friendtracker;
 
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewStub;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -27,7 +28,6 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
-import com.readystatesoftware.mapviewballoons.BalloonOverlayView;
 
 public class Map extends MapActivity {
 	private static final String TAG = "MAIN";
@@ -58,6 +58,16 @@ public class Map extends MapActivity {
 		mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
 		
+		Button statusbtn = (Button) findViewById(R.id.statusBtn);
+		final EditText statustxt = (EditText) findViewById(R.id.statusTxt);
+		
+		statusbtn.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				statustxt.setText("");
+				importPanel.setVisibility(View.INVISIBLE);
+			}
+		});
 		
 		final MapController mc = mapView.getController();
 		
@@ -126,10 +136,10 @@ public class Map extends MapActivity {
 		friendPosLong = 15578195;
 		GeoPoint point = new GeoPoint(friendPosLat, friendPosLong);
 		
-		HashMap d = new HashMap();
-		d.put("Anders", "Sitter och skiter!");
+		HashMap<String, String> status = new HashMap<String, String>();
+		status.put("Anders", "Sitter och skiter!");
 		
-		OverlayItem overlayitem = new OverlayItem(point, "Anders", (String) d.get("Anders"));
+		OverlayItem overlayitem = new OverlayItem(point, "Anders", (String) status.get("Anders"));
 		
 		pointerOverlay.addOverlay(overlayitem);
 		mapOverlays.add(pointerOverlay);
@@ -167,14 +177,6 @@ public class Map extends MapActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == 0) {
-			/*
-			// example hiding balloon before removing overlay
-			if (pointerOverlay != null) {
-				pointerOverlay.hideBalloon();
-			}
-			mapOverlays.remove(pointerOverlay);
-			mapView.invalidate();
-			*/
 			if(importPanel.getVisibility() != View.VISIBLE)
 				importPanel.setVisibility(View.VISIBLE);
 			else
