@@ -28,7 +28,7 @@ public class Map extends MapActivity {
 	private static final String TAG = "MAIN";
 
 	MyLocationOverlay myLocation;
-	PointerOverlay Derp;
+	PointerOverlay pointerOverlay;
 	List<Overlay> mapOverlays;
 	MapView mapView;
 	
@@ -41,6 +41,7 @@ public class Map extends MapActivity {
 		
 		mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
+		
 		
 		final MapController mc = mapView.getController();
 		
@@ -102,7 +103,7 @@ public class Map extends MapActivity {
 		mapOverlays = mapView.getOverlays();
 		
 		Drawable drawable = getResources().getDrawable(R.drawable.marker);
-		PointerOverlay Derp = new PointerOverlay(drawable, mapView);
+		PointerOverlay pointerOverlay = new PointerOverlay(drawable, mapView);
 		
 		int friendPosLat, friendPosLong; //testpoint at pastavagnen
 		friendPosLat = 58395516;
@@ -112,8 +113,8 @@ public class Map extends MapActivity {
 		
 		OverlayItem overlayitem = new OverlayItem(point, "Lunch", "Lunchar på pastavagnen");
 		
-		Derp.addOverlay(overlayitem);
-		mapOverlays.add(Derp);
+		pointerOverlay.addOverlay(overlayitem);
+		mapOverlays.add(pointerOverlay);
 		
 		mc.animateTo(point);
 		mc.setZoom(16);
@@ -149,10 +150,10 @@ public class Map extends MapActivity {
 		if (item.getItemId() == 0) {
 			
 			// example hiding balloon before removing overlay
-			if (Derp != null) {
-				Derp.hideBalloon();
+			if (pointerOverlay != null) {
+				pointerOverlay.hideBalloon();
 			}
-			mapOverlays.remove(Derp);
+			mapOverlays.remove(pointerOverlay);
 			mapView.invalidate();
 		}
 		return true;

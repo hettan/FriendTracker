@@ -40,6 +40,8 @@ public class PointerOverlay extends BalloonItemizedOverlay<OverlayItem> {
 	@Override
 	protected boolean onBalloonTap(int index, OverlayItem item) {
 		Log.v(TAG, "Fuck my lafiw");
+		Toast.makeText(c, "onBalloonTap for overlay index " + index,
+				Toast.LENGTH_LONG).show();
 		return true;
 	}
 }
