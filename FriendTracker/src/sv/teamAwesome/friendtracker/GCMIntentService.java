@@ -22,59 +22,13 @@ public class GCMIntentService extends GCMBaseIntentService{
 	@Override
 	protected void onRegistered(Context context, String regId) {
 		
-		JSONObject toServer = new JSONObject();
-		JSONObject data = new JSONObject();
-		try {
-			/*data.put("pushID", regId);
-			data.put("username", null);
-			toServer.put("type", "registerPush");
-			toServer.put("data", data);*/
-			
-			data.put("username", "1");
-			toServer.put("type", "getGroups");
-			toServer.put("data", data);
-			
-		} catch (Exception e) {
-			
-		}
-		String toSend = toServer.toString();
-		try {
-            Class[] params = {String.class, Boolean.class};
-			
-			ConnectionData connData = new ConnectionData(MainActivity.class.getMethod("Callback", params), MainActivity.class.newInstance(), toSend);
-			AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
-		}
-		catch(Exception e) {
-			Log.v(TAG, "Error: " + e.toString());
-		}
+		//DERP!
 	}
 
 	@Override
 	protected void onUnregistered(Context context, String regId) {
 		
-		JSONObject toServer = new JSONObject();
-		JSONObject data = new JSONObject();
-		try {
-			/*data.put("username", null);
-			toServer.put("type", "unregisterPush");
-			toServer.put("data", data);*/
-			
-			data.put("username", "1");
-			toServer.put("type", "getGroups");
-			toServer.put("data", data);
-		} catch (Exception e) {
-			
-		}
-		String toSend = toServer.toString();
-		try {
-            Class[] params = {String.class, Boolean.class};
-			
-			ConnectionData connData = new ConnectionData(MainActivity.class.getMethod("Callback", params), MainActivity.class.newInstance(), toSend);
-			AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
-		}
-		catch(Exception e) {
-			Log.v(TAG, "Error: " + e.toString());
-		}
+		//DERP!
 	}	
 
 	@Override

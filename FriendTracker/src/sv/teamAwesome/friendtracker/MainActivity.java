@@ -24,14 +24,12 @@ public class MainActivity extends Activity {
 		
 		final Object me = this;
 		
-		/*GCMRegistrar.checkDevice(this);
+		GCMRegistrar.checkDevice(this);
 		GCMRegistrar.checkManifest(this);
-		final String regId = GCMRegistrar.getRegistrationId(this);
-		if (regId.equals("")) {
+		if ((GCMRegistrar.getRegistrationId(this)).equals("")) {
 			GCMRegistrar.register(this, Config.SENDER_ID);
-		} else {
-			GCMRegistrar.unregister(this);
-		}*/
+		}
+		final String regId = GCMRegistrar.getRegistrationId(this);
 		
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
@@ -56,6 +54,7 @@ public class MainActivity extends Activity {
 				try {
 					data.put("username", checkUser);
 					data.put("password", checkPass);
+					data.put("pushID", regId);
 					toServer.put("type", "login");
 					toServer.put("data", data);
 				} catch (Exception e) {
@@ -79,7 +78,7 @@ public class MainActivity extends Activity {
 		
 			public void onClick(View v) {
 				Log.v(TAG, "Fuck my lafiw");
-				Intent regis = new Intent("sv.teamAwesome.friendtracker.REGISTER");
+				Intent regis = new Intent("sv.teamAwesome.friendtracker.FRONTPAGE");
 				startActivity(regis);
 			}
 		});
