@@ -34,7 +34,7 @@ import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
 public class Map extends MapActivity {
-	private static final String TAG = "MAIN";
+	private static final String TAG = "MAP";
 	String tmp;
 
 	MyLocationOverlay myLocation;

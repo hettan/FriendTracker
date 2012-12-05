@@ -13,6 +13,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -39,7 +41,6 @@ public class FriendsTab extends TabActivity {
 
  
         tabHost = (TabHost)findViewById(android.R.id.tabhost);
-        //FriendsAppTabs.setMyTabs(tabHost, this);
         listView1 = (ListView) findViewById(R.id.list1);
         listView2 = (ListView) findViewById(R.id.list2);
         listView3 = (ListView) findViewById(R.id.list3);
@@ -59,7 +60,7 @@ public class FriendsTab extends TabActivity {
 				return listView3;
 			}
 		}));
-        
+        tabHost.setCurrentTabByTag("All");
      	JSONObject toServer = new JSONObject();
 		JSONObject data = new JSONObject();
 		try {
@@ -87,7 +88,6 @@ public class FriendsTab extends TabActivity {
 		if(!error) {
 			try {
 				Log.v(TAG, "10");
-				//JSONArray data = new JSONArray(res);
 				JSONObject data = new JSONObject(res);
 				
 				JSONArray friends = data.getJSONArray("friends");
@@ -104,6 +104,7 @@ public class FriendsTab extends TabActivity {
 				listView1.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,listActive));
 				listView2.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,listAll));
 
+
 				JSONArray requests = data.getJSONArray("requests");
 				List<String> listReq = new ArrayList<String>();
 				for(int i=0; i < requests.length();i++){
@@ -119,6 +120,20 @@ public class FriendsTab extends TabActivity {
 		} else {
 			Log.v(TAG, "Error");
 		}
+	}
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add(0, 0, 1, "Search");
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == 0) {
+			Intent search = new Intent("sv.teamAwesome.friendtracker.SEARCH");
+			startActivity(search);
+		}
+		return true;
 	}
 	
 }
