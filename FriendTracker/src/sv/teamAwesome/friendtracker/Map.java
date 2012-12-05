@@ -41,6 +41,8 @@ public class Map extends MapActivity {
 	PointerOverlay pointerOverlay;
 	List<Overlay> mapOverlays;
 	MapView mapView;
+	GeoPoint point;
+	
 	View importPanel;
 	//HashMap<String, GeoPoint> friendPos;
 	List<String> fUser = null;
@@ -105,7 +107,6 @@ public class Map extends MapActivity {
 			}
 		});
 		
-		final MapController mc = mapView.getController();
 		
 		final MapController control = mapView.getController();
 		
@@ -114,8 +115,8 @@ public class Map extends MapActivity {
 		LocationListener listener = new LocationListener() {
 			
 			public void onLocationChanged(Location location) {
-				GeoPoint point = new GeoPoint((int)(location.getLatitude()*1E6), (int)(location.getLongitude()*1E6));
-				control.setCenter(point);
+				point = new GeoPoint((int)(location.getLatitude()*1E6), (int)(location.getLongitude()*1E6));
+
 								
 				JSONObject toServer = new JSONObject();
 				JSONObject data = new JSONObject();
@@ -197,20 +198,22 @@ public class Map extends MapActivity {
 		myLocation = new MyLocationOverlay(this, mapView);
 		mapView.getOverlays().add(myLocation);
 		
+		control.setCenter(point);
+		control.setZoom(20);
 		////////
 		
 		mapOverlays = mapView.getOverlays();
 		
-		
+		/*
 		int friendPosLat, friendPosLong; //testpoint at pastavagnen
 		friendPosLat = 58395516;
 		friendPosLong = 15578195;
-		GeoPoint point = new GeoPoint(friendPosLat, friendPosLong);
+		GeoPoint hardcode = new GeoPoint(friendPosLat, friendPosLong);
 				
 		HashMap<String, String> status = new HashMap<String, String>();
 		status.put("Anders", "Sitter och skiter!");
 		
-		/*for(int i = 0; i < fUser.size(); i++) {
+		for(int i = 0; i < fUser.size(); i++) {
 			Log.v(TAG, "Round "+i+", Starting..");
 			
 			PointerOverlay pointerOverlay = new PointerOverlay(drawable, mapView);
@@ -220,14 +223,8 @@ public class Map extends MapActivity {
 			Log.v(TAG, "Round "+i+", Done.");
 		}*/
 
-
-		
 		//pointerOverlay.addOverlay(overlayitem);
 		//mapOverlays.add(pointerOverlay);
-		
-		mc.animateTo(point);
-		mc.setZoom(16);
-		
 	}	
 
 	@Override
@@ -247,7 +244,6 @@ public class Map extends MapActivity {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
