@@ -43,7 +43,7 @@
         android:layout_alignLeft="@+id/groupmenu"
         android:layout_alignTop="@+id/mapmenu"
         android:onClick="MenuBtn"
-        android:src="@drawable/ic_launcher"
+        android:src="@drawable/notification"
         android:tag="Notification"
         android:background="@null" />
 
@@ -54,8 +54,8 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/mapmenu"
         android:onClick="MenuBtn"
-        android:src="@drawable/exit"
-        android:tag="Exit"
+        android:src="@drawable/back"
+        android:tag="MainActivity"
         android:background="@null" />
 
     <ImageButton
