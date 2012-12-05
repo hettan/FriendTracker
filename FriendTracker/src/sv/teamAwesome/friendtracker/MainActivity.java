@@ -78,7 +78,7 @@ public class MainActivity extends Activity {
 		
 			public void onClick(View v) {
 				Log.v(TAG, "Fuck my lafiw");
-				Intent regis = new Intent("sv.teamAwesome.friendtracker.FRONTPAGE");
+				Intent regis = new Intent("sv.teamAwesome.friendtracker.REGISTER");
 				startActivity(regis);
 			}
 		});
