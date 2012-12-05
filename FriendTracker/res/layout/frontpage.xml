@@ -55,7 +55,7 @@
         android:layout_below="@+id/mapmenu"
         android:onClick="MenuBtn"
         android:src="@drawable/back"
-        android:tag="Exit"
+        android:tag="MainActivity"
         android:background="@null" />
 
     <ImageButton
