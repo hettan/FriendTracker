@@ -32,7 +32,7 @@ def ok(data):
 def register(username, password, mail):
     if users.find_one({"username": username}) == None:
         new_user = {"username": username, "password": password, "mail": mail,
-                    "friends":["test","test2"], "active":False, "requests":[], "groups":[],
+                    "friends":[], "active":False, "requests":[], "groups":[],
                     "pos":{"lat":0,"lon":0}, "pushID": "", "friendsMod":0, "status":""}
         users.insert(new_user)
         return ok("User was successfully registred!")
@@ -100,15 +100,19 @@ def getSession(session):
 ##### Friend #####
     
 def isFriend(src,target):
+    print target
     target = users.find_one({"username": target})
-    return (src in target["friends"]) or (src in target["requests"])  
+    if target == None:
+        return True
+    else:
+        return (src in target["friends"]) or (src in target["requests"])  
 
 def addFriendReq(src, target):
     if not isFriend(src,target):
         time = datetime.datetime.now()
         req = {"requester":src, "time":time.strftime("%m-%d-%H-%M")} #Month-Day-Hour-Minute
         users.update({"username":target}, {"$push": {"requests": req}})
-        pushReq(target,{"type":"friend","data":src})
+        #pushReq(target,{"type":"friend","data":src})
         return ok("")
     
     else:
@@ -140,7 +144,7 @@ def getFriends(username):
         #active = users.find_one({"username":friend})["active"]
         active = True
         friends.append({"username":friend, "active":active})
-    friends.append({"username":"notOnline", "active":False})
+    #friends.append({"username":"notOnline", "active":False})
     #Sort
     requests = user["requests"]
     #friends = sorted(friends, key=lambda k: k["username"])
@@ -157,11 +161,12 @@ def getFriendsIfMod(username, ts):
 
 def userSearch(query):
       regexp = "(?i).*(" + query + ")+.*"; #Gets all users that contains the phrase in their username
-      search_res = users.find({"username":{"$regexp":regexp}})
-      
+      search_res = users.find({"username":{"$regex":regexp}})
+      print query
+      print "d" + str(search_res)
       res = []
       for user in search_res:
-          res.push(user["username"])
+          res.append(user["username"])
 
           
       if len(res) > 0:
