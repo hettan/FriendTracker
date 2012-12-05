@@ -12,7 +12,7 @@
         android:layout_height="140dp"
         android:layout_alignParentRight="true"
         android:onClick="MenuBtn"
-        android:src="@drawable/group"
+        android:src="@drawable/groups"
         android:tag="Groups"
         android:background="@null" />
 
@@ -21,7 +21,7 @@
         android:layout_width="160dp"
         android:layout_height="140dp"
         android:onClick="MenuBtn"
-        android:src="@drawable/friends"
+        android:src="@drawable/friend"
         android:tag="FriendsTab"
         android:background="@null" />
 
@@ -32,7 +32,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/friendmenu"
         android:onClick="MenuBtn"
-        android:src="@drawable/pin"
+        android:src="@drawable/earthmap"
         android:tag="Map"
         android:background="@null" />
 
@@ -43,7 +43,7 @@
         android:layout_alignLeft="@+id/groupmenu"
         android:layout_alignTop="@+id/mapmenu"
         android:onClick="MenuBtn"
-        android:src="@drawable/ic_launcher"
+        android:src="@drawable/notification"
         android:tag="Notification"
         android:background="@null" />
 
@@ -54,8 +54,8 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/mapmenu"
         android:onClick="MenuBtn"
-        android:src="@drawable/exit"
-        android:tag="Exit"
+        android:src="@drawable/back"
+        android:tag="MainActivity"
         android:background="@null" />
 
     <ImageButton

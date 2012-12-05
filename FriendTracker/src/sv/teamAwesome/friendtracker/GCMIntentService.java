@@ -4,6 +4,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 //import sv.teamAwesome.friendtracker.Config.SENDER_ID;
@@ -33,7 +34,9 @@ public class GCMIntentService extends GCMBaseIntentService{
 
 	@Override
 	protected void onMessage(Context context, Intent intent) {
-		//Derp
+		Intent noteIntent = new Intent("NotificationHandler");
+		intent.putExtra("category", 1);
+		LocalBroadcastManager.getInstance(this).sendBroadcast(noteIntent);
 	}
 
 	@Override
@@ -44,17 +47,6 @@ public class GCMIntentService extends GCMBaseIntentService{
 	@Override
 	protected boolean onRecoverableError(Context context, String errorId) {
 		return super.onRecoverableError(context, errorId);
-	}
-	
-	// Callback for TCP Connection
-	public void Callback(String res, Boolean error) {
-
-		Log.v(TAG, "Callback: " + res);
-		if(!error) {
-			Log.v(TAG, "Access Granted");
-		} else {
-			Log.v(TAG, "Access Denied");
-		}
 	}
 }
 

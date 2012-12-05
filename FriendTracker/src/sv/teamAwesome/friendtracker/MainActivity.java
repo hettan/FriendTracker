@@ -18,7 +18,6 @@ import android.graphics.PixelFormat;
 public class MainActivity extends Activity {
 	private static final String TAG = "MAIN";
 	
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
@@ -77,7 +76,7 @@ public class MainActivity extends Activity {
 		register.setOnClickListener(new View.OnClickListener() {
 		
 			public void onClick(View v) {
-				Log.v(TAG, "Fuck my lafiw");
+				
 				Intent regis = new Intent("sv.teamAwesome.friendtracker.FRONTPAGE");
 				startActivity(regis);
 			}

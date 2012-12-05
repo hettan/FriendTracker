@@ -1,34 +1,36 @@
 package sv.teamAwesome.friendtracker;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.view.WindowManager;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.preference.PreferenceActivity;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
-public class Setting extends Activity {
+public class Setting extends PreferenceActivity {
+	private static final String TAG = "SETTINGS";
 	
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.setting);
-		
-	    
-	/*	CheckBox repeatChkBx = (CheckBox) findViewById( R.id.check1 );
-		
-			repeatChkBx.setOnCheckedChangeListener(new OnCheckedChangeListener()
-			{
-			    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-			    {
-			        if ( isChecked )
-			        {
-			        	android.provider.Settings.System.putInt(getContentResolver(),
-			        		     android.provider.Settings.System.SCREEN_BRIGHTNESS,255);
-			        }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {        
+        super.onCreate(savedInstanceState);        
+        Log.v(TAG, "Fuck my lafiw");
+        addPreferencesFromResource(R.xml.preferences);        
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(Menu.NONE, 0, 0, "Show current settings");
+        return super.onCreateOptionsMenu(menu);
+    }
 
-			    }
-			});*/
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case 0:
+                startActivity(new Intent(this, ShowSettingsActivity.class));
+                return true;
+        }
+        return false;
+    }
+ 
 }

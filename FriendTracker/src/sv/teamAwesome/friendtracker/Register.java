@@ -3,28 +3,34 @@ package sv.teamAwesome.friendtracker;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.graphics.PixelFormat;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 public class Register extends Activity {
 	private static final String TAG = "REGISTER";
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		getWindow().setFormat(PixelFormat.RGBA_8888);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
 		setContentView(R.layout.register);
+		
+		final Object me = this;
 		
 		final EditText regusr = (EditText) findViewById(R.id.reguser);
 		final EditText regemail = (EditText) findViewById(R.id.regemail);
 		final EditText regpass1 = (EditText) findViewById(R.id.regpass1);
 		final EditText regpass2 = (EditText) findViewById(R.id.regpass2);
-		final TextView error = (TextView) findViewById(R.id.regerror);
+		final TextView errortxt = (TextView) findViewById(R.id.regerror);
 		Button regbtn = (Button) findViewById(R.id.regbtn);
 		
 		regbtn.setOnClickListener(new View.OnClickListener() {
@@ -51,14 +57,14 @@ public class Register extends Activity {
 					try {
 			            Class[] params = {String.class, Boolean.class};
 						
-						ConnectionData connData = new ConnectionData(MainActivity.class.getMethod("Callback", params), MainActivity.class.newInstance(), toSend);
+						ConnectionData connData = new ConnectionData(Register.class.getMethod("Callback", params), me, toSend);
 						AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
 					}
 					catch(Exception e) {
 						Log.v(TAG, "Error: " + e.toString());
 					}
 				} else {
-					error.setText("Passwords does not match");
+					errortxt.setText("Passwords does not match");
 				}
 			}
 		});
@@ -67,8 +73,11 @@ public class Register extends Activity {
 		Log.v(TAG, "Callback: " + res);
 		if(!error) {
 			Log.v(TAG, "Reg Ok");
+			finish();
 		} else {
 			Log.v(TAG, "Reg Ej Ok");
+			final TextView errortxt = (TextView) findViewById(R.id.regerror);
+			errortxt.setText(res);
 		}
 	}
 }
