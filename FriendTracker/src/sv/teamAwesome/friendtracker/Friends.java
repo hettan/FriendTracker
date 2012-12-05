@@ -4,6 +4,7 @@ package sv.teamAwesome.friendtracker;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -47,7 +48,7 @@ public class Friends extends Activity {
 				try {
 		            Class[] params = {String.class, Boolean.class};
 					
-					ConnectionData connData = new ConnectionData(MainActivity.class.getMethod("Callback", params), me, toSend);
+					ConnectionData connData = new ConnectionData(Friends.class.getMethod("Callback", params), me, toSend);
 
 					AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
 				}
@@ -58,6 +59,14 @@ public class Friends extends Activity {
 				
 			}
 		});
-		
+	}
+	public void Callback(String res, Boolean error) {
+		Log.v(TAG, "Callback: " + res);
+		if(!error) {
+			Log.v(TAG, "Status Sent");
+
+		} else {
+			Log.v(TAG, "Status Error");
+		}
 	}
 }

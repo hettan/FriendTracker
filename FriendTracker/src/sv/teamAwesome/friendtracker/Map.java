@@ -1,11 +1,14 @@
 package sv.teamAwesome.friendtracker;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -18,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewStub;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -37,7 +41,12 @@ public class Map extends MapActivity {
 	PointerOverlay pointerOverlay;
 	List<Overlay> mapOverlays;
 	MapView mapView;
+	GeoPoint point;
+	
 	View importPanel;
+	//HashMap<String, GeoPoint> friendPos;
+	List<String> fUser = null;
+	List<GeoPoint> fPos = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,18 +67,46 @@ public class Map extends MapActivity {
 		mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
 		
+		final Drawable drawable = getResources().getDrawable(R.drawable.marker);
+		
 		Button statusbtn = (Button) findViewById(R.id.statusBtn);
 		final EditText statustxt = (EditText) findViewById(R.id.statusTxt);
 		
 		statusbtn.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
+				
+				String status = statustxt.getText().toString();
+				
+				JSONObject toServer = new JSONObject();
+				JSONObject data = new JSONObject();
+				try {
+					data.put("username", Config.USERNAME);
+					data.put("status", status);
+					toServer.put("type", "setStatus");
+					toServer.put("data", data);
+				} catch (Exception e) {
+					
+				}
+				String toSend = toServer.toString();
+				try {
+		            Class[] params = {String.class, Boolean.class};
+					
+					ConnectionData connData = new ConnectionData(Map.class.getMethod("Callback", params), me, toSend);
+
+					AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+				}
+				catch(Exception e) {
+					Log.v(TAG, "Error: " + e.toString());
+				}
 				statustxt.setText("");
+				InputMethodManager imm = (InputMethodManager)getSystemService(
+					      Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(statustxt.getWindowToken(), 0);
 				importPanel.setVisibility(View.INVISIBLE);
 			}
 		});
 		
-		final MapController mc = mapView.getController();
 		
 		final MapController control = mapView.getController();
 		
@@ -78,8 +115,8 @@ public class Map extends MapActivity {
 		LocationListener listener = new LocationListener() {
 			
 			public void onLocationChanged(Location location) {
-				GeoPoint point = new GeoPoint((int)(location.getLatitude()*1E6), (int)(location.getLongitude()*1E6));
-				control.setCenter(point);
+				point = new GeoPoint((int)(location.getLatitude()*1E6), (int)(location.getLongitude()*1E6));
+
 								
 				JSONObject toServer = new JSONObject();
 				JSONObject data = new JSONObject();
@@ -92,6 +129,7 @@ public class Map extends MapActivity {
 				} catch (Exception e) {
 					
 				}
+				
 				String toSend = toServer.toString();
 				try {
 		            Class[] params = {String.class, Boolean.class};
@@ -104,6 +142,42 @@ public class Map extends MapActivity {
 				catch(Exception e) {
 					Log.v(TAG, "Error: " + e.toString());
 				}
+				
+				JSONObject toServer2 = new JSONObject();
+				JSONObject data2 = new JSONObject();
+				try {
+					data2.put("username", Config.USERNAME);
+					toServer2.put("type", "getFriendsPos");
+					toServer2.put("data", data2);
+				} catch (Exception e) {
+					
+				}
+				String toSend2 = toServer2.toString();
+				try {
+		            Class[] params = {String.class, Boolean.class};
+					
+					ConnectionData connData = new ConnectionData(Map.class.getMethod("CallbackFriends", params), me, toSend2);
+					//ConnectionData connData = new ConnectionData(MainActivity.class.getMethod("Callback", params), MainActivity.class.newInstance(), toSend);
+
+					AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+				}
+				catch(Exception e) {
+					Log.v(TAG, "Error: " + e.toString());
+				}
+				
+				//Log.v(TAG, "STORLEK: " + fPos.size());
+				if(fPos != null) {
+					for(int i = 0; i < fUser.size(); i++) {
+						Log.v(TAG, "Round "+i+", Starting..");
+						
+						PointerOverlay pointerOverlay = new PointerOverlay(drawable, mapView);
+						OverlayItem overlayitem = new OverlayItem(fPos.get(i), fUser.get(i), "Derp");
+						pointerOverlay.addOverlay(overlayitem);
+						mapOverlays.add(pointerOverlay);
+						Log.v(TAG, "Round "+i+", Done.");
+					}
+				}
+				
 			}
 
 			public void onProviderDisabled(String arg0) {
@@ -124,29 +198,33 @@ public class Map extends MapActivity {
 		myLocation = new MyLocationOverlay(this, mapView);
 		mapView.getOverlays().add(myLocation);
 		
-		///////
+		control.setCenter(point);
+		control.setZoom(20);
+		////////
 		
 		mapOverlays = mapView.getOverlays();
 		
-		Drawable drawable = getResources().getDrawable(R.drawable.marker);
-		PointerOverlay pointerOverlay = new PointerOverlay(drawable, mapView);
-		
+		/*
 		int friendPosLat, friendPosLong; //testpoint at pastavagnen
 		friendPosLat = 58395516;
 		friendPosLong = 15578195;
-		GeoPoint point = new GeoPoint(friendPosLat, friendPosLong);
-		
+		GeoPoint hardcode = new GeoPoint(friendPosLat, friendPosLong);
+				
 		HashMap<String, String> status = new HashMap<String, String>();
 		status.put("Anders", "Sitter och skiter!");
 		
-		OverlayItem overlayitem = new OverlayItem(point, "Anders", (String) status.get("Anders"));
-		
-		pointerOverlay.addOverlay(overlayitem);
-		mapOverlays.add(pointerOverlay);
-		
-		mc.animateTo(point);
-		mc.setZoom(16);
-		
+		for(int i = 0; i < fUser.size(); i++) {
+			Log.v(TAG, "Round "+i+", Starting..");
+			
+			PointerOverlay pointerOverlay = new PointerOverlay(drawable, mapView);
+			OverlayItem overlayitem = new OverlayItem(fPos.get(i), fUser.get(i), "Derp");
+			pointerOverlay.addOverlay(overlayitem);
+			mapOverlays.add(pointerOverlay);
+			Log.v(TAG, "Round "+i+", Done.");
+		}*/
+
+		//pointerOverlay.addOverlay(overlayitem);
+		//mapOverlays.add(pointerOverlay);
 	}	
 
 	@Override
@@ -167,7 +245,6 @@ public class Map extends MapActivity {
 		return false;
 	}
 	
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add(0, 0, 1, "Status");
@@ -183,6 +260,48 @@ public class Map extends MapActivity {
 				importPanel.setVisibility(View.INVISIBLE);
 		}
 		return true;
+	}
+	public void Callback(String res, Boolean error) {
+		Log.v(TAG, "Callback: " + res);
+		if(!error) {
+			Log.v(TAG, "Status Updated");
+
+		} else {
+			Log.v(TAG, "Status Not Updated");
+		}
+	}
+	public void CallbackFriends(String res, Boolean error) {
+		Log.v(TAG, "Callback: " + res);
+		if(!error) {
+			Log.v(TAG, "Friends Positions");
+			try {
+				JSONArray data = new JSONArray(res);
+				JSONObject pos;
+				for(int i=0; i < data.length();i++){
+					String username = data.getJSONObject(i).getString("username");
+					Log.v(TAG, "USERNAME = " + username);
+					data.getJSONObject(i).getString("status");
+					pos = data.getJSONObject(i).getJSONObject("pos");
+					int lon = Integer.parseInt(pos.getString("lon"));
+					Log.v(TAG, "LONGITUDE = " + lon);
+					int lat = Integer.parseInt(pos.getString("lat"));
+					Log.v(TAG, "LATITUDE = " + lat);
+					GeoPoint friend = new GeoPoint(lat, lon);
+					fPos.add(friend);
+					fUser.add(username);
+					//friendPos.put(username, friend);
+					
+					//if (friends.getJSONObject(i).getBoolean("active"))
+				}
+				//JSONArray friends = data.getJSONArray("friends");
+				//JSONArray requests = data.getJSONArray("requests");
+			} catch(Exception e) {
+				
+			}
+				
+		} else {
+			Log.v(TAG, "Error Friends Position");
+		}
 	}
 }
 
