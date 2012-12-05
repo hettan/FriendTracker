@@ -50,6 +50,24 @@
             </intent-filter>
         </activity>
         
+        <activity 
+            android:name=".Setting"
+            android:label="@string/title_activity_main">
+            <intent-filter>
+                <category android:name="sv.teamAwesome.friendtracker.SETTING" />
+                <action android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+        <activity 
+            android:name=".ShowSettingsActivity"
+        	android:label="@string/title_activity_main">
+            <intent-filter>
+                <category android:name="sv.teamAwesome.friendtracker.SHOWSETTINGSACTIVITY" />
+                <action android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+ 
         <activity
             android:name=".Register"
             android:label="@string/title_activity_main" >
@@ -123,7 +141,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name=".Setting"
             android:label="@string/title_activity_main" >
@@ -141,6 +158,5 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
     </application>
 </manifest>
