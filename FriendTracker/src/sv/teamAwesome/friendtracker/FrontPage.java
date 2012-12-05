@@ -20,12 +20,7 @@ public class FrontPage extends Activity{
 	}
 	
 	public void MenuBtn(View v) {
-		EditText err = (EditText) findViewById(R.id.err);
 		String Target = v.getTag().toString();
-		
-		err.setText(Target);
-		
-		
 		
 		ClassLoader classLoader = getClassLoader();
 		

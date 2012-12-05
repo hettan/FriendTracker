@@ -60,10 +60,10 @@
         </activity>
         
         <activity 
-            android:name=".ShowSettingsActivity"
+            android:name=".ResetSettings"
         	android:label="@string/title_activity_main">
             <intent-filter>
-                <category android:name="sv.teamAwesome.friendtracker.SHOWSETTINGSACTIVITY" />
+                <category android:name="sv.teamAwesome.friendtracker.RESETSETTINGS" />
                 <action android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
