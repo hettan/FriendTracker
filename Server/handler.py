@@ -46,7 +46,7 @@ def getFriendsIfMod(data):
     return db.getFriends(data["username"], data["ts"])
 
 def userSearch(data):
-    return db.getFriends(data["query"])
+    return db.userSearch(data["query"])
 
 #### Groups ####
 def createGroup(data):
