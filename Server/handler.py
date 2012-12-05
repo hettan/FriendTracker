@@ -25,6 +25,9 @@ def login(data):
 
 def logoff(data):
     return db.logoff(data["session"])
+
+def setStatus(data):
+    return db.setStatus(data["username"],data["status"])
     
 #### Requests/Friends ####        
 def addReq(data):
@@ -102,6 +105,7 @@ handler["register"] = register
 handler["changePw"] = changePassword
 handler["login"] = login
 handler["logoff"] = logoff
+handler["setStatus"] = setStatus
 
 handler["request"] = addReq
 handler["acceptReq"] = acceptReq

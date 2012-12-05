@@ -32,8 +32,8 @@ def ok(data):
 def register(username, password, mail):
     if users.find_one({"username": username}) == None:
         new_user = {"username": username, "password": password, "mail": mail,
-                    "friends":[], "active":False, "requests":[], "groups":[],
-                    "pos":{"lat":0,"lon":0}, "pushID": "", "friendsMod":0}
+                    "friends":["test","test2"], "active":False, "requests":[], "groups":[],
+                    "pos":{"lat":0,"lon":0}, "pushID": "", "friendsMod":0, "status":""}
         users.insert(new_user)
         return ok("User was successfully registred!")
     
@@ -41,7 +41,7 @@ def register(username, password, mail):
         return error("Username is already in use!")
 
 def changePassword(username, oldPassword, newPassword):
-    user = users.find_one({"username": username});
+    user = users.find_one({"username": username})
     if user != None:
         if user["password"] == oldPassword:
             users.update({"username":username},{"$set":{"password":newPassword}})
@@ -71,6 +71,11 @@ def logoff(session):
     
     else:
         return error("Session timeout")
+
+def setStatus(username, status):
+    users.update({"username": username},{"$set":{"status":status}})
+    return ok("")
+    
     
 ##### Session #####
 
@@ -101,7 +106,7 @@ def isFriend(src,target):
 def addFriendReq(src, target):
     if not isFriend(src,target):
         time = datetime.datetime.now()
-        req = {"requester":src, time:time.strftime("%m-%d-%H-%M")} #Month-Day-Hour-Minute
+        req = {"requester":src, "time":time.strftime("%m-%d-%H-%M")} #Month-Day-Hour-Minute
         users.update({"username":target}, {"$push": {"requests": req}})
         pushReq(target,{"type":"friend","data":src})
         return ok("")
@@ -132,12 +137,14 @@ def getFriends(username):
     #Flag active friends
     friends = []
     for friend in user["friends"]:
-        active = users.find_one({"username":friend})["active"]
+        #active = users.find_one({"username":friend})["active"]
+        active = True
         friends.append({"username":friend, "active":active})
-
+    friends.append({"username":"notOnline", "active":False})
     #Sort
-    friends = sorted(friends, key=lambda k: k["username"])
-    requests = sorted(user["requests"], key=lambda k: k["requester"]) 
+    requests = user["requests"]
+    #friends = sorted(friends, key=lambda k: k["username"])
+    #requests = sorted(user["requests"], key=lambda k: k["requester"]) 
     return ok(str({"friends":friends, "requests":requests}))
 
 def getFriendsIfMod(username, ts):
@@ -283,7 +290,7 @@ def getRallyPoints(username, groupID):
 def setPos(username, lat, lon):
     pos = {"lat":lat,"lon":lon}
     users.update({"username":username}, {"$set":{"pos":pos}})
-    return ok("")
+    return ok("Dinmamma")
 
 def getPos(username):
     user = users.find_one({"username":username})
@@ -304,8 +311,8 @@ def getGroupPos(username, groupID):
     else:
         positions = []
         for member in group["members"]:
-            pos = user.find_one({"username":member})
-            positions.append({"username": member, "pos":pos})
+            res = users.find_one({"username":member})["pos"]
+            positions.append({"username": member, "pos":res["pos"], "status":res["status"]})
             
         return ok(str(positions))
 
@@ -317,8 +324,8 @@ def getFriendsPos(username):
     else:
         positions = []
         for friend in user["friends"]:
-            pos = user.find_one({"username":friend})
-            positions.append({"username": friend, "pos":pos})
+            res = users.find_one({"username":friend})
+            positions.append({"username": friend, "pos":res["pos"], "status":res["status"]})
             
         return ok(str(positions))
 
