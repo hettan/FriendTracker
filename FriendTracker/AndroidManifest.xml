@@ -141,14 +141,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Setting"
-            android:label="@string/title_activity_main" >
-            <intent-filter>
-                <action android:name="sv.teamAwesome.friendtracker.SETTINGS" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
         
         <activity
             android:name=".Search"
