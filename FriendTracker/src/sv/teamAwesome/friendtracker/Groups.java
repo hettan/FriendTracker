@@ -24,7 +24,7 @@ public class Groups extends ListActivity {
 		Log.v(TAG, "2");
 		JSONObject data = new JSONObject();
 		try {
-			data.put("username", "1");
+			data.put("username", Config.USERNAME);
 			toServer.put("type", "getGroups");
 			toServer.put("data", data);
 		} catch (Exception e) {

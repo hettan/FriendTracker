@@ -107,10 +107,10 @@ public class FriendsTab extends TabActivity {
 
 				JSONArray requests = data.getJSONArray("requests");
 				List<String> listReq = new ArrayList<String>();
-				for(int i=0; i < requests.length();i++){
+				for(int i=0; i < requests.length();i++) {
 					listReq.add(requests.getJSONObject(i).getString("requester"));
 				}
-				listView3.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,listActive));
+				listView3.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,listReq));
 				
 			} catch(Exception e){
 				Log.v(TAG, "Error: "+ e.toString());

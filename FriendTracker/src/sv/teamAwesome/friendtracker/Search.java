@@ -95,8 +95,10 @@ public class Search extends Activity {
 			
 				JSONArray data = new JSONArray(res);
 				String[] listRes = new String[data.length()];
+				String item;
 				for(int i = 0; i < data.length(); i++) {
-					listRes[i] = data.getString(i);
+					item = data.getString(i);
+					listRes[i] = item.substring(2,item.length()-1); //need to remove u'' 
 				}
 				
 				
