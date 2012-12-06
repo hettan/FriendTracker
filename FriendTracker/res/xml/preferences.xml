@@ -2,7 +2,7 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory 
-        android:title="First Category"
+        android:title="App Configuration"
         android:key="first_category">
         
         <CheckBoxPreference 
@@ -14,8 +14,8 @@
         
         <ListPreference 
             android:key="updates_interval"
-            android:title="Updates interval"
-            android:summary="Define how often updates will be performed"
+            android:title="GPS-updates"
+            android:summary="Choose how often GPS-positions will be updated"
             android:defaultValue="1000" 
             android:entries="@array/updateInterval"
             android:entryValues="@array/updateIntervalValues"
@@ -25,16 +25,16 @@
     </PreferenceCategory>
 
     <PreferenceCategory 
-        android:title="Second Category"
+        android:title="Misc info"
         android:key="second_category">
 
         <EditTextPreference
-            android:key="welcome_message"
-            android:title="Welcome Message" 
-            android:summary="Define the Welcome message to be shown"
-            android:dialogTitle="Welcome Message"
-            android:dialogMessage="Provide a message"    
-            android:defaultValue="Default welcome message" />
+            android:key="status_msg"
+            android:title="Set your own status" 
+            android:summary="Show your friends what you are doing"
+            android:dialogTitle="Status"
+            android:dialogMessage="Provide a status"    
+            android:defaultValue="Using this awesome new app!" />
 
     </PreferenceCategory>
     

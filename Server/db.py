@@ -18,314 +18,319 @@ gcm = GCM(API_KEY)
 
 #Error-response begins with 0
 def error(msg):
-    return "0"+msg+"\n"
+    return b"0"+msg+"\n"
 
 def ok():
-    return "1\n"
+    return b"1\n"
 
 #OK-response begins with 1
 def ok(data):
-    return "1"+data+"\n"
+    return b"1"+data+b"\n"
 
 #### Account Management #####
 
 def register(username, password, mail):
-    if users.find_one({"username": username}) == None:
-        new_user = {"username": username, "password": password, "mail": mail,
-                    "friends":["test","test2"], "active":False, "requests":[], "groups":[],
-                    "pos":{"lat":0,"lon":0}, "pushID": "", "friendsMod":0, "status":""}
+    if users.find_one({b"username": username}) == None:
+        new_user = {b"username": username, b"password": password, b"mail": mail,
+                    b"friends":[], b"active":False, b"requests":[], b"groups":[],
+                    b"pos":{b"lat":0,b"lon":0}, "pushID": "", b"friendsMod":0, b"status":b""}
         users.insert(new_user)
-        return ok("User was successfully registred!")
+        return ok(b"User was successfully registred!")
     
     else:
-        return error("Username is already in use!")
+        return error(b"Username is already in use!")
 
 def changePassword(username, oldPassword, newPassword):
-    user = users.find_one({"username": username})
+    user = users.find_one({b"username": username})
     if user != None:
-        if user["password"] == oldPassword:
-            users.update({"username":username},{"$set":{"password":newPassword}})
-            return ok("Password changed!")
+        if user[b"password"] == oldPassword:
+            users.update({"username":username},{"$set":{b"password":newPassword}})
+            return ok(b"Password changed!")
         
         else:
-            return error("Wrong password!")
+            return error(b"Wrong password!")
         
     else:
-        return error("Session timeout")
+        return error(b"Session timeout")
 
 def login(username, password, pushID):
-    user = users.find_one({"username": username})
-    if user != None and user["password"] == password:
-        users.update({"username":user},{"$set":{"active":True}})
-        users.update({"username":user},{"$set":{"pushID":pushID}})
+    user = users.find_one({b"username": username})
+    if user != None and user[b"password"] == password:
+        users.update({b"username":user},{"$set":{b"active":True}})
+        users.update({b"username":user},{"$set":{b"pushID":pushID}})
         return ok(setSession(username))
     
     else:
-        return error("Wrong username or password!")
+        return error(b"Wrong username or password!")
 
 def logoff(session):
     user = remSession(session)
     if user != None:
-        users.update({"username":user},{"$set":{"active":False}})
-        return ok("")
+        users.update({b"username":user},{"$set":{b"active":False}})
+        return ok(b"")
     
     else:
-        return error("Session timeout")
+        return error(b"Session timeout")
 
 def setStatus(username, status):
-    users.update({"username": username},{"$set":{"status":status}})
-    return ok("")
+    users.update({b"username": username},{"$set":{b"status":status}})
+    return ok(b"")
     
     
 ##### Session #####
 
 def setSession(username):
     session = randomString()
-    sessions.insert({"session":session,"user":username})
+    sessions.insert({b"session":session,b"user":username})
     return session
 
 def remSession(session):
-    res = sessions.find_one({"session":session})
+    res = sessions.find_one({b"session":session})
     if res != None:
-        sessions.remove({"session":session})
-        return res["user"]
+        sessions.remove({b"session":session})
+        return res[b"user"]
     
     else:
         return None
 
 def getSession(session):
-    return sessions.find_one({"session":session})
+    return sessions.find_one({b"session":session})
                        
     
 ##### Friend #####
     
 def isFriend(src,target):
-    target = users.find_one({"username": target})
-    return (src in target["friends"]) or (src in target["requests"])  
+    print target
+    target = users.find_one({b"username": target})
+    if target == None:
+        return True
+    else:
+        return (src in target[b"friends"]) or (src in target[b"requests"])  
 
 def addFriendReq(src, target):
     if not isFriend(src,target):
         time = datetime.datetime.now()
-        req = {"requester":src, "time":time.strftime("%m-%d-%H-%M")} #Month-Day-Hour-Minute
-        users.update({"username":target}, {"$push": {"requests": req}})
-        pushReq(target,{"type":"friend","data":src})
-        return ok("")
+        req = {b"requester":src, b"time":time.strftime("%m-%d-%H-%M")} #Month-Day-Hour-Minute
+        users.update({b"username":target}, {"$push": {b"requests": req}})
+        #pushReq(target,{"type":"friend","data":src})
+        return ok(b"")
     
     else:
         return error("User is already friend with you or you've aldready made a friend request!")
 
 def acceptFriendReq(src, requester):
     #Remove from requests
-    users.update({"username":src},{"$pop":{"requests":{"username":requester}}})
+    users.update({b"username":src},{"$pop":{b"requests":{b"username":requester}}})
     
     #Update friends
-    users.update({"username":src},{"$push":{"friends":requester}})
-    users.update({"username":requester},{"$push":{"friends":src}})
+    users.update({b"username":src},{"$push":{b"friends":requester}})
+    users.update({b"username":requester},{"$push":{b"friends":src}})
     
     #Update modified
-    users.update({"username":src},{"$set":{"friendsMod":time.time()}})
-    users.update({"username":requester},{"$set":{"friendsMod":time.time()}})
+    users.update({b"username":src},{"$set":{b"friendsMod":time.time()}})
+    users.update({b"username":requester},{"$set":{b"friendsMod":time.time()}})
 
 def getFriendReq(username):
-    user = users.find_one({"username":username})
-    return ok(str(user["requests"]))
+    user = users.find_one({b"username":username})
+    return ok(str(user[b"requests"]))
 
 #Returns both friends and requests
 def getFriends(username):
-    user = users.find_one({"username":username})
+    user = users.find_one({b"username":username})
 
     #Flag active friends
     friends = []
-    for friend in user["friends"]:
+    for friend in user[b"friends"]:
         #active = users.find_one({"username":friend})["active"]
         active = True
-        friends.append({"username":friend, "active":active})
-    friends.append({"username":"notOnline", "active":False})
+        friends.append({b"username":friend, b"active":active})
+    #friends.append({"username":"notOnline", "active":False})
     #Sort
-    requests = user["requests"]
+    requests = user[b"requests"]
     #friends = sorted(friends, key=lambda k: k["username"])
     #requests = sorted(user["requests"], key=lambda k: k["requester"]) 
-    return ok(str({"friends":friends, "requests":requests}))
+    return ok(str({b"friends":friends, b"requests":requests}))
 
 def getFriendsIfMod(username, ts):
-    user = users.find_one({"username":username})
-    if user["friendsMod"] != ts:
-        return ok(str({"friends":user["friends"], "timestamp": user["friendsMod"]}))
+    user = users.find_one({b"username":username})
+    if user[b"friendsMod"] != ts:
+        return ok(str({b"friends":user[b"friends"], b"timestamp": user[b"friendsMod"]}))
     
     else:
-        return error("No change")
+        return error(b"No change")
 
 def userSearch(query):
       regexp = "(?i).*(" + query + ")+.*"; #Gets all users that contains the phrase in their username
-      search_res = users.find({"username":{"$regexp":regexp}})
-      
+      search_res = users.find({b"username":{"$regex":regexp}})
+      print query
+      print "d" + str(search_res)
       res = []
       for user in search_res:
-          res.push(user["username"])
+          res.append(user[b"username"])
 
           
       if len(res) > 0:
           res = sorted(res) 
           return ok(str(res))
       else:
-          return error("No user found")
+          return error(b"No user found")
 
 ###### Groups ######
 
 def createGroup(admin, name):
     groupID = randomString()
-    newGroup = {"groupID":groupID, "name":name, "admin":admin, "members": [admin], "rallypoints": []}
+    newGroup = {b"groupID":groupID, b"name":name, b"admin":admin, b"members": [admin], b"rallypoints": []}
     groups.insert(newGroup)
-    users.update({"username":admin}, {"$push":{"groups":groupID}})
+    users.update({b"username":admin}, {"$push":{b"groups":{b"name": name,b"groupID":groupID}}})
     return ok("")
 
 def isGroupAdmin(username, groupID):
-    group = groups.find_one({"groupID":groupID})
-    return group != None and group["admin"] == username
+    group = groups.find_one({b"groupID":groupID})
+    return group != None and group[b"admin"] == username
     
 def addGroupMember(username, groupID, newUser):
     if isGroupAdmin(username, groupID):
-        groups.update({"groupID":groupID}, {"$push":{"members":newUser}})
-        users.update({"username":newUser}, {"$push":{"groups":groupID}})
-        return ok("")
+        groups.update({b"groupID":groupID}, {"$push":{b"members":newUser}})
+        users.update({b"username":newUser}, {"$push":{b"groups":groupID}})
+        return ok(b"")
     
     else:
-        return error("You're not the group admin!")
+        return error(b"You're not the group admin!")
     
 def remFromGroup(username, groupID, target):
     if not isGroupAdmin(username, groupID):
-        return error("You're not the admin of this group!")
+        return error(b"You're not the admin of this group!")
     
     elif username == target:
-        return error("Can't remove yourself from group while admin!")
+        return error(b"Can't remove yourself from group while admin!")
     
     else:
-        groups.update({"groupID":groupID}, {"$pop":{"members":target}})
-        users.update({"username":target}, {"$pop":{"groups":groupID}})
-        return ok("")
+        groups.update({b"groupID":groupID}, {"$pop":{b"members":target}})
+        users.update({b"username":target}, {"$pop":{b"groups":groupID}})
+        return ok(b"")
 
 def leaveGroup(username, groupID):
     if not isGroupAdmin(username, groupID):
-        groups.update({"groupID":groupID}, {"$pop":{"members":user}})
-        users.update({"username":username}, {"$pop":{"groups":groupID}})
-        return ok("")
+        groups.update({b"groupID":groupID}, {"$pop":{b"members":user}})
+        users.update({b"username":username}, {"$pop":{b"groups":groupID}})
+        return ok(b"")
     
     else:
-        return error("You can't leave group while admin, assign another user as group admin first.")
+        return error(b"You can't leave group while admin, assign another user as group admin first.")
     
     
 def getGroups(username):
-    res = users.find_one({"username":username})
+    res = users.find_one({b"username":username})
     if res != None:
         #Sort
-        res = sorted(res["groups"], key=lambda k: k["username"]) 
-        return ok(str(res))
+        #res = sorted(res["groups"], key=lambda k: k["username"])
+        return ok(str(res["groups"]))
     
     else:
         return error("Can't find user in db")
 
 def getGroupInfo(username, groupID):
-    group = groups.find_one({"groupID":groupID})
+    group = groups.find_one({b"groupID":groupID})
     if group == None:
-        return error("Group not found!")
+        return error(b"Group not found!")
     
-    elif user not in group["members"]:
-        return error("You're not a member of this group!")
+    elif user not in group[b"members"]:
+        return error(b"You're not a member of this group!")
     
     else:
-        data = {"name":group["name"], "isAdmin":(group["admin"] == username), "members":group["members"]}
+        data = {b"name":group[b"name"], b"isAdmin":(group[b"admin"] == username), b"members":group[b"members"]}
         return ok(str(data))
     
 def changeGroupOwner(username, groupID, newAdmin):
     if isGroupAdmin(username, groupID):
-        groups.update({"groupID":groupID}, {"$set":{"admin":newAdmin}})
-        return ok("")
+        groups.update({b"groupID":groupID}, {"$set":{b"admin":newAdmin}})
+        return ok(b"")
     
     else:
-        return error("You're not the owner of this group!")
+        return error(b"You're not the owner of this group!")
 
 def addRallyPoint(username, groupID, pos, text):
-    group = groups.find_one({"groupID":groupID})
+    group = groups.find_one({b"groupID":groupID})
     if group == None:
-        return error("Group not found!")
+        return error(b"Group not found!")
     
-    elif username not in group["members"]:
-        return error("You're not a member of this group!")
+    elif username not in group[b"members"]:
+        return error(b"You're not a member of this group!")
     
     else:
         #Dont know if this works, only one rallypoint per user in each group is allowed
-        groups.update({"groupID":groupID}, {"$pop", {"rallypoints": {"created_by":username}}})
+        groups.update({b"groupID":groupID}, {"$pop", {b"rallypoints": {b"created_by":username}}})
         
-        rallyPoint = {"created_by":username, "pos":pos, "text":text}
-        groups.update({"groupID":groupID},{"$push", {"rallypoints":rallyPoint}})
-        return ok("")
+        rallyPoint = {b"created_by":username, "pos":pos, b"text":text}
+        groups.update({b"groupID":groupID},{"$push", {b"rallypoints":rallyPoint}})
+        return ok(b"")
 
 def remRallyPoint(username, groupID):
-    group = groups.find_one({"groupID":groupID})
+    group = groups.find_one({b"groupID":groupID})
     if group == None:
-        return error("Group not found!")
+        return error(b"Group not found!")
     
-    elif username not in group["members"]:
-        return error("You're not a member of this group!")
+    elif username not in group[b"members"]:
+        return error(b"You're not a member of this group!")
     
     else:
         #Dont know if this works
-        groups.update({"groupID":groupID}, {"$pop", {"rallypoints": {"created_by":username}}})
-        return ok("")
+        groups.update({b"groupID":groupID}, {"$pop", {b"rallypoints": {b"created_by":username}}})
+        return ok(b"")
 
 def getRallyPoints(username, groupID):
-    group = groups.find_one({"groupID":groupID})
+    group = groups.find_one({b"groupID":groupID})
     if group == None:
-        return error("Group not found!")
+        return error(b"Group not found!")
     
-    elif username not in group["members"]:
-        return error("You're not a member of this group!")
+    elif username not in group[b"members"]:
+        return error(b"You're not a member of this group!")
     
     else:
-        return ok(str(group["rallypoints"]))
+        return ok(str(group[b"rallypoints"]))
 
     
 #### Position ####
     
 def setPos(username, lat, lon):
-    pos = {"lat":lat,"lon":lon}
-    users.update({"username":username}, {"$set":{"pos":pos}})
-    return ok("Dinmamma")
+    pos = {b"lat":lat,b"lon":lon}
+    users.update({b"username":username}, {"$set":{b"pos":pos}})
+    return ok(b"Dinmamma")
 
 def getPos(username):
-    user = users.find_one({"username":username})
+    user = users.find_one({b"username":username})
     if user != None:
-        return ok(str(user["pos"]))
+        return ok(str(user[b"pos"]))
     
     else:
-        return error("User not found")
+        return error(b"User not found")
 
 def getGroupPos(username, groupID):
-    group = groups.find_one({"groupID":groupID})
+    group = groups.find_one({b"groupID":groupID})
     if group == None:
-        return error("Group not found!")
+        return error(b"Group not found!")
     
-    elif username not in group["members"]:
-        return error("You're not a member of this group!")
+    elif username not in group[b"members"]:
+        return error(b"You're not a member of this group!")
     
     else:
         positions = []
-        for member in group["members"]:
-            res = users.find_one({"username":member})["pos"]
-            positions.append({"username": member, "pos":res["pos"], "status":res["status"]})
+        for member in group[b"members"]:
+            res = users.find_one({b"username":member})[b"pos"]
+            positions.append({b"username": member, b"pos":res[b"pos"], b"status":res[b"status"]})
             
         return ok(str(positions))
 
 def getFriendsPos(username):
-    user = user.find_one({"username":username})
+    user = user.find_one({b"username":username})
     if user == None:
-        return error("User not in db!")
+        return error(b"User not in db!")
     
     else:
         positions = []
-        for friend in user["friends"]:
-            res = users.find_one({"username":friend})
-            positions.append({"username": friend, "pos":res["pos"], "status":res["status"]})
+        for friend in user[b"friends"]:
+            res = users.find_one({b"username":friend})
+            positions.append({b"username": friend, b"pos":res[b"pos"], b"status":res[b"status"]})
             
         return ok(str(positions))
 
@@ -333,18 +338,18 @@ def getFriendsPos(username):
 #### Push ####
 
 def registerPush(username, pushID):
-    users.update({"username": username}, {"$set": {"pushID": pushID}})
-    return ok("")
+    users.update({b"username": username}, {"$set": {b"pushID": pushID}})
+    return ok(b"")
 
 def removePush(username):
-    users.update({"username": username}, {"$set": {"pushID": ""}})
-    return ok("")
+    users.update({b"username": username}, {"$set": {b"pushID": b""}})
+    return ok(b"")
 
 def pushReq(target,data):
-    pushID = users.find_one({"username":target})["pushID"]
-    if pushID != "":
+    pushID = users.find_one({b"username":target})[b"pushID"]
+    if pushID != b"":
         response = gcm.json_request(registration_ids=pushID, data=data)
-        print "push sent to "+ pushID +"\n" + response
+        print b"push sent to "+ pushID +b"\n" + response
     
 #### Other ####
 
