@@ -116,8 +116,7 @@ public class Map extends MapActivity {
 			
 			public void onLocationChanged(Location location) {
 				point = new GeoPoint((int)(location.getLatitude()*1E6), (int)(location.getLongitude()*1E6));
-
-								
+			
 				JSONObject toServer = new JSONObject();
 				JSONObject data = new JSONObject();
 				try {
@@ -197,12 +196,10 @@ public class Map extends MapActivity {
 		
 		myLocation = new MyLocationOverlay(this, mapView);
 		mapView.getOverlays().add(myLocation);
-		
-		control.setCenter(point);
-		control.setZoom(20);
-		////////
-		
 		mapOverlays = mapView.getOverlays();
+		
+		//control.setCenter(point);
+		//control.setZoom(20);
 		
 		/*
 		int friendPosLat, friendPosLong; //testpoint at pastavagnen

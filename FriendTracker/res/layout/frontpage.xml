@@ -44,7 +44,7 @@
         android:layout_alignTop="@+id/mapmenu"
         android:onClick="MenuBtn"
         android:src="@drawable/notification"
-        android:tag="Notification"
+        android:tag="Notifications"
         android:background="@null" />
 
     <ImageButton
@@ -68,5 +68,17 @@
         android:src="@drawable/settings"
         android:tag="Setting"
         android:background="@null" />
+
+    <EditText
+        android:id="@+id/err"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:tag="derp" >
+
+        <requestFocus />
+    </EditText>
 
 </RelativeLayout>
