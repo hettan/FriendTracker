@@ -141,5 +141,14 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        
+        <activity
+            android:name=".CreateGroups">
+            <intent-filter>
+                <action android:name="sv.teamAwesome.friendtracker.CREATEGROUPS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
     </application>
 </manifest>
