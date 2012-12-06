@@ -1,9 +1,9 @@
 <resources>
 
-    <string name="app_name">FriendTracker</string>
+    <string name="app_name"></string>
     <string name="hello_world">Herpaderpaderp!!</string>
     <string name="menu_settings">Settings</string>
-    <string name="title_activity_main">FriendTracker</string>
+    <string name="title_activity_main">FT</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">Login</string>

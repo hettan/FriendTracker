@@ -44,7 +44,7 @@
         android:layout_alignTop="@+id/mapmenu"
         android:onClick="MenuBtn"
         android:src="@drawable/notification"
-        android:tag="Notification"
+        android:tag="Notifications"
         android:background="@null" />
 
     <ImageButton
