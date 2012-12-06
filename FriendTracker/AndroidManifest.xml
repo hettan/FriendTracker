@@ -42,8 +42,7 @@
         <service android:name=".GCMIntentService" />
         
         <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main" >
+            android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -52,7 +51,7 @@
         
         <activity 
             android:name=".Setting"
-            android:label="@string/title_activity_main">
+            android:theme="@style/SettingBround">
             <intent-filter>
                 <category android:name="sv.teamAwesome.friendtracker.SETTING" />
                 <action android:name="android.intent.category.DEFAULT" />
@@ -60,8 +59,7 @@
         </activity>
         
         <activity 
-            android:name=".ResetSettings"
-        	android:label="@string/title_activity_main">
+            android:name=".ResetSettings">
             <intent-filter>
                 <category android:name="sv.teamAwesome.friendtracker.RESETSETTINGS" />
                 <action android:name="android.intent.category.DEFAULT" />
@@ -69,16 +67,14 @@
         </activity>
  
         <activity
-            android:name=".Register"
-            android:label="@string/title_activity_main" >
+            android:name=".Register">
             <intent-filter>
                 <action android:name="sv.teamAwesome.friendtracker.REGISTER" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".FrontPage"
-            android:label="@string/title_activity_main" >
+            android:name=".FrontPage">
             <intent-filter>
                 <action android:name="sv.teamAwesome.friendtracker.FRONTPAGE" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -107,8 +103,7 @@
         </activity>
         
         <activity
-            android:name=".Groups"
-            android:label="@string/title_activity_main" >
+            android:name=".Groups">
             <intent-filter>
                 <action android:name="sv.teamAwesome.friendtracker.GROUPS" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -116,8 +111,7 @@
         </activity>
         
         <activity
-            android:name=".Map"
-            android:label="@string/title_activity_main" >
+            android:name=".Map">
             <intent-filter>
                 <action android:name="sv.teamAwesome.friendtracker.MAP" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -125,8 +119,7 @@
         </activity>
         
         <activity
-            android:name=".Notifications"
-            android:label="@string/title_activity_main" >
+            android:name=".Notifications">
             <intent-filter>
                 <action android:name="sv.teamAwesome.friendtracker.NOTIFICATIONS" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -134,8 +127,7 @@
         </activity>
         
         <activity
-            android:name=".Exit"
-            android:label="@string/title_activity_main" >
+            android:name=".Exit">
             <intent-filter>
                 <action android:name="sv.teamAwesome.friendtracker.EXIT" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -143,8 +135,7 @@
         </activity>
         
         <activity
-            android:name=".Search"
-            android:label="@string/title_activity_main" >
+            android:name=".Search">
             <intent-filter>
                 <action android:name="sv.teamAwesome.friendtracker.SEARCH" />
                 <category android:name="android.intent.category.DEFAULT" />
