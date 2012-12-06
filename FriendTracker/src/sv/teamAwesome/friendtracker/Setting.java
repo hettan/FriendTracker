@@ -1,10 +1,12 @@
 package sv.teamAwesome.friendtracker;
 
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 
 public class Setting extends PreferenceActivity {
 	private static final String TAG = "SET";
@@ -12,6 +14,8 @@ public class Setting extends PreferenceActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {        
         super.onCreate(savedInstanceState);        
+		getWindow().setFormat(PixelFormat.RGBA_8888);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
         addPreferencesFromResource(R.xml.preferences);        
     }
     
