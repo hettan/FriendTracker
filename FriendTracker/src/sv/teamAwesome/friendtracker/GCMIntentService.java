@@ -25,13 +25,18 @@ public class GCMIntentService extends GCMBaseIntentService{
 	@Override
 	protected void onRegistered(Context context, String regId) {
 		
-		//DERP!
+		/*
+		 * TODO:
+		 * Måste registrera mot servern här. Annars så kommer push att bli derpat om google registrerar om.
+		 */
 	}
 
 	@Override
 	protected void onUnregistered(Context context, String regId) {
 		
-		//DERP!
+		/*
+		 * Borde kanske kunna avregistrera push i settings??
+		 */
 	}	
 
 	@Override
@@ -46,11 +51,15 @@ public class GCMIntentService extends GCMBaseIntentService{
 		 * 			2 	GroupInvite
 		 * 			3 	Buzz
 		 */
-		int nCategory = 0;
+		
+		int nCategory = Integer.parseInt(intent.getStringExtra("type"));
+		String nUser = intent.getStringExtra("user");
+		String nGroup = intent.getStringExtra("group");
+		String nMessage = intent.getStringExtra("message");
+		Log.v("NotificationManager", "Got note of type: "+nCategory);
 		
 		// Construct Intent to be started when note is clicked
-		Intent targetIntent = new Intent("sv.teamAwesome.friendtracker.FRONTPAGE");
-		targetIntent.putExtra(String.valueOf(nCategory), 1);
+		Intent targetIntent = new Intent("sv.teamAwesome.friendtracker.NOTIFICATIONS");
         PendingIntent nIntent = 
             PendingIntent.getActivity(context, 0, targetIntent, 0);
  
@@ -63,17 +72,25 @@ public class GCMIntentService extends GCMBaseIntentService{
         
         switch(nCategory) {
         case 1:
-        	message = "You have a friendrequest!";
-        	Log.v(TAG, "Note: Friendrequest");
+        	title = "You have a friendrequest!";
+        	message = nUser+ " wants to add you as a friend!";
+        	Log.v("NotificationManager", "Note: Friendrequest");
+        	break;
         case 2:
-        	message = "You have been invited to a group!";
-        	Log.v(TAG, "Note: Groupinvite");
+        	title = "You have been invited to a group!";
+        	message = nUser+ " has invited you to join group \""+nGroup+"\"";
+        	Log.v("NotificationManager", "Note: Groupinvite");
+        	break;
         case 3:
-        	message = "You have been buzzed!";
-        	Log.v(TAG, "Note: Buzz");
+        	title = "You have been buzzed!";
+        	message = nUser+": "+nMessage;
+        	Log.v("NotificationManager", "Note: Buzz");
+        	break;
         default:	
-        	message = "FriendTracker is derped :(";
-        	Log.v(TAG, "Note: ERROR!");
+        	title = "FriendTracker is derped :(";
+        	message = "No category set. User: "+nUser;
+        	Log.v("NotificationManager", "Note: ERROR!");
+        	break;
         }
         
         Notification note = new Notification(
@@ -82,7 +99,7 @@ public class GCMIntentService extends GCMBaseIntentService{
             System.currentTimeMillis());
       
         note.setLatestEventInfo(context, title, message, nIntent);
-        noteManager.notify(nCategory, note);
+        noteManager.notify(nUser, nCategory, note);
 	}
 
 	@Override
@@ -95,14 +112,4 @@ public class GCMIntentService extends GCMBaseIntentService{
 		return super.onRecoverableError(context, errorId);
 	}
 }
-
-
-/*	== Ska finnas under onCreate() ==
- * GCMRegistrar.checkDevice(this);
- * GCMRegistrar.checkManifest(this);
- * final String regId = GCMRegistrar.getRegistrationId(this);
- * if (regId.equals("")) {
- *    GCMRegistrar.register(this, "377927318664");
- * }
- **/
 
