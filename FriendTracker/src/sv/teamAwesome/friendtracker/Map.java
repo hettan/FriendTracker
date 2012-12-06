@@ -106,6 +106,8 @@ public class Map extends MapActivity {
 		
 		
 		final MapController control = mapView.getController();
+		control.animateTo(point);
+		control.setZoom(20);
 		
 		LocationManager manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		
