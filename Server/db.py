@@ -25,7 +25,34 @@ def ok():
 
 #OK-response begins with 1
 def ok(data):
+    print data
     return b"1"+data+b"\n"
+
+def decode_dict(data):
+    rv = {}
+    for key, value in data.iteritems():
+        if isinstance(key, unicode):
+           key = key.encode('utf-8')
+        if isinstance(value, unicode):
+           value = value.encode('utf-8')
+        elif isinstance(value, list):
+           value = decode_list(value)
+        elif isinstance(value, dict):
+           value = decode_dict(value)
+        rv[key] = value
+    return rv
+
+def decode_list(data):
+    rv = []
+    for item in data:
+        if isinstance(item, unicode):
+            item = item.encode('utf-8')
+        elif isinstance(item, list):
+            item = decode_list(item)
+        elif isinstance(item, dict):
+            item = decode_dict(item)
+        rv.append(item)
+    return rv
 
 #### Account Management #####
 
@@ -44,7 +71,7 @@ def changePassword(username, oldPassword, newPassword):
     user = users.find_one({b"username": username})
     if user != None:
         if user[b"password"] == oldPassword:
-            users.update({"username":username},{"$set":{b"password":newPassword}})
+            users.update({b"username":username},{"$set":{b"password":newPassword}})
             return ok(b"Password changed!")
         
         else:
@@ -119,6 +146,7 @@ def addFriendReq(src, target):
         return error("User is already friend with you or you've aldready made a friend request!")
 
 def acceptFriendReq(src, requester):
+    print "src="+ src + "req="+ requester
     #Remove from requests
     users.update({b"username":src},{"$pop":{b"requests":{b"username":requester}}})
     
@@ -129,6 +157,7 @@ def acceptFriendReq(src, requester):
     #Update modified
     users.update({b"username":src},{"$set":{b"friendsMod":time.time()}})
     users.update({b"username":requester},{"$set":{b"friendsMod":time.time()}})
+    return ok(b"")
 
 def getFriendReq(username):
     user = users.find_one({b"username":username})
@@ -148,8 +177,9 @@ def getFriends(username):
     #Sort
     requests = user[b"requests"]
     #friends = sorted(friends, key=lambda k: k["username"])
-    #requests = sorted(user["requests"], key=lambda k: k["requester"]) 
-    return ok(str({b"friends":friends, b"requests":requests}))
+    #requests = sorted(user["requests"], key=lambda k: k["requester"])
+    out = decode_dict({b"friends":friends, b"requests":requests})
+    return ok(str(out))
 
 def getFriendsIfMod(username, ts):
     user = users.find_one({b"username":username})
@@ -224,10 +254,11 @@ def getGroups(username):
     if res != None:
         #Sort
         #res = sorted(res["groups"], key=lambda k: k["username"])
-        return ok(str(res["groups"]))
+        out = decode_list(res[b"groups"])
+        return ok(str(out))
     
     else:
-        return error("Can't find user in db")
+        return error(b"Can't find user in db")
 
 def getGroupInfo(username, groupID):
     group = groups.find_one({b"groupID":groupID})

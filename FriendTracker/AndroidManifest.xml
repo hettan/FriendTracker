@@ -42,7 +42,9 @@
         <service android:name=".GCMIntentService" />
         
         <activity
-            android:name=".MainActivity">
+            android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -51,7 +53,9 @@
         
         <activity 
             android:name=".Setting"
-            android:theme="@style/SettingBround">
+            android:label="@string/title_activity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation">
             <intent-filter>
                 <category android:name="sv.teamAwesome.friendtracker.SETTING" />
                 <action android:name="android.intent.category.DEFAULT" />
@@ -59,7 +63,10 @@
         </activity>
         
         <activity 
-            android:name=".ResetSettings">
+            android:name=".ResetSettings"
+            android:label="@string/title_activity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation">
             <intent-filter>
                 <category android:name="sv.teamAwesome.friendtracker.RESETSETTINGS" />
                 <action android:name="android.intent.category.DEFAULT" />
@@ -67,35 +74,50 @@
         </activity>
  
         <activity
-            android:name=".Register">
+            android:name=".Register"
+            android:label="@string/title_activity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation">
             <intent-filter>
                 <action android:name="sv.teamAwesome.friendtracker.REGISTER" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".FrontPage">
+            android:name=".FrontPage"
+            android:label="@string/title_activity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation">
             <intent-filter>
                 <action android:name="sv.teamAwesome.friendtracker.FRONTPAGE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".FriendsTab" >
+            android:name=".FriendsTab"
+            android:label="@string/title_activity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation">
             <intent-filter>
                 <action android:name="sv.teamAwesome.friendtracker.FRIENDSTAB" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".OnlineTab" >
+            android:name=".OnlineTab"
+            android:label="@string/title_activity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation">
             <intent-filter>
                 <action android:name="sv.teamAwesome.friendtracker.ONLINETAB" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".AllTab" >
+            android:name=".AllTab"
+            android:label="@string/title_activity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation">
             <intent-filter>
                 <action android:name="sv.teamAwesome.friendtracker.ALLTAB" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -103,7 +125,10 @@
         </activity>
         
         <activity
-            android:name=".Groups">
+            android:name=".Groups"
+            android:label="@string/title_activity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation">
             <intent-filter>
                 <action android:name="sv.teamAwesome.friendtracker.GROUPS" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -111,7 +136,10 @@
         </activity>
         
         <activity
-            android:name=".Map">
+            android:name=".Map"
+            android:label="@string/title_activity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation">
             <intent-filter>
                 <action android:name="sv.teamAwesome.friendtracker.MAP" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -119,7 +147,10 @@
         </activity>
         
         <activity
-            android:name=".Notifications">
+            android:name=".Notifications"
+            android:label="@string/title_activity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation">
             <intent-filter>
                 <action android:name="sv.teamAwesome.friendtracker.NOTIFICATIONS" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -127,7 +158,10 @@
         </activity>
         
         <activity
-            android:name=".Exit">
+            android:name=".Exit"
+            android:label="@string/title_activity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation">
             <intent-filter>
                 <action android:name="sv.teamAwesome.friendtracker.EXIT" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -135,11 +169,23 @@
         </activity>
         
         <activity
-            android:name=".Search">
+            android:name=".Search"
+            android:label="@string/title_activity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation">
             <intent-filter>
                 <action android:name="sv.teamAwesome.friendtracker.SEARCH" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        
+        <activity
+            android:name=".CreateGroups">
+            <intent-filter>
+                <action android:name="sv.teamAwesome.friendtracker.CREATEGROUPS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
     </application>
 </manifest>
