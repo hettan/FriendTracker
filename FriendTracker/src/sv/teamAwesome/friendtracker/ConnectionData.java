@@ -2,8 +2,6 @@ package sv.teamAwesome.friendtracker;
 
 import java.lang.reflect.Method;
 
-import org.json.JSONObject;
-
 import android.util.Log;
 
 public class ConnectionData {
