@@ -16,11 +16,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.ArrayAdapter;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TabHost.TabContentFactory;
 
 public class FriendsTab extends TabActivity {
@@ -29,7 +31,6 @@ public class FriendsTab extends TabActivity {
 	private static final String LIST2_TAB_TAG = "All";
 	private static final String LIST3_TAB_TAG = "Requests";
     TabHost tabHost;
-	final Object me = this;
 	  private ListView listView1;
 	  private ListView listView2;
 	  private ListView listView3;
@@ -38,7 +39,7 @@ public class FriendsTab extends TabActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.friends);
-
+    	final Object me = this;
  
         tabHost = (TabHost)findViewById(android.R.id.tabhost);
         listView1 = (ListView) findViewById(R.id.list1);
@@ -60,6 +61,36 @@ public class FriendsTab extends TabActivity {
 				return listView3;
 			}
 		}));
+		
+		listView3.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView parent, View view, int position, long id) {
+				String item = (String) listView3.getAdapter().getItem(position);
+				if(item != null) {			
+					JSONObject toServer = new JSONObject();
+					JSONObject data = new JSONObject();
+					try {
+						data.put("src", Config.USERNAME);
+						data.put("requester", item);
+						toServer.put("type", "acceptReq");
+						toServer.put("data", data);
+					} catch (Exception e) {
+						
+					}
+					String toSend = toServer.toString();
+					Log.v(TAG, "me= " + me.toString());
+					try {
+			            Class[] params = {String.class, Boolean.class};
+						
+						ConnectionData connData = new ConnectionData(FriendsTab.class.getMethod("CallbackAccept", params), me, toSend);
+
+						AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+					} catch(Exception e) {
+						Log.v(TAG, "Error: " + e.toString());
+					}
+				}
+			}
+		});
+		
         tabHost.setCurrentTabByTag("All");
      	JSONObject toServer = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -121,6 +152,14 @@ public class FriendsTab extends TabActivity {
 			Log.v(TAG, "Error");
 		}
 	}
+	
+	public void CallbackAccept(String res, Boolean error) {
+		Log.v(TAG, "Callback: " + res);
+		if(error) {
+			Log.v(TAG, "Error");
+		}
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add(0, 0, 1, "Search");
