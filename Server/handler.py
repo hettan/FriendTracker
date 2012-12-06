@@ -6,11 +6,25 @@ import db
 handler = {}
 
 def request_handler(jsonStr):
-    jData = json.loads(jsonStr)
-    print jData
-
+    jData = json.loads(jsonStr, object_hook=decode_dict)
     func = handler[jData["type"]]
+    print jData
     return func(jData["data"])
+
+#Python makes string to unicode by standard, need to decode this
+def decode_dict(data):
+    rv = {}
+    for key, value in data.iteritems():
+        if isinstance(key, unicode):
+           key = key.encode('utf-8')
+        if isinstance(value, unicode):
+           value = value.encode('utf-8')
+        elif isinstance(value, list):
+           value = decode_list(value)
+        elif isinstance(value, dict):
+           value = decode_dict(value)
+        rv[key] = value
+    return rv
 
 
 #### Account Management ####
@@ -34,7 +48,7 @@ def addReq(data):
     return db.addFriendReq(data["src"], data["target"])
     
 def acceptReq(data):
-    return db.acceptFriendReq(data["src"], data["target"])
+    return db.acceptFriendReq(data["src"], data["requester"])
 
 def getFriendReq(data):
     return db.getFriendReq(data["username"])

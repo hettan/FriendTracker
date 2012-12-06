@@ -38,7 +38,7 @@ public class Search extends Activity {
 					JSONObject data = new JSONObject();
 					try {
 						data.put("src", Config.USERNAME);
-						data.put("target", searchtxt.getText().toString());
+						data.put("target", item);
 						toServer.put("type", "request");
 						toServer.put("data", data);
 					} catch (Exception e) {
