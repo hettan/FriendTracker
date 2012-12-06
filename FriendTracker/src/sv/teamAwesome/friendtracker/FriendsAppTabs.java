@@ -1,17 +1,13 @@
 package sv.teamAwesome.friendtracker;
 
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 
 public class FriendsAppTabs {
-	private static final String TAG = "FRIENDS";
+	//private static final String TAG = "FRIENDS";
 	final Object me = this;
 	
     public static void setMyTabs(TabHost tabHost, Context context){
