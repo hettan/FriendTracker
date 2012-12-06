@@ -1,14 +1,11 @@
 package sv.teamAwesome.friendtracker;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+
 
 public class Setting extends PreferenceActivity {
 	private static final String TAG = "SET";
@@ -16,7 +13,7 @@ public class Setting extends PreferenceActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {        
         super.onCreate(savedInstanceState);        
-        addPreferencesFromResource(R.xml.preferences);
+        addPreferencesFromResource(R.xml.preferences);        
     }
     
     @Override
