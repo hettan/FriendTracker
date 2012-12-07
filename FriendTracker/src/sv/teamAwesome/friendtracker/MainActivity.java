@@ -4,6 +4,9 @@ import org.json.JSONObject;
 
 import com.google.android.gcm.GCMRegistrar;
 
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,12 +18,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 
-
 /*
  * TODO:
- * 	onResume() mŒste registrera push.
+ * 	onResume() mï¿½ste registrera push.
  * 	Om man inte registrerat google-konto, loggar in i appen och sen registrerar google-konto
- * 	kommer inte push registreras fšrens appen startar om.
+ * 	kommer inte push registreras fï¿½rens appen startar om.
  */
 
 public class MainActivity extends Activity {
@@ -48,6 +50,7 @@ public class MainActivity extends Activity {
 		final EditText password = (EditText) findViewById(R.id.passwordtv);
 		Button login = (Button) findViewById(R.id.loginbtn);
 		Button register = (Button) findViewById(R.id.regbtn);
+		Button override = (Button) findViewById(R.id.override);
 		
 		login.setOnClickListener(new View.OnClickListener() {
 			
@@ -87,6 +90,13 @@ public class MainActivity extends Activity {
 				
 				Intent regis = new Intent("sv.teamAwesome.friendtracker.REGISTER");
 				startActivity(regis);
+			}
+		});
+		override.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				Intent skip = new Intent("sv.teamAwesome.friendtracker.FRONTPAGE");
+				startActivity(skip);
 			}
 		});
 	}

@@ -39,8 +39,9 @@ public class Map extends MapActivity {
 	List<Overlay> mapOverlays;
 	MapView mapView;
 	GeoPoint point;
-	
+	MapController control;
 	View importPanel;
+	Boolean FirstLoc = true;
 	//HashMap<String, GeoPoint> friendPos;
 	List<String> fUser = null;
 	List<GeoPoint> fPos = null;
@@ -48,6 +49,7 @@ public class Map extends MapActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+		Log.v(TAG, "Error 1");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map);
 
@@ -63,16 +65,17 @@ public class Map extends MapActivity {
 		
 		mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
-		
+		control = mapView.getController();
+
 		final Drawable drawable = getResources().getDrawable(R.drawable.marker);
 		
 		Button statusbtn = (Button) findViewById(R.id.statusBtn);
 		final EditText statustxt = (EditText) findViewById(R.id.statusTxt);
-		
+		Log.v(TAG, "Error 0");
 		statusbtn.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				
+				Log.v(TAG, "Error 1");
 				String status = statustxt.getText().toString();
 				
 				JSONObject toServer = new JSONObject();
@@ -103,19 +106,18 @@ public class Map extends MapActivity {
 				importPanel.setVisibility(View.INVISIBLE);
 			}
 		});
-		
-		
-		final MapController control = mapView.getController();
-		
-		//control.setZoom(20);
-		
+
 		LocationManager manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		
 		LocationListener listener = new LocationListener() {
 			
 			public void onLocationChanged(Location location) {
 				point = new GeoPoint((int)(location.getLatitude()*1E6), (int)(location.getLongitude()*1E6));
-				
+				if(FirstLoc) {
+					control.animateTo(point);
+					control.setZoom(20);
+					FirstLoc = false;
+				}
 				JSONObject toServer = new JSONObject();
 				JSONObject data = new JSONObject();
 				try {
@@ -127,7 +129,6 @@ public class Map extends MapActivity {
 				} catch (Exception e) {
 					
 				}
-				
 				String toSend = toServer.toString();
 				try {
 		            Class[] params = {String.class, Boolean.class};
