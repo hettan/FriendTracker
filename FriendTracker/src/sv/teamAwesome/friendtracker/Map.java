@@ -107,7 +107,8 @@ public class Map extends MapActivity {
 			}
 		});
 
-		LocationManager manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);	
+		LocationManager manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+		
 		LocationListener listener = new LocationListener() {
 			
 			public void onLocationChanged(Location location) {
@@ -192,6 +193,7 @@ public class Map extends MapActivity {
 		};
 		
 		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.USER_POSITION_UPDATE_INTERVAL, 0, listener);
+		//control.animateTo(point);
 		
 		myLocation = new MyLocationOverlay(this, mapView);
 		mapView.getOverlays().add(myLocation);

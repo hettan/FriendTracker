@@ -15,6 +15,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 
+
+/*
+ * TODO:
+ * 	onResume() måste registrera push.
+ * 	Om man inte registrerat google-konto, loggar in i appen och sen registrerar google-konto
+ * 	kommer inte push registreras förens appen startar om.
+ */
+
 public class MainActivity extends Activity {
 	private static final String TAG = "MAIN";
 	
