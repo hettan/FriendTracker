@@ -6,6 +6,6 @@
     android:layout_height="fill_parent"
     android:clickable="true"
     android:enabled="true"
-	android:apiKey="0EbrDHH7e5jrEcedfMlHLN0rXK4iAfstastLkrw"
+	android:apiKey="0Hdk8ZATdfShGrjE3Vw0CQR8ecW0F_rqQNFp_Ew"
     android:visibility="visible"
     style="@style/mapView" />

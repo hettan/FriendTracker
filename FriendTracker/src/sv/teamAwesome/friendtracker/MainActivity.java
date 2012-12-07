@@ -40,6 +40,7 @@ public class MainActivity extends Activity {
 		final EditText password = (EditText) findViewById(R.id.passwordtv);
 		Button login = (Button) findViewById(R.id.loginbtn);
 		Button register = (Button) findViewById(R.id.regbtn);
+		Button override = (Button) findViewById(R.id.override);
 		
 		login.setOnClickListener(new View.OnClickListener() {
 			
@@ -79,6 +80,13 @@ public class MainActivity extends Activity {
 				
 				Intent regis = new Intent("sv.teamAwesome.friendtracker.REGISTER");
 				startActivity(regis);
+			}
+		});
+		override.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				Intent skip = new Intent("sv.teamAwesome.friendtracker.FRONTPAGE");
+				startActivity(skip);
 			}
 		});
 	}
