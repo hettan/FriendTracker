@@ -7,6 +7,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.util.Log;
 
 //import sv.teamAwesome.friendtracker.Config.SENDER_ID;
@@ -27,7 +30,7 @@ public class GCMIntentService extends GCMBaseIntentService{
 		
 		/*
 		 * TODO:
-		 * MŒste registrera mot servern hŠr. Annars sŒ kommer push att bli derpat om google registrerar om.
+		 * Mï¿½ste registrera mot servern hï¿½r. Annars sï¿½ kommer push att bli derpat om google registrerar om.
 		 */
 	}
 
@@ -100,6 +103,14 @@ public class GCMIntentService extends GCMBaseIntentService{
       
         note.setLatestEventInfo(context, title, message, nIntent);
         noteManager.notify(nUser, nCategory, note);
+        
+        
+        //plays the standard message sound, should work when you get a notification if placed here. otherwise move it.
+		 try {
+		        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+		        Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+		        r.play();
+		    } catch (Exception e) {}
 	}
 
 	@Override
