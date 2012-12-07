@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewStub;
@@ -45,6 +46,7 @@ public class Map extends MapActivity {
 	//HashMap<String, GeoPoint> friendPos;
 	List<String> fUser = null;
 	List<GeoPoint> fPos = null;
+	Boolean setPoint = false;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -192,6 +194,26 @@ public class Map extends MapActivity {
 			}
 		};
 		
+
+		mapView.setOnTouchListener(new View.OnTouchListener() {
+			public boolean onTouch(View v, MotionEvent event) {
+				GeoPoint RP = mapView.getProjection().fromPixels((int) event.getX(), (int) event.getY());
+				PointerOverlay pointerOverlay = new PointerOverlay(drawable, mapView);
+				Log.v(TAG, "setPoint: " + setPoint);
+				if(event.getAction() == MotionEvent.ACTION_UP) {
+					if(setPoint) {
+						OverlayItem overlayitem = new OverlayItem(RP, "Hej", "Derp");
+						pointerOverlay.addOverlay(overlayitem);
+						mapOverlays.add(pointerOverlay);
+						mapView.invalidate();
+					}
+				setPoint = false;
+				}
+				return true;
+			}
+		});
+
+		
 		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.USER_POSITION_UPDATE_INTERVAL, 0, listener);
 		//control.animateTo(point);
 		
@@ -225,6 +247,8 @@ public class Map extends MapActivity {
 		//mapOverlays.add(pointerOverlay);
 	}	
 
+
+	
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -245,17 +269,21 @@ public class Map extends MapActivity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, 0, 1, "Status");
+		menu.add(0, 1, 1, "Status");
+		menu.add(0, 2, 2, "Add Point");
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == 0) {
+		if (item.getItemId() == 1) {
 			if(importPanel.getVisibility() != View.VISIBLE)
 				importPanel.setVisibility(View.VISIBLE);
 			else
 				importPanel.setVisibility(View.INVISIBLE);
+		}
+		if (item.getItemId() == 2) {
+			setPoint = true;
 		}
 		return true;
 	}
