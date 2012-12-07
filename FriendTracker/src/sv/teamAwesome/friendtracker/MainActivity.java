@@ -92,6 +92,7 @@ public class MainActivity extends Activity {
 				startActivity(regis);
 			}
 		});
+		
 		override.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
