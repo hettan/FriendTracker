@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -58,6 +59,8 @@ public class CreateGroups extends Activity {
 	}
 	public void Callback(String res, Boolean error) {
 		if(!error) {
+			Intent ok = new Intent("sv.teamAwesome.friendtracker.GROUPS");
+			startActivity(ok);
 
 		} else {
 
