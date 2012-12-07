@@ -106,8 +106,8 @@ public class Map extends MapActivity {
 		
 		
 		final MapController control = mapView.getController();
-		control.animateTo(point);
-		control.setZoom(20);
+		
+		//control.setZoom(20);
 		
 		LocationManager manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		
@@ -115,7 +115,7 @@ public class Map extends MapActivity {
 			
 			public void onLocationChanged(Location location) {
 				point = new GeoPoint((int)(location.getLatitude()*1E6), (int)(location.getLongitude()*1E6));
-			
+				
 				JSONObject toServer = new JSONObject();
 				JSONObject data = new JSONObject();
 				try {
@@ -192,6 +192,7 @@ public class Map extends MapActivity {
 		};
 		
 		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.USER_POSITION_UPDATE_INTERVAL, 0, listener);
+		//control.animateTo(point);
 		
 		myLocation = new MyLocationOverlay(this, mapView);
 		mapView.getOverlays().add(myLocation);
