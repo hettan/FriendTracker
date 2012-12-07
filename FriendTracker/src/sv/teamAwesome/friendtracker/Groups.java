@@ -27,6 +27,8 @@ public class Groups extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getWindow().setFormat(PixelFormat.RGBA_8888);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
 		setContentView(R.layout.groups);
 		final Object me = this;
 
