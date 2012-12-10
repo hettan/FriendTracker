@@ -17,6 +17,9 @@ public class FrontPage extends Activity{
 		getWindow().setFormat(PixelFormat.RGBA_8888);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
 		setContentView(R.layout.frontpage);
+		
+		Intent backgroundService = new Intent(getApplicationContext(), BackgroundService.class);
+	    startService(backgroundService);
 	}
 	
 	public void MenuBtn(View v) {
@@ -35,6 +38,7 @@ public class FrontPage extends Activity{
             }
         }
         Intent menuSwap = new Intent(v.getContext(), aClass);
+        menuSwap.putExtra("type", "All");
         startActivity(menuSwap);
 	}	
 }

@@ -53,6 +53,9 @@ def acceptReq(data):
 def getFriendReq(data):
     return db.getFriendReq(data["username"])
 
+def getRequests(data):
+    return db.getRequests(data["username"])
+
 def getFriends(data):
     return db.getFriends(data["username"])
 
@@ -124,6 +127,7 @@ handler["setStatus"] = setStatus
 handler["request"] = addReq
 handler["acceptReq"] = acceptReq
 handler["getFriendReq"] = getFriendReq
+handler["getRequests"] = getRequests
 handler["getFriends"] = getFriends
 handler["getFriendsIfMod"] = getFriendsIfMod
 handler["userSearch"] = userSearch

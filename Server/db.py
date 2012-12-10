@@ -29,8 +29,8 @@ def ok(data):
         data = decode_list(data)
     elif isinstance(data,dict):
         data = decode_list(data)
-        
-    return b"1"+data+b"\n"
+    print "OK - Data="+str(data)
+    return b"1"+str(data)+b"\n"
 
 def decode_dict(data):
     rv = {}
@@ -136,14 +136,14 @@ def isFriend(src,target):
     if target == None:
         return True
     else:
-        return (src in target[b"friends"]) or (src in target[b"requests"][b"requester"])  
+        return (src in target[b"friends"]) or ({b"requester":src, b"type":b"friend"} in target[b"requests"])  
 
 def addFriendReq(src, target):
     if not isFriend(src,target):
         time = datetime.datetime.now()
-        req = {b"requester":src, b"time":time.strftime("%m-%d-%H-%M")} #Month-Day-Hour-Minute
+        req = {b"requester":src, b"time":time.strftime("%m-%d-%H-%M"), b"type":b"friend"} #Month-Day-Hour-Minute
         users.update({b"username":target}, {"$push": {b"requests": req}})
-        #pushReq(target,{"type":"friend","data":src})
+        pushReq(target,{"type":"friend","data":src})
         return ok(b"")
     
     else:
@@ -165,12 +165,15 @@ def acceptFriendReq(src, requester):
 
 def getFriendReq(username):
     user = users.find_one({b"username":username})
-    return ok(str(user[b"requests"]))
+    return ok(filter(lambda req: req[b"type"]==b"friend", user[b"requests"]))
+
+def getRequests(username):
+    user = users.find_one({b"username":username})
+    return ok(user[b"requests"])
 
 #Returns both friends and requests
 def getFriends(username):
     user = users.find_one({b"username":username})
-
     #Flag active friends
     friends = []
     for friend in user[b"friends"]:
@@ -182,13 +185,13 @@ def getFriends(username):
     requests = user[b"requests"]
     #friends = sorted(friends, key=lambda k: k["username"])
     #requests = sorted(user["requests"], key=lambda k: k["requester"])
-    out = decode_dict({b"friends":friends, b"requests":requests})
-    return ok(str(out))
+    #out = decode_dict({b"friends":friends, b"requests":requests})
+    return ok({b"friends":friends, b"requests":requests})
 
 def getFriendsIfMod(username, ts):
     user = users.find_one({b"username":username})
     if user[b"friendsMod"] != ts:
-        return ok(str({b"friends":user[b"friends"], b"timestamp": user[b"friendsMod"]}))
+        return ok({b"friends":user[b"friends"], b"timestamp": user[b"friendsMod"]})
     
     else:
         return error(b"No change")
@@ -196,8 +199,7 @@ def getFriendsIfMod(username, ts):
 def userSearch(query):
       regexp = "(?i).*(" + query + ")+.*"; #Gets all users that contains the phrase in their username
       search_res = users.find({b"username":{"$regex":regexp}})
-      print query
-      print "d" + str(search_res)
+      print "query = "+query
       res = []
       for user in search_res:
           res.append(user[b"username"])
@@ -205,7 +207,7 @@ def userSearch(query):
           
       if len(res) > 0:
           res = sorted(res) 
-          return ok(str(res))
+          return ok(res)
       else:
           return error(b"No user found")
 
@@ -258,8 +260,8 @@ def getGroups(username):
     if res != None:
         #Sort
         #res = sorted(res["groups"], key=lambda k: k["username"])
-        out = decode_list(res[b"groups"])
-        return ok(str(out))
+        #out = decode_list(res[b"groups"])
+        return ok(res[b"groups"])
     
     else:
         return error(b"Can't find user in db")
@@ -274,7 +276,7 @@ def getGroupInfo(username, groupID):
     
     else:
         data = {b"name":group[b"name"], b"isAdmin":(group[b"admin"] == username), b"members":group[b"members"]}
-        return ok(str(data))
+        return ok(data)
     
 def changeGroupOwner(username, groupID, newAdmin):
     if isGroupAdmin(username, groupID):
@@ -322,7 +324,7 @@ def getRallyPoints(username, groupID):
         return error(b"You're not a member of this group!")
     
     else:
-        return ok(str(group[b"rallypoints"]))
+        return ok(group[b"rallypoints"])
 
     
 #### Position ####
@@ -335,7 +337,7 @@ def setPos(username, lat, lon):
 def getPos(username):
     user = users.find_one({b"username":username})
     if user != None:
-        return ok(str(user[b"pos"]))
+        return ok(user[b"pos"])
     
     else:
         return error(b"User not found")
@@ -354,7 +356,7 @@ def getGroupPos(username, groupID):
             res = users.find_one({b"username":member})[b"pos"]
             positions.append({b"username": member, b"pos":res[b"pos"], b"status":res[b"status"]})
             
-        return ok(str(positions))
+        return ok(positions)
 
 def getFriendsPos(username):
     user = users.find_one({b"username":username})
@@ -366,8 +368,7 @@ def getFriendsPos(username):
         for friend in user[b"friends"]:
             res = users.find_one({b"username":friend})
             positions.append({b"username": friend, b"pos":res[b"pos"], b"status":res[b"status"]})
-            
-        return ok(str(positions))
+        return ok(positions)
 
     
 #### Push ####

@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabContentFactory;
 
 public class NotificationsTab extends TabActivity{
@@ -30,14 +31,11 @@ public class NotificationsTab extends TabActivity{
 	private static final String LIST4_TAB_TAG = "Buzz";
 	
 	TabHost tabHost;
-	ListView tabAll;
-	ListView tabFriendReq;
-	ListView tabGroupReq;
-	ListView tabBuzz;
+	private ListView tabAll;
+	private ListView tabFriendReq;
+	private ListView tabGroupReq;
+	private ListView tabBuzz;
 	
-	NotificationManager noteManager = (NotificationManager)
-            getSystemService(NOTIFICATION_SERVICE);
-		
 	/*
 	 * ID
 	 * 1	FriendRequest
@@ -48,10 +46,12 @@ public class NotificationsTab extends TabActivity{
 	 */
 	
 		// TODO Auto-generated method stub
-		protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
+		final NotificationManager noteManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		Log.v(TAG, "Starting NotiTab");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.notifications);
-		
+
 	    final Object me = this;
 	    tabHost = (TabHost)findViewById(android.R.id.tabhost);
 	    tabAll = (ListView) findViewById(R.id.tabAll);
@@ -80,29 +80,48 @@ public class NotificationsTab extends TabActivity{
 			}
 		}));
 		
+		Bundle extras = getIntent().getExtras();
+        tabHost.setCurrentTabByTag(extras.getString("type"));
+		
+        /*
 		tabAll.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView parent, View view, int position, long id) {
-				noteManager.cancel(1);
 			}
 		});
 		tabFriendReq.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView parent, View view, int position, long id) {
-				noteManager.cancel(1);
 			}
 		});
+		
 		tabGroupReq.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView parent, View view, int position, long id) {
-				noteManager.cancel(2);
 			}
 		});
 		tabBuzz.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView parent, View view, int position, long id) {
-				noteManager.cancel(3);
 			}
 		});
+		*/
 		
-		tabHost.setCurrentTabByTag("All");
-     	JSONObject toServer = new JSONObject();
+		tabHost.setOnTabChangedListener(new OnTabChangeListener() {
+			public void onTabChanged(String tabId) {
+			int i = getTabHost().getCurrentTab();
+			    if (i == 0) {
+			    	
+			    }
+			    else if (i ==1) {
+					noteManager.cancel(1);
+			    }
+			    else if (i ==2) {
+					noteManager.cancel(2);
+			    }
+			    else if (i ==3) {
+					noteManager.cancel(3);
+			    }
+			  }
+			});
+	}
+		/*JSONObject toServer = new JSONObject();
 		JSONObject data = new JSONObject();
 		try {
 			data.put("username", Config.USERNAME);
@@ -115,20 +134,22 @@ public class NotificationsTab extends TabActivity{
 		try {
 	        Class[] params = {String.class, Boolean.class};
 				
-		 	ConnectionData connData = new ConnectionData(FriendsTab.class.getMethod("Callback", params), me, toSend);
+		 	ConnectionData connData = new ConnectionData(NotificationsTab.class.getMethod("Callback", params), me, toSend);
 
 			AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
 			}
 			catch(Exception e) {
 				Log.v(TAG, "Error: " + e.toString());
 			}
-		}
+		}*/
 		
 		public void Callback(String res, Boolean error) {
 			Log.v(TAG, "Callback: " + res);
 			if(!error) {
 				try {
-					//listView1.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,listActive));
+					String[] derp = new String[1];
+					derp[0] = "asdad";
+					tabAll.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,derp));
 				} catch(Exception e){
 					Log.v(TAG, "Error");
 				}

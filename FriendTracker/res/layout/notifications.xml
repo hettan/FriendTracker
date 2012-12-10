@@ -15,16 +15,16 @@
 		<FrameLayout android:id="@android:id/tabcontent"
 			android:layout_width="fill_parent" android:layout_height="fill_parent">
 			<ListView android:id="@+id/tabAll" android:layout_width="fill_parent"
-				android:layout_height="wrap_content">
+				android:layout_height="wrap_content" android:layout_weight="1">
 			</ListView>
 			<ListView android:id="@+id/tabFriendReq" android:layout_width="fill_parent"
-				android:layout_height="wrap_content">
+				android:layout_height="wrap_content" android:layout_weight="1">
 			</ListView>
 			<ListView android:id="@+id/tabGroupReq" android:layout_width="fill_parent"
-				android:layout_height="wrap_content">
+				android:layout_height="wrap_content" android:layout_weight="1">
 			</ListView>
 			<ListView android:id="@+id/tabBuzz" android:layout_width="fill_parent"
-				android:layout_height="wrap_content">
+				android:layout_height="wrap_content" android:layout_weight="1">
 			</ListView>
 		</FrameLayout>
 	</LinearLayout>
