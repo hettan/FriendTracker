@@ -44,11 +44,11 @@ public class NotificationsTab extends TabActivity{
 	 * noteManager.cancel(id)
 	 *
 	 */
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Bundle extras = getIntent().getExtras();
-		
+
 		final NotificationManager noteManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		Log.v(TAG, "Starting NotiTab");
 		setContentView(R.layout.notifications);
@@ -81,6 +81,7 @@ public class NotificationsTab extends TabActivity{
 			}
 		}));
 
+		Bundle extras = getIntent().getExtras();
 		Log.v(TAG, "extras:" + extras.getString("type"));
         tabHost.setCurrentTabByTag(extras.getString("type"));
         
@@ -108,19 +109,19 @@ public class NotificationsTab extends TabActivity{
 			public void onTabChanged(String tabId) {
 			int i = getTabHost().getCurrentTab();
 			    if (i == 0) {
-			    //	noteManager.cancelAll();
+			    	noteManager.cancelAll();
 			    }
 			    else if (i ==1) {
 					Log.v(TAG, "tab1");
-				//	noteManager.cancel(1);
+					noteManager.cancel(1);
 			    }
 			    else if (i ==2) {
 					Log.v(TAG, "tab2");
-				//	noteManager.cancel(2);
+					noteManager.cancel(2);
 			    }
 			    else if (i ==3) {
 					Log.v(TAG, "tab3");
-				//	noteManager.cancel(3);
+					noteManager.cancel(3);
 			    }
 			  }
 			});

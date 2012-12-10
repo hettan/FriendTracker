@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 
 //import sv.teamAwesome.friendtracker.Config.SENDER_ID;
@@ -21,9 +22,7 @@ public class GCMIntentService extends GCMBaseIntentService{
 	public GCMIntentService() {
 		super(Config.SENDER_ID);
 	}
-
 	private static final String TAG = "GCMIntentService";
-
 
 	@Override
 	protected void onRegistered(Context context, String regId) {
@@ -98,14 +97,13 @@ public class GCMIntentService extends GCMBaseIntentService{
         	Log.v("NotificationManager", "Note: ERROR!");
         	break;
         }
-        
         targetIntent.putExtra("type", derp);
-        Log.v(TAG, "sent: " + derp);
+        //targetIntent.setAction(Long.toString(System.currentTimeMillis()));
         
-        targetIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Log.v(TAG, "sent: " + derp); 
+        
         PendingIntent nIntent = 
-                PendingIntent.getActivity(context, 0, targetIntent, 0);
-
+                PendingIntent.getActivity(context, nCategory, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         
         Notification note = new Notification(
             R.drawable.ic_launcher, 
@@ -121,6 +119,7 @@ public class GCMIntentService extends GCMBaseIntentService{
 		        Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
 		        r.play();
 		    } catch (Exception e) {}
+
 	}
 
 	@Override
