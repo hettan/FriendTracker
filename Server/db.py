@@ -5,7 +5,7 @@ import time,random,datetime
 
 from gcm import GCM
 
-connection = Connection('localhost', 27017) #DB connection
+connection = Connection('127.0.0.1', 27017) #DB connection
 db = connection.test #Main db
 users = db.users #SubDB - Userdata
 sessions = db.sessions #SubDB - Current sessions
@@ -294,10 +294,10 @@ def addRallyPoint(username, groupID, pos, text):
     
     else:
         #Dont know if this works, only one rallypoint per user in each group is allowed
-        groups.update({b"groupID":groupID}, {"$pop", {b"rallypoints": {b"created_by":username}}})
+        groups.update({b"groupID":groupID}, {"$pop": {b"rallypoints": {b"created_by":username}}})
         
         rallyPoint = {b"created_by":username, "pos":pos, b"text":text}
-        groups.update({b"groupID":groupID},{"$push", {b"rallypoints":rallyPoint}})
+        groups.update({b"groupID":groupID},{"$push": {b"rallypoints":rallyPoint}})
         return ok(b"")
 
 def remRallyPoint(username, groupID):
@@ -310,7 +310,7 @@ def remRallyPoint(username, groupID):
     
     else:
         #Dont know if this works
-        groups.update({b"groupID":groupID}, {"$pop", {b"rallypoints": {b"created_by":username}}})
+        groups.update({b"groupID":groupID}, {"$pop": {b"rallypoints": {b"created_by":username}}})
         return ok(b"")
 
 def getRallyPoints(username, groupID):
