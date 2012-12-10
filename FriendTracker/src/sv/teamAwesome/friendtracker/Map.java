@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewStub;
@@ -39,15 +40,18 @@ public class Map extends MapActivity {
 	List<Overlay> mapOverlays;
 	MapView mapView;
 	GeoPoint point;
-	
+	MapController control;
 	View importPanel;
+	Boolean FirstLoc = true;
 	//HashMap<String, GeoPoint> friendPos;
 	List<String> fUser = null;
 	List<GeoPoint> fPos = null;
+	Boolean setPoint = false;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+		Log.v(TAG, "Error 1");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map);
 
@@ -63,16 +67,17 @@ public class Map extends MapActivity {
 		
 		mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
-		
+		control = mapView.getController();
+
 		final Drawable drawable = getResources().getDrawable(R.drawable.marker);
 		
 		Button statusbtn = (Button) findViewById(R.id.statusBtn);
 		final EditText statustxt = (EditText) findViewById(R.id.statusTxt);
-		
+		Log.v(TAG, "Error 0");
 		statusbtn.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				
+				Log.v(TAG, "Error 1");
 				String status = statustxt.getText().toString();
 				
 				JSONObject toServer = new JSONObject();
@@ -103,19 +108,18 @@ public class Map extends MapActivity {
 				importPanel.setVisibility(View.INVISIBLE);
 			}
 		});
-		
-		
-		final MapController control = mapView.getController();
-		control.animateTo(point);
-		control.setZoom(20);
-		
+
 		LocationManager manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		
 		LocationListener listener = new LocationListener() {
 			
 			public void onLocationChanged(Location location) {
 				point = new GeoPoint((int)(location.getLatitude()*1E6), (int)(location.getLongitude()*1E6));
-			
+				if(FirstLoc) {
+					control.animateTo(point);
+					control.setZoom(20);
+					FirstLoc = false;
+				}
 				JSONObject toServer = new JSONObject();
 				JSONObject data = new JSONObject();
 				try {
@@ -127,7 +131,6 @@ public class Map extends MapActivity {
 				} catch (Exception e) {
 					
 				}
-				
 				String toSend = toServer.toString();
 				try {
 		            Class[] params = {String.class, Boolean.class};
@@ -191,7 +194,28 @@ public class Map extends MapActivity {
 			}
 		};
 		
+
+		mapView.setOnTouchListener(new View.OnTouchListener() {
+			public boolean onTouch(View v, MotionEvent event) {
+				GeoPoint RP = mapView.getProjection().fromPixels((int) event.getX(), (int) event.getY());
+				PointerOverlay pointerOverlay = new PointerOverlay(drawable, mapView);
+				Log.v(TAG, "setPoint: " + setPoint);
+				if(event.getAction() == MotionEvent.ACTION_UP) {
+					if(setPoint) {
+						OverlayItem overlayitem = new OverlayItem(RP, "Hej", "Derp");
+						pointerOverlay.addOverlay(overlayitem);
+						mapOverlays.add(pointerOverlay);
+						mapView.invalidate();
+					}
+				setPoint = false;
+				}
+				return true;
+			}
+		});
+
+		
 		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.USER_POSITION_UPDATE_INTERVAL, 0, listener);
+		//control.animateTo(point);
 		
 		myLocation = new MyLocationOverlay(this, mapView);
 		mapView.getOverlays().add(myLocation);
@@ -223,6 +247,8 @@ public class Map extends MapActivity {
 		//mapOverlays.add(pointerOverlay);
 	}	
 
+
+	
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -243,17 +269,21 @@ public class Map extends MapActivity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, 0, 1, "Status");
+		menu.add(0, 1, 1, "Status");
+		menu.add(0, 2, 2, "Add Point");
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == 0) {
+		if (item.getItemId() == 1) {
 			if(importPanel.getVisibility() != View.VISIBLE)
 				importPanel.setVisibility(View.VISIBLE);
 			else
 				importPanel.setVisibility(View.INVISIBLE);
+		}
+		if (item.getItemId() == 2) {
+			setPoint = true;
 		}
 		return true;
 	}

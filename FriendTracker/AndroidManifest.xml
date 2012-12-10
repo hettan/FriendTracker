@@ -53,7 +53,7 @@
         
         <activity 
             android:name=".Setting"
-            android:theme="@style/SettingBround"
+            android:label="@string/title_activity"
             android:screenOrientation="portrait"
             android:configChanges="orientation">
             <intent-filter>
@@ -64,6 +64,7 @@
         
         <activity 
             android:name=".ResetSettings"
+            android:label="@string/title_activity"
             android:screenOrientation="portrait"
             android:configChanges="orientation">
             <intent-filter>
@@ -74,6 +75,7 @@
  
         <activity
             android:name=".Register"
+            android:label="@string/title_activity"
             android:screenOrientation="portrait"
             android:configChanges="orientation">
             <intent-filter>
@@ -83,6 +85,7 @@
         </activity>
         <activity
             android:name=".FrontPage"
+            android:label="@string/title_activity"
             android:screenOrientation="portrait"
             android:configChanges="orientation">
             <intent-filter>
@@ -92,6 +95,7 @@
         </activity>
         <activity
             android:name=".FriendsTab"
+            android:label="@string/title_activity"
             android:screenOrientation="portrait"
             android:configChanges="orientation">
             <intent-filter>
@@ -101,6 +105,7 @@
         </activity>
         <activity
             android:name=".OnlineTab"
+            android:label="@string/title_activity"
             android:screenOrientation="portrait"
             android:configChanges="orientation">
             <intent-filter>
@@ -110,6 +115,7 @@
         </activity>
         <activity
             android:name=".AllTab"
+            android:label="@string/title_activity"
             android:screenOrientation="portrait"
             android:configChanges="orientation">
             <intent-filter>
@@ -120,6 +126,7 @@
         
         <activity
             android:name=".Groups"
+            android:label="@string/title_activity"
             android:screenOrientation="portrait"
             android:configChanges="orientation">
             <intent-filter>
@@ -130,6 +137,7 @@
         
         <activity
             android:name=".Map"
+            android:label="@string/title_activity"
             android:screenOrientation="portrait"
             android:configChanges="orientation">
             <intent-filter>
@@ -140,6 +148,7 @@
         
         <activity
             android:name=".Notifications"
+            android:label="@string/title_activity"
             android:screenOrientation="portrait"
             android:configChanges="orientation">
             <intent-filter>
@@ -150,6 +159,7 @@
         
         <activity
             android:name=".Exit"
+            android:label="@string/title_activity"
             android:screenOrientation="portrait"
             android:configChanges="orientation">
             <intent-filter>
@@ -160,6 +170,7 @@
         
         <activity
             android:name=".Search"
+            android:label="@string/title_activity"
             android:screenOrientation="portrait"
             android:configChanges="orientation">
             <intent-filter>
