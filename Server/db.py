@@ -357,7 +357,7 @@ def getGroupPos(username, groupID):
         return ok(str(positions))
 
 def getFriendsPos(username):
-    user = user.find_one({b"username":username})
+    user = users.find_one({b"username":username})
     if user == None:
         return error(b"User not in db!")
     
