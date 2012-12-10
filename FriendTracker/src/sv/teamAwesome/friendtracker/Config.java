@@ -8,6 +8,7 @@ public class Config {
 	public static long USER_BACKGROUND_POSITION_UPDATE_INTERVAL = 60000;
 	public static String USERNAME = "";
 	public static String SESSION_ID = "";
+	public static String selectedGroupID = "";
 	public static Object andersMamma = null;
 	public static Dictionary<String, String> STATUS;
 	

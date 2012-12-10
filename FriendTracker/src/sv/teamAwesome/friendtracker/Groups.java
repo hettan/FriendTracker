@@ -58,29 +58,9 @@ public class Groups extends Activity {
 		listViewGroups = (ListView) findViewById(R.id.groupslist);
 		listViewGroups.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView parent, View view, int position, long id) {
-				String item = (String) listViewGroups.getAdapter().getItem(position);
-				if(item != null) {			
-					JSONObject toServer = new JSONObject();
-					JSONObject data = new JSONObject();
-					try {
-						data.put("username", Config.USERNAME);
-						data.put("groupID", groupIDs[position]);
-						toServer.put("type", "getGroupInfo");
-						toServer.put("data", data);
-					} catch (Exception e) {
-						
-					}
-					String toSend = toServer.toString();
-					try {
-			            Class[] params = {String.class, Boolean.class};
-						
-						ConnectionData connData = new ConnectionData(Search.class.getMethod("CallbackReq", params), me, toSend);
-
-						AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
-					} catch(Exception e) {
-						Log.v(TAG, "Error: " + e.toString());
-					}
-				}
+				Config.selectedGroupID = groupIDs[position];
+				Intent group = new Intent("sv.teamAwesome.friendtracker.GROUP");
+				startActivity(group);		
 			}
 		});
 		
@@ -125,7 +105,7 @@ public class Groups extends Activity {
 			}
 		}
 	}
-	public void Callback(String res, Boolean error) {
+	public void CallbackReq(String res, Boolean error) {
 		if(!error) {
 			Log.v(TAG, "Res: " + res);
 		} else {
