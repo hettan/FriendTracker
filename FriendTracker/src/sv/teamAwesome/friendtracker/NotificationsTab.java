@@ -45,11 +45,12 @@ public class NotificationsTab extends TabActivity{
 	 *
 	 */
 	
-		// TODO Auto-generated method stub
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
 		final NotificationManager noteManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		Log.v(TAG, "Starting NotiTab");
-		super.onCreate(savedInstanceState);
 		setContentView(R.layout.notifications);
 
 	    final Object me = this;
@@ -79,10 +80,11 @@ public class NotificationsTab extends TabActivity{
 				return tabBuzz;
 			}
 		}));
-		
+
 		Bundle extras = getIntent().getExtras();
+		Log.v(TAG, "extras:" + extras.getString("type"));
         tabHost.setCurrentTabByTag(extras.getString("type"));
-		
+        
         /*
 		tabAll.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView parent, View view, int position, long id) {
@@ -107,15 +109,18 @@ public class NotificationsTab extends TabActivity{
 			public void onTabChanged(String tabId) {
 			int i = getTabHost().getCurrentTab();
 			    if (i == 0) {
-			    	
+			    	noteManager.cancelAll();
 			    }
 			    else if (i ==1) {
+					Log.v(TAG, "tab1");
 					noteManager.cancel(1);
 			    }
 			    else if (i ==2) {
+					Log.v(TAG, "tab2");
 					noteManager.cancel(2);
 			    }
 			    else if (i ==3) {
+					Log.v(TAG, "tab3");
 					noteManager.cancel(3);
 			    }
 			  }

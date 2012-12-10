@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 
 //import sv.teamAwesome.friendtracker.Config.SENDER_ID;
@@ -21,9 +22,7 @@ public class GCMIntentService extends GCMBaseIntentService{
 	public GCMIntentService() {
 		super(Config.SENDER_ID);
 	}
-
 	private static final String TAG = "GCMIntentService";
-
 
 	@Override
 	protected void onRegistered(Context context, String regId) {
@@ -70,36 +69,41 @@ public class GCMIntentService extends GCMBaseIntentService{
         
         CharSequence title = "FriendTracker";
         CharSequence message;   
+        String derp = "All";
         
         switch(nCategory) {
         case 1:
         	title = "You have a friendrequest!";
         	message = nUser+ " wants to add you as a friend!";
-        	targetIntent.putExtra("type", "FriendRequests");
+        	derp = "FriendRequests";
         	Log.v("NotificationManager", "Note: Friendrequest");
         	break;
         case 2:
         	title = "You have been invited to a group!";
         	message = nUser+ " has invited you to join group \""+nGroup+"\"";
-        	targetIntent.putExtra("type", "GroupRequests");
+        	derp = "GroupRequests";
         	Log.v("NotificationManager", "Note: Groupinvite");
         	break;
         case 3:
         	title = "You have been buzzed!";
         	message = nUser+": "+nMessage;
-        	targetIntent.putExtra("type", "Buzz");
+        	derp = "Buzz";
         	Log.v("NotificationManager", "Note: Buzz");
         	break;
         default:	
         	title = "FriendTracker is derped :(";
         	message = "No category set. User: "+nUser;
-        	targetIntent.putExtra("type", "All");
+        	derp = "All";
         	Log.v("NotificationManager", "Note: ERROR!");
         	break;
         }
-
+        targetIntent.putExtra("type", derp);
+        //targetIntent.setAction(Long.toString(System.currentTimeMillis()));
+        
+        Log.v(TAG, "sent: " + derp); 
+        
         PendingIntent nIntent = 
-                PendingIntent.getActivity(context, 0, targetIntent, 0);
+                PendingIntent.getActivity(context, nCategory, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         
         Notification note = new Notification(
             R.drawable.ic_launcher, 
@@ -115,6 +119,7 @@ public class GCMIntentService extends GCMBaseIntentService{
 		        Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
 		        r.play();
 		    } catch (Exception e) {}
+
 	}
 
 	@Override
