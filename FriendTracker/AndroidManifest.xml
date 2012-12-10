@@ -41,6 +41,10 @@
         
         <service android:name=".GCMIntentService" />
         
+        <service
+   			android:enabled="true"
+   			android:name=".BackgroundService" />
+        
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
