@@ -37,7 +37,7 @@ public class BackgroundService extends Service{
 		
 	}
 	
-	public void onStartCommand(Intent intent, int startId) {
+	public void onStart(Intent intent, int startId) {
 		Log.v(TAG, "Starting BackgroundService..");
 		LocationManager manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		
@@ -61,7 +61,7 @@ public class BackgroundService extends Service{
 				try {
 		            Class[] params = {String.class, Boolean.class};
 					
-					ConnectionData connData = new ConnectionData(MainActivity.class.getMethod("Callback", params), me, toSend);
+					ConnectionData connData = new ConnectionData(BackgroundService.class.getMethod("Callback", params), me, toSend);
 					//ConnectionData connData = new ConnectionData(MainActivity.class.getMethod("Callback", params), MainActivity.class.newInstance(), toSend);
 
 					AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
@@ -85,6 +85,16 @@ public class BackgroundService extends Service{
 			}
 		};
 		
-		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.USER_POSITION_UPDATE_INTERVAL, 0, listener);
+		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.USER_BACKGROUND_POSITION_UPDATE_INTERVAL, 0, listener);
+	}
+	
+	public void Callback(String res, Boolean error) {
+		Log.v(TAG, "Callback: " + res);
+		if(!error) {
+			Log.v(TAG, "Status Updated");
+
+		} else {
+			Log.v(TAG, "Status Not Updated");
 		}
+	}
 }
