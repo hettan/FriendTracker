@@ -25,7 +25,11 @@ def ok():
 
 #OK-response begins with 1
 def ok(data):
-    print data
+    if isinstance(data,list):
+        data = decode_list(data)
+    elif isinstance(data,dict):
+        data = decode_list(data)
+        
     return b"1"+data+b"\n"
 
 def decode_dict(data):
@@ -132,7 +136,7 @@ def isFriend(src,target):
     if target == None:
         return True
     else:
-        return (src in target[b"friends"]) or (src in target[b"requests"])  
+        return (src in target[b"friends"]) or (src in target[b"requests"][b"requester"])  
 
 def addFriendReq(src, target):
     if not isFriend(src,target):
