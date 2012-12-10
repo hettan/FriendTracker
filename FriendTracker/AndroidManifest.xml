@@ -108,27 +108,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".OnlineTab"
-            android:label="@string/title_activity"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation">
-            <intent-filter>
-                <action android:name="sv.teamAwesome.friendtracker.ONLINETAB" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".AllTab"
-            android:label="@string/title_activity"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation">
-            <intent-filter>
-                <action android:name="sv.teamAwesome.friendtracker.ALLTAB" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        
-        <activity
             android:name=".Groups"
             android:label="@string/title_activity"
             android:screenOrientation="portrait"
@@ -151,12 +130,12 @@
         </activity>
         
         <activity
-            android:name=".Notifications"
+            android:name=".NotificationsTab"
             android:label="@string/title_activity"
             android:screenOrientation="portrait"
             android:configChanges="orientation">
             <intent-filter>
-                <action android:name="sv.teamAwesome.friendtracker.NOTIFICATIONS" />
+                <action android:name="sv.teamAwesome.friendtracker.NOTIFICATIONSTAB" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -184,7 +163,10 @@
         </activity>
         
         <activity
-            android:name=".CreateGroups">
+            android:name=".CreateGroups"
+            android:label="@string/title_activity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation">
             <intent-filter>
                 <action android:name="sv.teamAwesome.friendtracker.CREATEGROUPS" />
                 <category android:name="android.intent.category.DEFAULT" />
