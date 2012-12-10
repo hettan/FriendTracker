@@ -65,6 +65,7 @@ public class GCMIntentService extends GCMBaseIntentService{
 		Intent targetIntent = new Intent("sv.teamAwesome.friendtracker.NOTIFICATIONS");
         PendingIntent nIntent = 
             PendingIntent.getActivity(context, 0, targetIntent, 0);
+        targetIntent.putExtra("type", String.valueOf(nCategory));
  
         // Construct Notification Manager to handle Notes
         NotificationManager noteManager = (NotificationManager)
