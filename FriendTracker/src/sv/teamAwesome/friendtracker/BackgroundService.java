@@ -51,6 +51,7 @@ public class BackgroundService extends Service{
 					data.put("lat", (int)(location.getLatitude()*1E6));
 					data.put("lon", (int)(location.getLongitude()*1E6));
 					data.put("username", Config.USERNAME);
+					data.put("referer", "BackgroundService");
 					toServer.put("type", "setPos");
 					toServer.put("data", data);
 				} catch (Exception e) {
@@ -62,7 +63,6 @@ public class BackgroundService extends Service{
 		            Class[] params = {String.class, Boolean.class};
 					
 					ConnectionData connData = new ConnectionData(BackgroundService.class.getMethod("Callback", params), me, toSend);
-					//ConnectionData connData = new ConnectionData(MainActivity.class.getMethod("Callback", params), MainActivity.class.newInstance(), toSend);
 
 					AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
 				}
