@@ -79,7 +79,12 @@ public class NotificationsTab extends TabActivity{
 				return tabBuzz;
 			}
 		}));
-
+		
+		tabAll.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView parent, View view, int position, long id) {
+				noteManager.cancel(1);
+			}
+		});
 		tabFriendReq.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView parent, View view, int position, long id) {
 				noteManager.cancel(1);
