@@ -104,7 +104,6 @@ public class GCMIntentService extends GCMBaseIntentService{
         note.setLatestEventInfo(context, title, message, nIntent);
         noteManager.notify(nUser, nCategory, note);
         
-        
         //plays the standard message sound, should work when you get a notification if placed here. otherwise move it.
 		 try {
 		        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

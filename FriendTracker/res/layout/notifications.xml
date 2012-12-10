@@ -1,7 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/background"
     android:orientation="vertical" >
 
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@android:id/tabhost" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+	<LinearLayout android:orientation="vertical"
+		android:layout_width="fill_parent" android:layout_height="fill_parent">
+		<TabWidget android:id="@android:id/tabs"
+			android:layout_width="fill_parent" android:layout_height="wrap_content" />
+		<FrameLayout android:id="@android:id/tabcontent"
+			android:layout_width="fill_parent" android:layout_height="fill_parent">
+			<ListView android:id="@+id/tabAll" android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+			</ListView>
+			<ListView android:id="@+id/tabFriendReq" android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+			</ListView>
+			<ListView android:id="@+id/tabGroupReq" android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+			</ListView>
+			<ListView android:id="@+id/tabBuzz" android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+			</ListView>
+		</FrameLayout>
+	</LinearLayout>
+</TabHost>
+    
 </LinearLayout>

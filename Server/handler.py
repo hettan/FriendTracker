@@ -95,7 +95,7 @@ def getRallyPoints(data):
 
 #### Position ####
 def setPos(data):
-    return db.setPos(data["username"], data["pos"])
+    return db.setPos(data["username"], data["lat"], data["lon"])
 
 def getPos(data):
     return db.getPos(data["username"])
@@ -135,6 +135,10 @@ handler["leaveGroup"] = leaveGroup
 handler["getGroups"] = getGroups
 handler["getGroupInfo"] = getGroupInfo
 handler["changeGroupOwner"] = changeGroupOwner
+handler["addRallyPoint"] = addRallyPoint
+handler["remRallyPoint"] = remRallyPoint
+handler["getRallyPoints"] = getRallyPoints
+
 
 handler["setPos"] = setPos
 handler["getPos"] = getPos
