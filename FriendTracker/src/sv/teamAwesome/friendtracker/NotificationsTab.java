@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabContentFactory;
 
 public class NotificationsTab extends TabActivity{
@@ -35,10 +36,7 @@ public class NotificationsTab extends TabActivity{
 	private ListView tabGroupReq;
 	private ListView tabBuzz;
 	
-	/*NotificationManager noteManager = (NotificationManager)
-            getSystemService(NOTIFICATION_SERVICE);
-		
-	
+	/*
 	 * ID
 	 * 1	FriendRequest
 	 * 2	GroupRequest
@@ -49,10 +47,11 @@ public class NotificationsTab extends TabActivity{
 	
 		// TODO Auto-generated method stub
 	protected void onCreate(Bundle savedInstanceState) {
+		final NotificationManager noteManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		Log.v(TAG, "Starting NotiTab");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.notifications);
-		
+
 	    final Object me = this;
 	    tabHost = (TabHost)findViewById(android.R.id.tabhost);
 	    tabAll = (ListView) findViewById(R.id.tabAll);
@@ -81,27 +80,46 @@ public class NotificationsTab extends TabActivity{
 			}
 		}));
 		
+		Bundle extras = getIntent().getExtras();
+        tabHost.setCurrentTabByTag(extras.getString("type"));
+		
+        /*
 		tabAll.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView parent, View view, int position, long id) {
-				//noteManager.cancel(1);
 			}
 		});
 		tabFriendReq.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView parent, View view, int position, long id) {
-				//noteManager.cancel(1);
 			}
 		});
+		
 		tabGroupReq.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView parent, View view, int position, long id) {
-				//noteManager.cancel(2);
 			}
 		});
 		tabBuzz.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView parent, View view, int position, long id) {
-				//noteManager.cancel(3);
 			}
 		});
-
+		*/
+		
+		tabHost.setOnTabChangedListener(new OnTabChangeListener() {
+			public void onTabChanged(String tabId) {
+			int i = getTabHost().getCurrentTab();
+			    if (i == 0) {
+			    	
+			    }
+			    else if (i ==1) {
+					noteManager.cancel(1);
+			    }
+			    else if (i ==2) {
+					noteManager.cancel(2);
+			    }
+			    else if (i ==3) {
+					noteManager.cancel(3);
+			    }
+			  }
+			});
 	}
 		/*JSONObject toServer = new JSONObject();
 		JSONObject data = new JSONObject();

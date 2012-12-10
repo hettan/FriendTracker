@@ -38,6 +38,7 @@ public class FrontPage extends Activity{
             }
         }
         Intent menuSwap = new Intent(v.getContext(), aClass);
+        menuSwap.putExtra("type", "All");
         startActivity(menuSwap);
 	}	
 }

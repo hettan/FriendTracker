@@ -62,7 +62,7 @@ public class GCMIntentService extends GCMBaseIntentService{
 		Log.v("NotificationManager", "Got note of type: "+nCategory);
 		
 		// Construct Intent to be started when note is clicked
-		Intent targetIntent = new Intent("sv.teamAwesome.friendtracker.NOTIFICATIONS");
+		Intent targetIntent = new Intent("sv.teamAwesome.friendtracker.NOTIFICATIONSTAB");
         PendingIntent nIntent = 
             PendingIntent.getActivity(context, 0, targetIntent, 0);
  
