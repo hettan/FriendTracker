@@ -14,6 +14,8 @@ public class Config {
 	public static String SENDER_ID = "377927318664";
 	
 	// IP-adress and port for server.
-	public static String SERVER_IP_ADRESS = "130.236.187.198";
-	public static int SERVER_PORT = 8080;
+	//130.236.187.198
+	//85.229.131.109
+	public static String SERVER_IP_ADRESS = "hemma.klumpen.se";
+	public static int SERVER_PORT = 8888;
 }

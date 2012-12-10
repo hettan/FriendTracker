@@ -24,6 +24,7 @@ import android.widget.TabHost;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TabHost.TabContentFactory;
+import android.widget.TextView;
 
 public class FriendsTab extends TabActivity {
 	private static final String TAG = "FRIENDS";
@@ -132,8 +133,17 @@ public class FriendsTab extends TabActivity {
 						listActive.add(username);
 					}
 				}
+				String[] test = new String[3];
+				test[0] = "No Friends";
+				test[1] = "No Active Friends";
+				test[2] = "No Requests";
 				listView1.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,listActive));
-				listView2.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,listAll));
+				if(listAll.length == 0) {
+					listView2.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1, test));
+				} else {
+					listView2.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,listAll));
+				}
+				
 
 
 				JSONArray requests = data.getJSONArray("requests");

@@ -195,7 +195,7 @@ public class Map extends MapActivity {
 		};
 		
 
-		mapView.setOnTouchListener(new View.OnTouchListener() {
+		/*mapView.setOnTouchListener(new View.OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
 				GeoPoint RP = mapView.getProjection().fromPixels((int) event.getX(), (int) event.getY());
 				PointerOverlay pointerOverlay = new PointerOverlay(drawable, mapView);
@@ -205,13 +205,13 @@ public class Map extends MapActivity {
 						OverlayItem overlayitem = new OverlayItem(RP, "Hej", "Derp");
 						pointerOverlay.addOverlay(overlayitem);
 						mapOverlays.add(pointerOverlay);
-						mapView.invalidate();
+						//mapView.invalidate();
 					}
 				setPoint = false;
 				}
 				return true;
 			}
-		});
+		});*/
 
 		
 		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.USER_POSITION_UPDATE_INTERVAL, 0, listener);
