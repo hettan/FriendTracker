@@ -62,10 +62,7 @@ public class GCMIntentService extends GCMBaseIntentService{
 		Log.v("NotificationManager", "Got note of type: "+nCategory);
 		
 		// Construct Intent to be started when note is clicked
-		Intent targetIntent = new Intent("sv.teamAwesome.friendtracker.NOTIFICATIONS");
-        PendingIntent nIntent = 
-            PendingIntent.getActivity(context, 0, targetIntent, 0);
-        targetIntent.putExtra("type", String.valueOf(nCategory));
+		Intent targetIntent = new Intent("sv.teamAwesome.friendtracker.NOTIFICATIONSTAB");
  
         // Construct Notification Manager to handle Notes
         NotificationManager noteManager = (NotificationManager)
@@ -78,24 +75,31 @@ public class GCMIntentService extends GCMBaseIntentService{
         case 1:
         	title = "You have a friendrequest!";
         	message = nUser+ " wants to add you as a friend!";
+        	targetIntent.putExtra("type", "FriendRequests");
         	Log.v("NotificationManager", "Note: Friendrequest");
         	break;
         case 2:
         	title = "You have been invited to a group!";
         	message = nUser+ " has invited you to join group \""+nGroup+"\"";
+        	targetIntent.putExtra("type", "GroupRequests");
         	Log.v("NotificationManager", "Note: Groupinvite");
         	break;
         case 3:
         	title = "You have been buzzed!";
         	message = nUser+": "+nMessage;
+        	targetIntent.putExtra("type", "Buzz");
         	Log.v("NotificationManager", "Note: Buzz");
         	break;
         default:	
         	title = "FriendTracker is derped :(";
         	message = "No category set. User: "+nUser;
+        	targetIntent.putExtra("type", "All");
         	Log.v("NotificationManager", "Note: ERROR!");
         	break;
         }
+        
+        PendingIntent nIntent = 
+                PendingIntent.getActivity(context, 0, targetIntent, 0);
         
         Notification note = new Notification(
             R.drawable.ic_launcher, 
