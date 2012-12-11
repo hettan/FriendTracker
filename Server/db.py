@@ -28,7 +28,7 @@ def ok(data):
     if isinstance(data,list):
         data = decode_list(data)
     elif isinstance(data,dict):
-        data = decode_list(data)
+        data = decode_dict(data)
     print "OK - Data="+str(data)
     return b"1"+str(data)+b"\n"
 
@@ -87,8 +87,8 @@ def changePassword(username, oldPassword, newPassword):
 def login(username, password, pushID):
     user = users.find_one({b"username": username})
     if user != None and user[b"password"] == password:
-        users.update({b"username":user},{"$set":{b"active":True}})
-        users.update({b"username":user},{"$set":{b"pushID":pushID}})
+        users.update({b"username":username},{"$set":{b"active":True}})
+        users.update({b"username":username},{"$set":{b"pushID":pushID}})
         return ok(setSession(username))
     
     else:
@@ -143,7 +143,7 @@ def addFriendReq(src, target):
         time = datetime.datetime.now()
         req = {b"requester":src, b"time":time.strftime("%m-%d-%H-%M"), b"type":b"friend"} #Month-Day-Hour-Minute
         users.update({b"username":target}, {"$push": {b"requests": req}})
-        pushReq(target,{"type":"friend","data":src})
+        pushReq(target,{b"type":b"1", b"user":src})
         return ok(b"")
     
     else:
@@ -171,6 +171,10 @@ def getRequests(username):
     user = users.find_one({b"username":username})
     return ok(user[b"requests"])
 
+def clearRequests(username):
+    users.update({b"username":username},{"$set":{b"requests":[]}})
+    return ok("")
+
 #Returns both friends and requests
 def getFriends(username):
     user = users.find_one({b"username":username})
@@ -196,14 +200,14 @@ def getFriendsIfMod(username, ts):
     else:
         return error(b"No change")
 
-def userSearch(query):
+def userSearch(username, query):
       regexp = "(?i).*(" + query + ")+.*"; #Gets all users that contains the phrase in their username
       search_res = users.find({b"username":{"$regex":regexp}})
       print "query = "+query
       res = []
       for user in search_res:
-          res.append(user[b"username"])
-
+          if user["username"] != username:
+              res.append(user[b"username"])
           
       if len(res) > 0:
           res = sorted(res) 
@@ -254,6 +258,16 @@ def leaveGroup(username, groupID):
     else:
         return error(b"You can't leave group while admin, assign another user as group admin first.")
     
+
+def delGroup(username, groupID):
+    if isGroupAdmin(username, groupID):
+        group = groups.find_one({b"groupID":groupID})
+        for member in group["members"]:
+            users.update({b"username":member}, {b"$pop":{b"groups":groupID}})
+        groups.remove({b"groupID":groupID})
+        return ok(b"")
+    else:
+        return error(b"You must be admin to remove group")
     
 def getGroups(username):
     res = users.find_one({b"username":username})
@@ -271,11 +285,11 @@ def getGroupInfo(username, groupID):
     if group == None:
         return error(b"Group not found!")
     
-    elif user not in group[b"members"]:
+    elif username not in group[b"members"]:
         return error(b"You're not a member of this group!")
     
     else:
-        data = {b"name":group[b"name"], b"isAdmin":(group[b"admin"] == username), b"members":group[b"members"]}
+        data = {b"name":group[b"name"], b"admin":group[b"admin"], b"members":group[b"members"]}
         return ok(data)
     
 def changeGroupOwner(username, groupID, newAdmin):
@@ -382,11 +396,15 @@ def removePush(username):
     return ok(b"")
 
 def pushReq(target,data):
-    pushID = users.find_one({b"username":target})[b"pushID"]
+    user = users.find_one({b"username":target})
+    print user
+    pushID = user[b"pushID"]
+    print "pushID="+pushID
     if pushID != b"":
-        response = gcm.json_request(registration_ids=pushID, data=data)
-        print b"push sent to "+ pushID +b"\n" + response
-    
+        response = gcm.json_request(registration_ids=[pushID], data=data)
+    else:
+        print "pushID missing"
+
 #### Other ####
 
 def pri(selected_db):
