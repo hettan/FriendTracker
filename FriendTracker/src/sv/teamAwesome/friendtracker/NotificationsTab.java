@@ -1,6 +1,7 @@
 package sv.teamAwesome.friendtracker;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TabHost;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TabHost.OnTabChangeListener;
@@ -59,7 +61,7 @@ public class NotificationsTab extends TabActivity{
 	    tabFriendReq = (ListView) findViewById(R.id.tabFriendReq);
 	    tabGroupReq = (ListView) findViewById(R.id.tabGroupReq);
 	    tabBuzz = (ListView) findViewById(R.id.tabBuzz);
-	       
+		Log.v(TAG, "le fuq");
 		tabHost.addTab(tabHost.newTabSpec(LIST1_TAB_TAG).setIndicator(LIST1_TAB_TAG).setContent(new TabContentFactory() {
 			public View createTabContent(String arg0) {
 				return tabAll;
@@ -85,7 +87,7 @@ public class NotificationsTab extends TabActivity{
 		Log.v(TAG, "extras:" + extras.getString("type"));
         tabHost.setCurrentTabByTag(extras.getString("type"));
         
-        /*
+        
 		tabAll.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView parent, View view, int position, long id) {
 			}
@@ -103,40 +105,41 @@ public class NotificationsTab extends TabActivity{
 			public void onItemClick(AdapterView parent, View view, int position, long id) {
 			}
 		});
-		*/
 		
+		Log.v(TAG, "init done");
 		tabHost.setOnTabChangedListener(new OnTabChangeListener() {
 			public void onTabChanged(String tabId) {
 			int i = getTabHost().getCurrentTab();
 			    if (i == 0) {
-			    	noteManager.cancelAll();
+			    	//noteManager.cancelAll();
 			    }
 			    else if (i ==1) {
 					Log.v(TAG, "tab1");
-					noteManager.cancel(1);
+					//noteManager.cancel(1);
 			    }
 			    else if (i ==2) {
 					Log.v(TAG, "tab2");
-					noteManager.cancel(2);
+					//noteManager.cancel(2);
 			    }
 			    else if (i ==3) {
 					Log.v(TAG, "tab3");
-					noteManager.cancel(3);
+					//noteManager.cancel(3);
 			    }
 			  }
 			});
-	}
-		/*JSONObject toServer = new JSONObject();
+		Log.v(TAG, "Start servercall");
+		JSONObject toServer = new JSONObject();
 		JSONObject data = new JSONObject();
 		try {
 			data.put("username", Config.USERNAME);
-			toServer.put("type", "getFriendReq");
+			toServer.put("type", "getRequests");
 			toServer.put("data", data);
 		} catch (Exception e) {
 				
 		}
 		String toSend = toServer.toString();
 		try {
+			Log.v(TAG, "servcall");
 	        Class[] params = {String.class, Boolean.class};
 				
 		 	ConnectionData connData = new ConnectionData(NotificationsTab.class.getMethod("Callback", params), me, toSend);
@@ -146,18 +149,52 @@ public class NotificationsTab extends TabActivity{
 			catch(Exception e) {
 				Log.v(TAG, "Error: " + e.toString());
 			}
-		}*/
+		}
 		
 		public void Callback(String res, Boolean error) {
 			Log.v(TAG, "Callback: " + res);
 			if(!error) {
 				try {
-					String[] derp = new String[1];
-					derp[0] = "asdad";
-					tabAll.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,derp));
+					Log.v(TAG, "NotiTry");
+					
+					String[] from = new String[]{"Header","Info","Tstamp"};
+					int[] to = new int[] {R.id.Header,R.id.Info,R.id.Tstamp};
+					
+					JSONArray data = new JSONArray(res);
+					
+					List<HashMap<String,String>> listAll = new ArrayList<HashMap<String,String>>();
+					List<String[]> listFriend = new ArrayList<String[]>();
+					List<String[]> listGroup = new ArrayList<String[]>();
+					List<String[]> listBuzz = new ArrayList<String[]>();
+					String info;
+					for(int i=0; i < data.length();i++){
+						Log.v(TAG, "middle");
+						HashMap<String,String> map = new HashMap<String,String>();
+						map.put("Header", data.getJSONObject(i).getString("requester"));
+						map.put("Info", data.getJSONObject(i).getString("type"));
+						map.put("Tstamp", data.getJSONObject(i).getString("time"));
+						listAll.add(map);
+						/*
+						if (info[2].contentEquals("friend")) {
+							listFriend.add(info);
+						}
+						else if (info[2].contentEquals("group")) {
+							listGroup.add(info);
+						}
+						else if (info[2].contentEquals("buzz")) {
+							listBuzz.add(info);
+						}
+						*/
+					}
+					
+					SimpleAdapter adapter = new SimpleAdapter(this,listAll,R.xml.notificationitem,from,to);
+					tabAll.setAdapter(adapter);
+
 				} catch(Exception e){
-					Log.v(TAG, "Error");
+					Log.v(TAG, "Error: "+ e.toString());
+					Log.v(TAG, "Cause: "+ e.getCause());
 				}
+
 			} else {
 				Log.v(TAG, "Error");
 			}

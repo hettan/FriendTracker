@@ -69,38 +69,37 @@ public class GCMIntentService extends GCMBaseIntentService{
         
         CharSequence title = "FriendTracker";
         CharSequence message;   
-        String derp = "All";
+        String notificationType = "All";
         
         switch(nCategory) {
         case 1:
         	title = "You have a friendrequest!";
         	message = nUser+ " wants to add you as a friend!";
-        	derp = "FriendRequests";
+        	notificationType = "FriendRequests";
         	Log.v("NotificationManager", "Note: Friendrequest");
         	break;
         case 2:
         	title = "You have been invited to a group!";
         	message = nUser+ " has invited you to join group \""+nGroup+"\"";
-        	derp = "GroupRequests";
+        	notificationType = "GroupRequests";
         	Log.v("NotificationManager", "Note: Groupinvite");
         	break;
         case 3:
         	title = "You have been buzzed!";
         	message = nUser+": "+nMessage;
-        	derp = "Buzz";
+        	notificationType = "Buzz";
         	Log.v("NotificationManager", "Note: Buzz");
         	break;
         default:	
         	title = "FriendTracker is derped :(";
         	message = "No category set. User: "+nUser;
-        	derp = "All";
+        	notificationType = "All";
         	Log.v("NotificationManager", "Note: ERROR!");
         	break;
         }
-        targetIntent.putExtra("type", derp);
-        //targetIntent.setAction(Long.toString(System.currentTimeMillis()));
+        targetIntent.putExtra("type", notificationType);
         
-        Log.v(TAG, "sent: " + derp); 
+        Log.v(TAG, "sent: " + notificationType); 
         
         PendingIntent nIntent = 
                 PendingIntent.getActivity(context, nCategory, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
