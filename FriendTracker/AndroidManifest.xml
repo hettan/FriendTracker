@@ -173,5 +173,16 @@
             </intent-filter>
         </activity>
         
+        <activity
+            android:name=".Group"
+            android:label="@string/title_activity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation">
+            <intent-filter>
+                <action android:name="sv.teamAwesome.friendtracker.GROUP" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
     </application>
 </manifest>

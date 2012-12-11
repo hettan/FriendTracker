@@ -67,6 +67,7 @@ public class Search extends Activity {
 				JSONObject data = new JSONObject();
 				try {
 					data.put("query", searcht);
+					data.put("username", Config.USERNAME);
 					toServer.put("type", "userSearch");
 					toServer.put("data", data);
 				} catch (Exception e) {
@@ -95,10 +96,8 @@ public class Search extends Activity {
 			
 				JSONArray data = new JSONArray(res);
 				String[] listRes = new String[data.length()];
-				String item;
 				for(int i = 0; i < data.length(); i++) {
-					item = data.getString(i);
-					listRes[i] = item.substring(2,item.length()-1); //need to remove u'' 
+					listRes[i] = data.getString(i); //need to remove u'' 
 				}
 				
 				
