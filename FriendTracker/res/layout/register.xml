@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:inputType="textPersonName"
         android:hint="@string/username" >
 
         <requestFocus />
@@ -49,8 +50,7 @@
         android:id="@+id/regerror"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text=""
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:gravity="center"
+        android:text="" />
 
 </LinearLayout>

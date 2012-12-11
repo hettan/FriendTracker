@@ -35,6 +35,8 @@ public class FriendsTab extends TabActivity {
 	  private ListView listView1;
 	  private ListView listView2;
 	  private ListView listView3;
+	  
+	  private ArrayAdapter<String> testing;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,12 +90,60 @@ public class FriendsTab extends TabActivity {
 					} catch(Exception e) {
 						Log.v(TAG, "Error: " + e.toString());
 					}
+
+					testing.remove((String)listView3.getAdapter().getItem(position));
+					testing.notifyDataSetChanged();
+				}
+			}
+		});
+		
+		tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+			public void onTabChanged(String tabId) {
+				int i = getTabHost().getCurrentTab();
+				if(i == 0) {
+				    JSONObject toServer = new JSONObject();
+					JSONObject data = new JSONObject();
+					try {
+						data.put("username", Config.USERNAME);
+						toServer.put("type", "getFriends");
+						toServer.put("data", data);
+					} catch (Exception e) {
+							
+					}
+					String toSend = toServer.toString();
+					try {
+				        Class[] params = {String.class, Boolean.class};
+							
+					 	ConnectionData connData = new ConnectionData(FriendsTab.class.getMethod("Callback", params), me, toSend);
+						AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+					} catch(Exception e) {
+						Log.v(TAG, "Error: " + e.toString());
+					}
+				} if(i == 1) {
+				   	JSONObject toServer2 = new JSONObject();
+					JSONObject data2 = new JSONObject();
+					try {
+						data2.put("username", Config.USERNAME);
+						toServer2.put("type", "getFriends");
+						toServer2.put("data", data2);
+					} catch (Exception e) {
+							
+					}
+					String toSend2 = toServer2.toString();
+					try {
+				        Class[] params = {String.class, Boolean.class};
+							
+					 	ConnectionData connData = new ConnectionData(FriendsTab.class.getMethod("Callback", params), me, toSend2);
+						AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+					} catch(Exception e) {
+						Log.v(TAG, "Error: " + e.toString());
+					}
 				}
 			}
 		});
 		
         tabHost.setCurrentTabByTag("All");
-     	JSONObject toServer = new JSONObject();
+     	/*JSONObject toServer = new JSONObject();
 		JSONObject data = new JSONObject();
 		try {
 			data.put("username", Config.USERNAME);
@@ -112,7 +162,7 @@ public class FriendsTab extends TabActivity {
 			}
 			catch(Exception e) {
 				Log.v(TAG, "Error: " + e.toString());
-		}
+		}*/
     }
     
 	public void Callback(String res, Boolean error) {
@@ -133,25 +183,19 @@ public class FriendsTab extends TabActivity {
 						listActive.add(username);
 					}
 				}
-				String[] test = new String[3];
-				test[0] = "No Friends";
-				test[1] = "No Active Friends";
-				test[2] = "No Requests";
-				listView1.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,listActive));
-				if(listAll.length == 0) {
-					listView2.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1, test));
-				} else {
-					listView2.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,listAll));
-				}
-				
 
+				listView1.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,listActive));
+				listView2.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,listAll));
 
 				JSONArray requests = data.getJSONArray("requests");
 				List<String> listReq = new ArrayList<String>();
 				for(int i=0; i < requests.length();i++) {
 					listReq.add(requests.getJSONObject(i).getString("requester"));
 				}
-				listView3.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,listReq));
+				testing = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listReq);
+				
+				//listView3.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,listReq));
+				listView3.setAdapter(testing);
 				
 			} catch(Exception e){
 				Log.v(TAG, "Error: "+ e.toString());
