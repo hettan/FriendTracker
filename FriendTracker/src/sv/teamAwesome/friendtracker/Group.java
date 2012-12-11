@@ -68,10 +68,10 @@ public class Group extends Activity {
 				Log.v(TAG, "14" + text);
 
 				tv1.setText(text);
-				tv2.setText(data.getString("admin"));
+				tv2.setText("Admin: " + data.getString("admin"));
 				Log.v(TAG, "15");
 				ListView lv = (ListView)findViewById(R.id.groupmembers);
-				lv.setAdapter(new ArrayAdapter<String>(this, R.layout.group, listMembers));
+				lv.setAdapter(new ArrayAdapter<String>(this, R.layout.groups_list_item, listMembers));
 
 				Log.v(TAG, "16");
 				
