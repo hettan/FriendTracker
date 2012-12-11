@@ -77,6 +77,7 @@ public class FriendsTab extends TabActivity {
 					try {
 						data.put("src", Config.USERNAME);
 						data.put("requester", item);
+						data.put("type", "friend");
 						toServer.put("type", "acceptReq");
 						toServer.put("data", data);
 					} catch (Exception e) {
