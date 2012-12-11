@@ -36,7 +36,10 @@ public class FriendsTab extends TabActivity {
 	  private ListView listView2;
 	  private ListView listView3;
 	  
-	  private ArrayAdapter<String> testing;
+	  private ArrayAdapter<String> lv1;
+	  private ArrayAdapter<String> lv2;
+	  private ArrayAdapter<String> lv3;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,6 +77,7 @@ public class FriendsTab extends TabActivity {
 					try {
 						data.put("src", Config.USERNAME);
 						data.put("requester", item);
+						data.put("type", "friend");
 						toServer.put("type", "acceptReq");
 						toServer.put("data", data);
 					} catch (Exception e) {
@@ -91,8 +95,8 @@ public class FriendsTab extends TabActivity {
 						Log.v(TAG, "Error: " + e.toString());
 					}
 
-					testing.remove((String)listView3.getAdapter().getItem(position));
-					testing.notifyDataSetChanged();
+					lv3.remove((String)listView3.getAdapter().getItem(position));
+					lv3.notifyDataSetChanged();
 				}
 			}
 		});
@@ -167,6 +171,8 @@ public class FriendsTab extends TabActivity {
     
 	public void Callback(String res, Boolean error) {
 		Log.v(TAG, "Callback: " + res);
+		lv2.clear();
+		lv1.clear();
 		if(!error) {
 			try {
 				Log.v(TAG, "10");
@@ -184,18 +190,20 @@ public class FriendsTab extends TabActivity {
 					}
 				}
 
-				listView1.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,listActive));
-				listView2.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,listAll));
+				lv1 = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listActive);
+				lv2 = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listAll);
 
 				JSONArray requests = data.getJSONArray("requests");
 				List<String> listReq = new ArrayList<String>();
 				for(int i=0; i < requests.length();i++) {
 					listReq.add(requests.getJSONObject(i).getString("requester"));
 				}
-				testing = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listReq);
+				lv3 = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listReq);
 				
 				//listView3.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,listReq));
-				listView3.setAdapter(testing);
+				listView1.setAdapter(lv1);
+				listView2.setAdapter(lv2);
+				listView3.setAdapter(lv3);
 				
 			} catch(Exception e){
 				Log.v(TAG, "Error: "+ e.toString());
