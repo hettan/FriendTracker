@@ -11,6 +11,7 @@ public class Config {
 	public static String selectedGroupID = "";
 	public static Object andersMamma = null;
 	public static Dictionary<String, String> STATUS;
+	public static String ADMIN = "";
 	
 	// Sender id for GCM registration
 	public static String SENDER_ID = "377927318664";

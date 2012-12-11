@@ -8,8 +8,11 @@ handler = {}
 def request_handler(jsonStr):
     jData = json.loads(jsonStr, object_hook=decode_dict)
     func = handler[jData["type"]]
-    print jData
-    return func(jData["data"])
+    if func == None:
+        print "Invalid function type"
+        return "Invalid function-type"
+    else:
+        return func(jData["data"])
 
 #Python makes string to unicode by standard, need to decode this
 def decode_dict(data):
@@ -56,6 +59,9 @@ def getFriendReq(data):
 def getRequests(data):
     return db.getRequests(data["username"])
 
+def clearRequests(data):
+    return db.clearRequests(data["username"])
+
 def getFriends(data):
     return db.getFriends(data["username"])
 
@@ -63,7 +69,7 @@ def getFriendsIfMod(data):
     return db.getFriends(data["username"], data["ts"])
 
 def userSearch(data):
-    return db.userSearch(data["query"])
+    return db.userSearch(data["username"], data["query"])
 
 #### Groups ####
 def createGroup(data):
@@ -77,6 +83,9 @@ def remFromGroup(data):
 
 def leaveGroup(data):
     return db.leaveGroup(data["username"], data["groupID"])
+
+def delGroup(data):
+    return db.delGroup(data["username"], data["groupID"])
 
 def getGroups(data):
     return db.getGroups(data["username"])
@@ -128,6 +137,7 @@ handler["request"] = addReq
 handler["acceptReq"] = acceptReq
 handler["getFriendReq"] = getFriendReq
 handler["getRequests"] = getRequests
+handler["clearRequests"] = clearRequests
 handler["getFriends"] = getFriends
 handler["getFriendsIfMod"] = getFriendsIfMod
 handler["userSearch"] = userSearch
@@ -136,6 +146,7 @@ handler["createGroup"] = createGroup
 handler["addGroupMember"] = addGroupMember
 handler["remFromGroup"] = remFromGroup
 handler["leaveGroup"] = leaveGroup
+handler["delGroup"] = delGroup
 handler["getGroups"] = getGroups
 handler["getGroupInfo"] = getGroupInfo
 handler["changeGroupOwner"] = changeGroupOwner
