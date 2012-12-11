@@ -9,16 +9,23 @@ import org.json.JSONObject;
 
 import android.app.NotificationManager;
 import android.app.TabActivity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract.CommonDataKinds.Note;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.SimpleAdapter;
 import android.widget.TabHost;
 import android.widget.AdapterView.OnItemClickListener;
@@ -37,8 +44,10 @@ public class NotificationsTab extends TabActivity{
 	private ListView tabFriendReq;
 	private ListView tabGroupReq;
 	private ListView tabBuzz;
+	NotificationManager noteManager;
+    final Object me = this;
 	
-	/*
+    /*
 	 * ID
 	 * 1	FriendRequest
 	 * 2	GroupRequest
@@ -50,18 +59,17 @@ public class NotificationsTab extends TabActivity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		final NotificationManager noteManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		Log.v(TAG, "Starting NotiTab");
 		setContentView(R.layout.notifications);
-
-	    final Object me = this;
+		
+		final ShowPopUp pop = new ShowPopUp();
+		
+		noteManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+	
 	    tabHost = (TabHost)findViewById(android.R.id.tabhost);
 	    tabAll = (ListView) findViewById(R.id.tabAll);
 	    tabFriendReq = (ListView) findViewById(R.id.tabFriendReq);
 	    tabGroupReq = (ListView) findViewById(R.id.tabGroupReq);
 	    tabBuzz = (ListView) findViewById(R.id.tabBuzz);
-		Log.v(TAG, "le fuq");
 		tabHost.addTab(tabHost.newTabSpec(LIST1_TAB_TAG).setIndicator(LIST1_TAB_TAG).setContent(new TabContentFactory() {
 			public View createTabContent(String arg0) {
 				return tabAll;
@@ -90,6 +98,8 @@ public class NotificationsTab extends TabActivity{
         
 		tabAll.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView parent, View view, int position, long id) {
+				ShowPopUp pop = new ShowPopUp();
+				pop.show(pop.getFragmentManager(),"PopTry");
 			}
 		});
 		tabFriendReq.setOnItemClickListener(new OnItemClickListener() {
@@ -106,50 +116,51 @@ public class NotificationsTab extends TabActivity{
 			}
 		});
 		
-		Log.v(TAG, "init done");
 		tabHost.setOnTabChangedListener(new OnTabChangeListener() {
 			public void onTabChanged(String tabId) {
 			int i = getTabHost().getCurrentTab();
 			    if (i == 0) {
-			    	//noteManager.cancelAll();
+			    	Update();
+			    	noteManager.cancelAll();
 			    }
 			    else if (i ==1) {
-					Log.v(TAG, "tab1");
-					//noteManager.cancel(1);
+					Update();
+					noteManager.cancel(1);
 			    }
 			    else if (i ==2) {
-					Log.v(TAG, "tab2");
-					//noteManager.cancel(2);
+					Update();
+					noteManager.cancel(2);
 			    }
 			    else if (i ==3) {
-					Log.v(TAG, "tab3");
-					//noteManager.cancel(3);
+					Update();
+					noteManager.cancel(3);
 			    }
 			  }
 			});
-		Log.v(TAG, "Start servercall");
-		JSONObject toServer = new JSONObject();
-		JSONObject data = new JSONObject();
-		try {
-			data.put("username", Config.USERNAME);
-			toServer.put("type", "getRequests");
-			toServer.put("data", data);
-		} catch (Exception e) {
-				
+		Update();
 		}
-		String toSend = toServer.toString();
-		try {
-			Log.v(TAG, "servcall");
-	        Class[] params = {String.class, Boolean.class};
+		
+		public void Update() {
+			
+			JSONObject toServer = new JSONObject();
+			JSONObject data = new JSONObject();
+			try {
+				data.put("username", Config.USERNAME);
+				toServer.put("type", "getRequests");
+				toServer.put("data", data);
+			} catch (Exception e) {
 				
-		 	ConnectionData connData = new ConnectionData(NotificationsTab.class.getMethod("Callback", params), me, toSend);
-
-			AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
 			}
-			catch(Exception e) {
-				Log.v(TAG, "Error: " + e.toString());
+			String toSend = toServer.toString();
+			try {
+	        	Class[] params = {String.class, Boolean.class};	
+		 		ConnectionData connData = new ConnectionData(NotificationsTab.class.getMethod("Callback", params), me, toSend);
+		 		AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+				}
+				catch(Exception e) {
+					Log.v(TAG, "Error: " + e.toString());
+				}
 			}
-		}
 		
 		public void Callback(String res, Boolean error) {
 			Log.v(TAG, "Callback: " + res);
@@ -168,7 +179,6 @@ public class NotificationsTab extends TabActivity{
 					List<String[]> listBuzz = new ArrayList<String[]>();
 					String info;
 					for(int i=0; i < data.length();i++){
-						Log.v(TAG, "middle");
 						HashMap<String,String> map = new HashMap<String,String>();
 						map.put("Header", data.getJSONObject(i).getString("requester"));
 						map.put("Info", data.getJSONObject(i).getString("type"));
@@ -189,7 +199,9 @@ public class NotificationsTab extends TabActivity{
 					
 					SimpleAdapter adapter = new SimpleAdapter(this,listAll,R.xml.notificationitem,from,to);
 					tabAll.setAdapter(adapter);
-
+					
+					noteManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+					
 				} catch(Exception e){
 					Log.v(TAG, "Error: "+ e.toString());
 					Log.v(TAG, "Cause: "+ e.getCause());
@@ -208,10 +220,40 @@ public class NotificationsTab extends TabActivity{
 		@Override
 		public boolean onOptionsItemSelected(MenuItem item) {
 			if (item.getItemId() == 0) {
-				NotificationManager nm = (NotificationManager)
-			            getSystemService(NOTIFICATION_SERVICE);
-				nm.cancelAll();
+				JSONObject toServer = new JSONObject();
+				JSONObject data = new JSONObject();
+				try {
+					data.put("username", Config.USERNAME);
+					toServer.put("type", "clearRequests");
+					toServer.put("data", data);
+				} catch (Exception e) {
+						
+				}
+				String toSend = toServer.toString();
+				try {
+			        Class[] params = {String.class, Boolean.class};	
+				 	ConnectionData connData = new ConnectionData(NotificationsTab.class.getMethod("CallbackClear", params), me, toSend);
+					AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+					}
+					catch(Exception e) {
+						Log.v(TAG, "Error: " + e.toString());
+					}
 			}
 			return true;
+		}
+		public void CallbackClear(String res, Boolean error) {
+			Log.v(TAG, "Callback: " + res);
+			if(!error) {
+				try {
+					NotificationManager nm = (NotificationManager)
+				            getSystemService(NOTIFICATION_SERVICE);
+					nm.cancelAll();
+					Update();
+				}
+				catch(Exception e){
+					Log.v(TAG, "Error: "+ e.toString());
+					Log.v(TAG, "Cause: "+ e.getCause());
+				}
+			}
 		}
 }
