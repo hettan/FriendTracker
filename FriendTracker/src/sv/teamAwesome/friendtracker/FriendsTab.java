@@ -74,6 +74,7 @@ public class FriendsTab extends TabActivity {
 				Intent goDia = new Intent(getBaseContext(), DialogAct.class);
 								
 				String item = (String) listView3.getAdapter().getItem(position);
+				
 				goDia.putExtra("item", item);
 				Config.temp = me;
 				ItemPos = position;
@@ -152,7 +153,6 @@ public class FriendsTab extends TabActivity {
     
 	public void Callback(String res, Boolean error) {
 		Log.v(TAG, "Callback: " + res);
-		
 		if(!error) {
 			try {
 				Log.v(TAG, "10");
