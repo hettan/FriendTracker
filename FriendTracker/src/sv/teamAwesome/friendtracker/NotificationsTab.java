@@ -9,23 +9,15 @@ import org.json.JSONObject;
 
 import android.app.NotificationManager;
 import android.app.TabActivity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract.CommonDataKinds.Note;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.SimpleAdapter;
 import android.widget.TabHost;
 import android.widget.AdapterView.OnItemClickListener;
@@ -61,8 +53,6 @@ public class NotificationsTab extends TabActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.notifications);
 		
-		final ShowPopUp pop = new ShowPopUp();
-		
 		noteManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 	
 	    tabHost = (TabHost)findViewById(android.R.id.tabhost);
@@ -94,12 +84,14 @@ public class NotificationsTab extends TabActivity{
 		Bundle extras = getIntent().getExtras();
 		Log.v(TAG, "extras:" + extras.getString("type"));
         tabHost.setCurrentTabByTag(extras.getString("type"));
-        
-        
+
 		tabAll.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView parent, View view, int position, long id) {
-				ShowPopUp pop = new ShowPopUp();
-				pop.show(pop.getFragmentManager(),"PopTry");
+				
+				Log.v(TAG, "Outside Anders Mamma");
+				Intent goDia = new Intent(getBaseContext(), DialogAct.class);
+				startActivity(goDia);
+				Log.v(TAG, "After Anders Mamma");
 			}
 		});
 		tabFriendReq.setOnItemClickListener(new OnItemClickListener() {
