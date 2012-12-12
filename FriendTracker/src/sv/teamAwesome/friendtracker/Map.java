@@ -198,7 +198,7 @@ public class Map extends MapActivity {
 		mapView.getOverlays().add(myLocation);
 		mapOverlays = mapView.getOverlays();
 		
-		if(showhide) {
+		/*if(showhide) {
 			JSONObject toServer = new JSONObject();
 			JSONObject data = new JSONObject();
 			try {
@@ -221,7 +221,7 @@ public class Map extends MapActivity {
 			catch(Exception e) {
 				Log.v(TAG, "Error: " + e.toString());
 			}
-		}
+		}*/
 		
 	}	
 
@@ -268,10 +268,10 @@ public class Map extends MapActivity {
 		if(item.getItemId() == 3) {
 			if(item.getTitle().toString().contentEquals("Hide Friends")) {
 				item.setTitle("Show Friends");
-				showFriends = false;
+				//showFriends = false;
 			} else {
 				item.setTitle("Hide Friends");
-				showFriends = true;
+				//showFriends = true;
 			}
 
 		}
@@ -297,10 +297,11 @@ public class Map extends MapActivity {
 			try {
 				JSONArray data = new JSONArray(res);
 				JSONObject pos;
+				List<String> friendStatus = new ArrayList<String>();
 				for(int i=0; i < data.length();i++){
 					String username = data.getJSONObject(i).getString("username");
 					Log.v(TAG, "USERNAME = " + username);
-					data.getJSONObject(i).getString("status");
+					friendStatus.add(data.getJSONObject(i).getString("status"));
 					pos = data.getJSONObject(i).getJSONObject("pos");
 					int lon = Integer.parseInt(pos.getString("lon"));
 					Log.v(TAG, "LONGITUDE = " + lon);
@@ -317,7 +318,7 @@ public class Map extends MapActivity {
 					Log.v(TAG, "Round "+i+", Starting..");
 						
 					PointerOverlay pointerOverlay = new PointerOverlay(drawable, mapView);
-					OverlayItem overlayitem = new OverlayItem(fPos.get(i), fUser.get(i), "Derp");
+					OverlayItem overlayitem = new OverlayItem(fPos.get(i), fUser.get(i), friendStatus.get(i));
 					pointerOverlay.addOverlay(overlayitem);
 					mapOverlays.add(pointerOverlay);
 					Log.v(TAG, "Round "+i+", Done.");

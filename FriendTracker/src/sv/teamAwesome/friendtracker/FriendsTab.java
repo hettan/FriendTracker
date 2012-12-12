@@ -171,8 +171,6 @@ public class FriendsTab extends TabActivity {
     
 	public void Callback(String res, Boolean error) {
 		Log.v(TAG, "Callback: " + res);
-		//lv2.clear();
-		//lv1.clear();
 		if(!error) {
 			try {
 				Log.v(TAG, "10");
