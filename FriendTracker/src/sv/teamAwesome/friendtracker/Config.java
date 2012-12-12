@@ -8,8 +8,10 @@ public class Config {
 	public static long USER_BACKGROUND_POSITION_UPDATE_INTERVAL = 60000;
 	public static String USERNAME = "";
 	public static String SESSION_ID = "";
+	public static String selectedGroupID = "";
 	public static Object andersMamma = null;
 	public static Dictionary<String, String> STATUS;
+	public static String ADMIN = "";
 	
 	// Sender id for GCM registration
 	public static String SENDER_ID = "377927318664";

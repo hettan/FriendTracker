@@ -14,20 +14,41 @@
 			android:layout_width="fill_parent" android:layout_height="wrap_content" />
 		<FrameLayout android:id="@android:id/tabcontent"
 			android:layout_width="fill_parent" android:layout_height="fill_parent">
-			<ListView android:id="@+id/tabAll" android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:layout_weight="1">
-			</ListView>
-			<ListView android:id="@+id/tabFriendReq" android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:layout_weight="1">
-			</ListView>
-			<ListView android:id="@+id/tabGroupReq" android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:layout_weight="1">
-			</ListView>
-			<ListView android:id="@+id/tabBuzz" android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:layout_weight="1">
-			</ListView>
-		</FrameLayout>
-	</LinearLayout>
-</TabHost>
-    
+				<LinearLayout android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:layout_weight="1">
+					<ListView 
+					    android:layout_width="fill_parent"
+					    android:layout_height="fill_parent"
+					    android:id="@+id/tabAll">				    
+					</ListView>
+				</LinearLayout>
+			
+				<LinearLayout android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:layout_weight="1">
+					<ListView 
+					    android:layout_width="fill_parent"
+					    android:layout_height="fill_parent"
+					    android:id="@+id/tabFriendReq">				    
+					</ListView>
+				</LinearLayout>
+				<LinearLayout android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:layout_weight="1">
+					<ListView 
+					    android:layout_width="fill_parent"
+					    android:layout_height="fill_parent"
+					    android:id="@+id/tabGroupReq" >				    
+					</ListView>
+				</LinearLayout>
+				<LinearLayout  android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:layout_weight="1">
+					<ListView 
+					    android:layout_width="fill_parent"
+					    android:layout_height="fill_parent"
+					    android:id="@+id/tabBuzz">				    
+					</ListView>
+				</LinearLayout>
+			</FrameLayout>
+		</LinearLayout>
+	</TabHost>
+
 </LinearLayout>

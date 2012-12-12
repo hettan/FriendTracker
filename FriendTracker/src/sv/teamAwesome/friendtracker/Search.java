@@ -67,6 +67,7 @@ public class Search extends Activity {
 				JSONObject data = new JSONObject();
 				try {
 					data.put("query", searcht);
+					data.put("username", Config.USERNAME);
 					toServer.put("type", "userSearch");
 					toServer.put("data", data);
 				} catch (Exception e) {
