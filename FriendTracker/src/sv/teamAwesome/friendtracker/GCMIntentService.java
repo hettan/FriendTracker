@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Looper;
 import android.util.Log;
 
 //import sv.teamAwesome.friendtracker.Config.SENDER_ID;
@@ -21,27 +23,92 @@ public class GCMIntentService extends GCMBaseIntentService{
 	public GCMIntentService() {
 		super(Config.SENDER_ID);
 	}
-
+	
+	public static Object derp;
 	private static final String TAG = "GCMIntentService";
 
-
 	@Override
-	protected void onRegistered(Context context, String regId) {
+	protected void onRegistered(final Context context, final String regId) {
 		
-		/*
-		 * TODO:
-		 * M�ste registrera mot servern h�r. Annars s� kommer push att bli derpat om google registrerar om.
-		 */
+		Log.v(TAG, "** onRegistered");
+		
+		class LooperThread extends Thread {
+			  public void run() {
+			    Looper.prepare();
+			    JSONObject toServer = new JSONObject();
+			    JSONObject data = new JSONObject();
+			    try {
+			    	data.put("username", Config.USERNAME);
+			    	data.put("pushID", regId);
+			    	toServer.put("type", "registerPush");
+			    	toServer.put("data", data);
+			    } catch (Exception e) {}
+			    
+			    String toSend = toServer.toString();
+			    try {
+			    	Class[] params = {String.class, Boolean.class};
+			    	ConnectionData connData = new ConnectionData(LooperThread.class.getMethod("Callback", params), this, toSend);
+			    	AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+			    }
+			    catch(Exception e) {
+			    	Log.v(TAG, "Error: " + e.toString());
+			    }
+			    Looper.loop();
+			  }
+			  public void Callback(String res, Boolean error) {
+				  	Log.v("GCMCallback", "Callback: "+res);
+				 	try {
+				 		Looper.myLooper().quit();
+				 	} catch(Exception e) {
+				 		Log.v("GCMCallback", "Error: "+e);
+				 	}
+			  }
+		}
+		LooperThread TCPThread = new LooperThread();
+		TCPThread.start();
 	}
 
 	@Override
-	protected void onUnregistered(Context context, String regId) {
-		
+	protected void onUnregistered(final Context context, final String regId) {
+		Log.v(TAG, "** onUnregistered");
 		/*
 		 * Borde kanske kunna avregistrera push i settings??
 		 */
-	}	
-
+		class LooperThread extends Thread {
+			  public void run() {
+			    Looper.prepare();
+			    JSONObject toServer = new JSONObject();
+			    JSONObject data = new JSONObject();
+			    try {
+			    	data.put("username", Config.USERNAME);
+			    	toServer.put("type", "removePush");
+			    	toServer.put("data", data);
+			    } catch (Exception e) {}
+			    
+			    String toSend = toServer.toString();
+			    try {
+			    	Class[] params = {String.class, Boolean.class};
+			    	ConnectionData connData = new ConnectionData(LooperThread.class.getMethod("Callback", params), this, toSend);
+			    	AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+			    }
+			    catch(Exception e) {
+			    	Log.v(TAG, "Error: " + e.toString());
+			    }
+			    Looper.loop();
+			  }
+			  public void Callback(String res, Boolean error) {
+				  	Log.v("GCMCallback", "Callback: "+res);
+				 	try {
+				 		Looper.myLooper().quit();
+				 	} catch(Exception e) {
+				 		Log.v("GCMCallback", "Error: "+e);
+				 	}
+			  }
+		}
+		LooperThread TCPThread = new LooperThread();
+		TCPThread.start();
+	}
+	
 	@Override
 	protected void onMessage(Context context, Intent intent) {
 		/*

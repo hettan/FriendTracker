@@ -33,13 +33,6 @@ public class MainActivity extends Activity {
 		
 		final Object me = this;
 		
-		GCMRegistrar.checkDevice(this);
-		GCMRegistrar.checkManifest(this);
-		if ((GCMRegistrar.getRegistrationId(this)).equals("")) {
-			GCMRegistrar.register(this, Config.SENDER_ID);
-		}
-		final String regId = GCMRegistrar.getRegistrationId(this);
-		
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		getWindow().setFormat(PixelFormat.RGBA_8888);
@@ -64,7 +57,6 @@ public class MainActivity extends Activity {
 				try {
 					data.put("username", checkUser);
 					data.put("password", checkPass);
-					data.put("pushID", regId);
 					toServer.put("type", "login");
 					toServer.put("data", data);
 				} catch (Exception e) {

@@ -1,9 +1,12 @@
 package sv.teamAwesome.friendtracker;
 
+import com.google.android.gcm.GCMRegistrar;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -12,6 +15,16 @@ public class FrontPage extends Activity{
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		
+		// Logged in, registering PUSH!!
+		GCMRegistrar.checkDevice(this);
+		GCMRegistrar.checkManifest(this);
+		if ((GCMRegistrar.getRegistrationId(this)).equals("")) {
+			GCMRegistrar.register(this, Config.SENDER_ID);
+		} else {
+			GCMRegistrar.unregister(this);
+		}
+		
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		getWindow().setFormat(PixelFormat.RGBA_8888);
