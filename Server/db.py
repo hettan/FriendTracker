@@ -140,11 +140,6 @@ def isFriend(src,target):
 
 def addFriendReq(src, target):
     if not isFriend(src,target):
-        requests = users.find_one({b"username":target})[b"requests"]
-        for req in requests:
-            if req[b"requester"] == src and req[b"type"] == b"friend":
-                return error(b"You've alreade made this request!")
-        
         time = datetime.datetime.now()
         req = {b"requester":src, b"time":time.strftime("%d/%m - %H:%M"), b"type":b"friend"} #Month-Day-Hour-Minute
         users.update({b"username":target}, {"$push": {b"requests": req}})
@@ -156,26 +151,16 @@ def addFriendReq(src, target):
 
 def acceptReq(src, requester, reqType):
     print "src="+ src + "req="+ requester
-        
-    if reqType == "group":
-    #Get groupID
-        requests = users.find_one({b"username":src})["requests"]
-        for req in requests:
-            if req["requester"] == requester and req["type"] == "group":
-                groups.update({b"groupID":req[b"groupID"]}, {"$push":{b"members":src}})
-                users.update({b"username":src}, {"$push":{b"groups":req[b"groupID"]}})
-
-    elif reqType == "friend":
-        #Update friends
-        users.update({b"username":src},{"$push":{b"friends":requester}})
-        users.update({b"username":requester},{"$push":{b"friends":src}})
-                     
     #Remove from requests
-    users.update({b"username":src},{"$pop":{b"requests":{b"username":requester, b"type":reqType}}})  
+    users.update({b"username":src},{"$pop":{b"requests":{b"username":requester}}})
+    
+    #Update friends
+    users.update({b"username":src},{"$push":{b"friends":requester}})
+    users.update({b"username":requester},{"$push":{b"friends":src}})
     
     #Update modified
-    #users.update({b"username":src},{"$set":{b"friendsMod":time.time()}})
-    #users.update({b"username":requester},{"$set":{b"friendsMod":time.time()}})
+    users.update({b"username":src},{"$set":{b"friendsMod":time.time()}})
+    users.update({b"username":requester},{"$set":{b"friendsMod":time.time()}})
     return ok(b"")
 
 def getFriendReq(username):
@@ -211,18 +196,6 @@ def getFriends(username):
     #requests = sorted(user["requests"], key=lambda k: k["requester"])
     #out = decode_dict({b"friends":friends, b"requests":requests})
     return ok({b"friends":friends, b"requests":requests})
-
-#Returns all friends not in group
-def getFriendsNotGroup(username, groupID):
-    user = users.find_one({b"username":username})
-    groupMembers = groups.find_one({b"groupID":groupID})["members"]
-
-    friends = []
-    for friend in user[b"friends"]:
-        if friend not in groupMembers:
-            friends.append(friend)
-    return ok(friends)
-
 
 def getFriendsIfMod(username, ts):
     user = users.find_one({b"username":username})
@@ -275,7 +248,7 @@ def addGroupMember(username, groupID, newUser):
     
     else:
         return error(b"You're not the group admin!")
-
+    
 def remFromGroup(username, groupID, target):
     if not isGroupAdmin(username, groupID):
         return error(b"You're not the admin of this group!")
@@ -423,22 +396,6 @@ def getFriendsPos(username):
             positions.append({b"username": friend, b"pos":res[b"pos"], b"status":res[b"status"]})
         return ok(positions)
 
-
-def getPositions(username, showFriends, groupID):
-    user = users.find_one({b"username":username})
-    data = []
-    if showFriends:
-        for friend in user["friend"]:
-            entry = {b"type": b"friend", b"username":friend}
-            entry[b"pos"] = users.find_one({b"username":friend})[b"pos"]
-            data.append(entry)
-    if groupID != "":
-        group = groups.find_one({b"groupID":groupID})
-        for member in group[b"members"]:
-            if member != username:
-                 entry = {b"type": b"group", b"groupName":group[b"name"], b"username":member}
-                 data.append(entry)
-    return ok(data)
     
 #### Push ####
 

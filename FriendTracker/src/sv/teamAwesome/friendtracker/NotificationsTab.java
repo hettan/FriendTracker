@@ -9,23 +9,15 @@ import org.json.JSONObject;
 
 import android.app.NotificationManager;
 import android.app.TabActivity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract.CommonDataKinds.Note;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.SimpleAdapter;
 import android.widget.TabHost;
 import android.widget.AdapterView.OnItemClickListener;
@@ -61,8 +53,6 @@ public class NotificationsTab extends TabActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.notifications);
 		
-		final ShowPopUp pop = new ShowPopUp();
-		
 		noteManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 	
 	    tabHost = (TabHost)findViewById(android.R.id.tabhost);
@@ -94,12 +84,9 @@ public class NotificationsTab extends TabActivity{
 		Bundle extras = getIntent().getExtras();
 		Log.v(TAG, "extras:" + extras.getString("type"));
         tabHost.setCurrentTabByTag(extras.getString("type"));
-        
-        
+
 		tabAll.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView parent, View view, int position, long id) {
-				ShowPopUp pop = new ShowPopUp();
-				pop.show(pop.getFragmentManager(),"PopTry");
 			}
 		});
 		tabFriendReq.setOnItemClickListener(new OnItemClickListener() {
@@ -174,9 +161,9 @@ public class NotificationsTab extends TabActivity{
 					JSONArray data = new JSONArray(res);
 					
 					List<HashMap<String,String>> listAll = new ArrayList<HashMap<String,String>>();
-					List<String[]> listFriend = new ArrayList<String[]>();
-					List<String[]> listGroup = new ArrayList<String[]>();
-					List<String[]> listBuzz = new ArrayList<String[]>();
+					List<HashMap<String,String>> listFriend = new ArrayList<HashMap<String,String>>();
+					List<HashMap<String,String>> listGroup = new ArrayList<HashMap<String,String>>();
+					List<HashMap<String,String>> listBuzz = new ArrayList<HashMap<String,String>>();
 					String info;
 					for(int i=0; i < data.length();i++){
 						HashMap<String,String> map = new HashMap<String,String>();
@@ -184,21 +171,30 @@ public class NotificationsTab extends TabActivity{
 						map.put("Info", data.getJSONObject(i).getString("type"));
 						map.put("Tstamp", data.getJSONObject(i).getString("time"));
 						listAll.add(map);
-						/*
-						if (info[2].contentEquals("friend")) {
-							listFriend.add(info);
+						
+						if (data.getJSONObject(i).getString("type").contentEquals("friend")) {
+							listFriend.add(map);
 						}
-						else if (info[2].contentEquals("group")) {
-							listGroup.add(info);
+						if (data.getJSONObject(i).getString("type").contentEquals("group")) {
+							listGroup.add(map);
 						}
-						else if (info[2].contentEquals("buzz")) {
-							listBuzz.add(info);
+						if (data.getJSONObject(i).getString("type").contentEquals("buzz")) {
+							listBuzz.add(map);
 						}
-						*/
+						
 					}
 					
-					SimpleAdapter adapter = new SimpleAdapter(this,listAll,R.xml.notificationitem,from,to);
-					tabAll.setAdapter(adapter);
+					SimpleAdapter adapter1 = new SimpleAdapter(this,listAll,R.xml.notificationitem,from,to);
+					tabAll.setAdapter(adapter1);
+					
+					SimpleAdapter adapter2 = new SimpleAdapter(this,listFriend,R.xml.notificationitem,from,to);
+					tabFriendReq.setAdapter(adapter2);
+					
+					SimpleAdapter adapter3 = new SimpleAdapter(this,listGroup,R.xml.notificationitem,from,to);
+					tabGroupReq.setAdapter(adapter3);
+					
+					SimpleAdapter adapter4 = new SimpleAdapter(this,listBuzz,R.xml.notificationitem,from,to);
+					tabBuzz.setAdapter(adapter4);
 					
 					noteManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 					

@@ -31,6 +31,7 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
+import com.readystatesoftware.maps.OnSingleTapListener;
 
 public class Map extends MapActivity {
 	private static final String TAG = "MAP";
@@ -39,17 +40,16 @@ public class Map extends MapActivity {
 	MyLocationOverlay myLocation;
 	PointerOverlay pointerOverlay;
 	List<Overlay> mapOverlays;
-	MapView mapView;
+	TapControlledMapView mapView;
 	GeoPoint point;
 	MapController control;
 	View importPanel;
 	Boolean FirstLoc = true;
-	//HashMap<String, GeoPoint> friendPos;
 	Boolean setPoint = false;
+	String myGroupID = "";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map);
 
@@ -62,8 +62,9 @@ public class Map extends MapActivity {
 		importPanel.setVisibility(View.INVISIBLE);
 		
 		final Object me = this;
+
 		
-		mapView = (MapView) findViewById(R.id.mapview);
+		mapView = (TapControlledMapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
 		control = mapView.getController();
 
@@ -113,7 +114,7 @@ public class Map extends MapActivity {
 				point = new GeoPoint((int)(location.getLatitude()*1E6), (int)(location.getLongitude()*1E6));
 				if(FirstLoc) {
 					control.animateTo(point);
-					control.setZoom(50);
+					control.setZoom(100);
 					FirstLoc = false;
 				}
 				JSONObject toServer = new JSONObject();
@@ -132,7 +133,6 @@ public class Map extends MapActivity {
 		            Class[] params = {String.class, Boolean.class};
 					
 					ConnectionData connData = new ConnectionData(MainActivity.class.getMethod("Callback", params), me, toSend);
-					//ConnectionData connData = new ConnectionData(MainActivity.class.getMethod("Callback", params), MainActivity.class.newInstance(), toSend);
 
 					AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
 				}
@@ -154,7 +154,6 @@ public class Map extends MapActivity {
 		            Class[] params = {String.class, Boolean.class};
 					
 					ConnectionData connData = new ConnectionData(Map.class.getMethod("CallbackFriends", params), me, toSend2);
-					//ConnectionData connData = new ConnectionData(MainActivity.class.getMethod("Callback", params), MainActivity.class.newInstance(), toSend);
 
 					AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
 				}
@@ -175,58 +174,55 @@ public class Map extends MapActivity {
 				// TODO Auto-generated method stub
 			}
 		};
-		
 
-		/*mapView.setOnTouchListener(new View.OnTouchListener() {
-			public boolean onTouch(View v, MotionEvent event) {
+		mapView.setOnSingleTapListener(new OnSingleTapListener() {
+			public boolean onSingleTap(MotionEvent event) {
 				GeoPoint RP = mapView.getProjection().fromPixels((int) event.getX(), (int) event.getY());
 				PointerOverlay pointerOverlay = new PointerOverlay(drawable, mapView);
 				Log.v(TAG, "setPoint: " + setPoint);
-				if(event.getAction() == MotionEvent.ACTION_UP) {
-					if(setPoint) {
-						OverlayItem overlayitem = new OverlayItem(RP, "Hej", "Derp");
-						pointerOverlay.addOverlay(overlayitem);
-						mapOverlays.add(pointerOverlay);
-						//mapView.invalidate();
-					}
-				setPoint = false;
+				if(setPoint) {
+					// POPUP
+					
+					// SKICKA RP TILL SERVER
+					setPoint = false;
 				}
 				return true;
 			}
-		});*/
+		});
+		
 
 		
 		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.USER_POSITION_UPDATE_INTERVAL, 0, listener);
-		//control.animateTo(point);
 		
 		myLocation = new MyLocationOverlay(this, mapView);
 		mapView.getOverlays().add(myLocation);
 		mapOverlays = mapView.getOverlays();
 		
-		//control.setCenter(point);
-		//control.setZoom(20);
-		
-		/*
-		int friendPosLat, friendPosLong; //testpoint at pastavagnen
-		friendPosLat = 58395516;
-		friendPosLong = 15578195;
-		GeoPoint hardcode = new GeoPoint(friendPosLat, friendPosLong);
+		/*if(showhide) {
+			JSONObject toServer = new JSONObject();
+			JSONObject data = new JSONObject();
+			try {
+				data.put("showFriends", "true");
+				data.put("groupID", myGroupID);
+				data.put("username", Config.USERNAME);
+				toServer.put("type", "getPositions");
+				toServer.put("data", data);
+			} catch (Exception e) {
 				
-		HashMap<String, String> status = new HashMap<String, String>();
-		status.put("Anders", "Sitter och skiter!");
-		
-		for(int i = 0; i < fUser.size(); i++) {
-			Log.v(TAG, "Round "+i+", Starting..");
-			
-			PointerOverlay pointerOverlay = new PointerOverlay(drawable, mapView);
-			OverlayItem overlayitem = new OverlayItem(fPos.get(i), fUser.get(i), "Derp");
-			pointerOverlay.addOverlay(overlayitem);
-			mapOverlays.add(pointerOverlay);
-			Log.v(TAG, "Round "+i+", Done.");
+			}
+			String toSend = toServer.toString();
+			try {
+	            Class[] params2 = {String.class, Boolean.class};
+				
+				ConnectionData connData = new ConnectionData(Map.class.getMethod("CallbackShow", params2), me, toSend);
+	
+				AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+			}
+			catch(Exception e) {
+				Log.v(TAG, "Error: " + e.toString());
+			}
 		}*/
-
-		//pointerOverlay.addOverlay(overlayitem);
-		//mapOverlays.add(pointerOverlay);
+		
 	}	
 
 
@@ -253,6 +249,8 @@ public class Map extends MapActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add(0, 1, 1, "Status");
 		menu.add(0, 2, 2, "Add Point");
+		menu.add(0, 3, 3, "Hide Friends");
+		menu.add(0, 4, 4, "Show Group");
 		return true;
 	}
 
@@ -266,6 +264,16 @@ public class Map extends MapActivity {
 		}
 		if (item.getItemId() == 2) {
 			setPoint = true;
+		}
+		if(item.getItemId() == 3) {
+			if(item.getTitle().toString().contentEquals("Hide Friends")) {
+				item.setTitle("Show Friends");
+				//showFriends = false;
+			} else {
+				item.setTitle("Hide Friends");
+				//showFriends = true;
+			}
+
 		}
 		return true;
 	}
@@ -289,10 +297,11 @@ public class Map extends MapActivity {
 			try {
 				JSONArray data = new JSONArray(res);
 				JSONObject pos;
+				List<String> friendStatus = new ArrayList<String>();
 				for(int i=0; i < data.length();i++){
 					String username = data.getJSONObject(i).getString("username");
 					Log.v(TAG, "USERNAME = " + username);
-					data.getJSONObject(i).getString("status");
+					friendStatus.add(data.getJSONObject(i).getString("status"));
 					pos = data.getJSONObject(i).getJSONObject("pos");
 					int lon = Integer.parseInt(pos.getString("lon"));
 					Log.v(TAG, "LONGITUDE = " + lon);
@@ -301,9 +310,6 @@ public class Map extends MapActivity {
 					GeoPoint friend = new GeoPoint(lat, lon);
 					fPos.add(friend);
 					fUser.add(username);
-					//friendPos.put(username, friend);
-					//Log.v(TAG, "fUser:  - " + fUser.size());
-					//if (friends.getJSONObject(i).getBoolean("active"))
 					
 				}
 				final Drawable drawable = getResources().getDrawable(R.drawable.marker_friends);
@@ -312,14 +318,12 @@ public class Map extends MapActivity {
 					Log.v(TAG, "Round "+i+", Starting..");
 						
 					PointerOverlay pointerOverlay = new PointerOverlay(drawable, mapView);
-					OverlayItem overlayitem = new OverlayItem(fPos.get(i), fUser.get(i), "Derp");
+					OverlayItem overlayitem = new OverlayItem(fPos.get(i), fUser.get(i), friendStatus.get(i));
 					pointerOverlay.addOverlay(overlayitem);
 					mapOverlays.add(pointerOverlay);
 					Log.v(TAG, "Round "+i+", Done.");
 				}
 
-				//JSONArray friends = data.getJSONArray("friends");
-				//JSONArray requests = data.getJSONArray("requests");
 			} catch(Exception e) {
 				Log.v(TAG, "eeee: " + e.toString());
 				Log.v(TAG, "eeee: " + e.getCause());
@@ -330,5 +334,3 @@ public class Map extends MapActivity {
 		}
 	}
 }
-
-

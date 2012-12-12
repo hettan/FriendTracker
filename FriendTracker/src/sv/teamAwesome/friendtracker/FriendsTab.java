@@ -40,6 +40,7 @@ public class FriendsTab extends TabActivity {
 	  private ArrayAdapter<String> lv2;
 	  private ArrayAdapter<String> lv3;
 
+	  private int ItemPos;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,37 +68,43 @@ public class FriendsTab extends TabActivity {
 				return listView3;
 			}
 		}));
-		
+		listView1.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView parent, View view, int position, long id) {
+				Intent goDia = new Intent(getBaseContext(), DialogRemFriend.class);
+								
+				String item = (String) listView1.getAdapter().getItem(position);
+				
+				goDia.putExtra("item", item);
+				Config.temp = me;
+				ItemPos = position;
+				
+				startActivity(goDia);
+			}
+		});
+		listView2.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView parent, View view, int position, long id) {
+				Intent goDia = new Intent(getBaseContext(), DialogRemFriend.class);
+								
+				String item = (String) listView2.getAdapter().getItem(position);
+				
+				goDia.putExtra("item", item);
+				Config.temp = me;
+				ItemPos = position;
+				
+				startActivity(goDia);
+			}
+		});
 		listView3.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView parent, View view, int position, long id) {
+				Intent goDia = new Intent(getBaseContext(), DialogAct.class);
+								
 				String item = (String) listView3.getAdapter().getItem(position);
-				if(item != null) {			
-					JSONObject toServer = new JSONObject();
-					JSONObject data = new JSONObject();
-					try {
-						data.put("src", Config.USERNAME);
-						data.put("requester", item);
-						data.put("type", "friend");
-						toServer.put("type", "acceptReq");
-						toServer.put("data", data);
-					} catch (Exception e) {
-						
-					}
-					String toSend = toServer.toString();
-					Log.v(TAG, "me= " + me.toString());
-					try {
-			            Class[] params = {String.class, Boolean.class};
-						
-						ConnectionData connData = new ConnectionData(FriendsTab.class.getMethod("CallbackAccept", params), me, toSend);
-
-						AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
-					} catch(Exception e) {
-						Log.v(TAG, "Error: " + e.toString());
-					}
-
-					lv3.remove((String)listView3.getAdapter().getItem(position));
-					lv3.notifyDataSetChanged();
-				}
+				
+				goDia.putExtra("item", item);
+				Config.temp = me;
+				ItemPos = position;
+				
+				startActivity(goDia);
 			}
 		});
 		
@@ -171,8 +178,6 @@ public class FriendsTab extends TabActivity {
     
 	public void Callback(String res, Boolean error) {
 		Log.v(TAG, "Callback: " + res);
-		lv2.clear();
-		lv1.clear();
 		if(!error) {
 			try {
 				Log.v(TAG, "10");
@@ -217,7 +222,21 @@ public class FriendsTab extends TabActivity {
 	
 	public void CallbackAccept(String res, Boolean error) {
 		Log.v(TAG, "Callback: " + res);
-		if(error) {
+		if(!error) {
+			lv3.remove((String)listView3.getAdapter().getItem(ItemPos));
+			lv3.notifyDataSetChanged();
+		}
+		else {	
+			Log.v(TAG, "Error");
+		}
+	}
+	public void CallbackRem(String res, Boolean error) {
+		Log.v(TAG, "Callback: " + res);
+		if(!error) {
+			lv3.remove((String)listView3.getAdapter().getItem(ItemPos));
+			lv3.notifyDataSetChanged();
+		}
+		else {	
 			Log.v(TAG, "Error");
 		}
 	}

@@ -51,7 +51,7 @@ def addReq(data):
     return db.addFriendReq(data["src"], data["target"])
     
 def acceptReq(data):
-    return db.acceptReq(data["src"], data["requester"], data["type"])
+    return db.acceptFriendReq(data["src"], data["requester"])
 
 def getFriendReq(data):
     return db.getFriendReq(data["username"])
@@ -68,9 +68,6 @@ def remFriend(data):
 def getFriends(data):
     return db.getFriends(data["username"])
 
-def getFriendsNotGroup(data):
-    return db.getFriendsNotGroup(data["username"],data["groupID"])
-
 def getFriendsIfMod(data):
     return db.getFriends(data["username"], data["ts"])
 
@@ -82,10 +79,10 @@ def createGroup(data):
     return db.createGroup(data["username"], data["name"])
 
 def addGroupMember(data):
-    return db.addGroupMember(data["username"], data["groupID"], data["target"])
+    return db.addGroupMember(data["admin"], data["groupID"], data["username"])
 
 def remFromGroup(data):
-    return db.remFromGroup(data["username"], data["groupID"], data["target"])
+    return db.remFromGroup(data["admin"], data["groupID"], data["username"])
 
 def leaveGroup(data):
     return db.leaveGroup(data["username"], data["groupID"])
@@ -124,9 +121,6 @@ def getGroupPos(data):
 def getFriendsPos(data):
     return db.getFriendsPos(data["username"])
 
-def getPositions(data):
-    return db.getPositions(data["username"], data["filter"])
-
 #### Push ####
 def registerPush(data):
     return db.registerPush(data["username"], data["pushID"])
@@ -149,7 +143,6 @@ handler["getRequests"] = getRequests
 handler["clearRequests"] = clearRequests
 handler["remFriend"] = remFriend
 handler["getFriends"] = getFriends
-handler["getFriendsNotGroup"] = getFriendsNotGroup
 handler["getFriendsIfMod"] = getFriendsIfMod
 handler["userSearch"] = userSearch
 
@@ -170,7 +163,6 @@ handler["setPos"] = setPos
 handler["getPos"] = getPos
 handler["getGroupPos"] = getGroupPos
 handler["getFriendsPos"] = getFriendsPos
-handler["getPositions"] = getPositions
 
 handler["registerPush"] = registerPush
 handler["removePush"] = removePush
