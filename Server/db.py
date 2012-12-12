@@ -84,11 +84,11 @@ def changePassword(username, oldPassword, newPassword):
     else:
         return error(b"Session timeout")
 
-def login(username, password, pushID):
+def login(username, password):
     user = users.find_one({b"username": username})
     if user != None and user[b"password"] == password:
         users.update({b"username":username},{"$set":{b"active":True}})
-        users.update({b"username":username},{"$set":{b"pushID":pushID}})
+        #users.update({b"username":username},{"$set":{b"pushID":pushID}})
         return ok(setSession(username))
     
     else:
@@ -146,7 +146,7 @@ def addFriendReq(src, target):
                 return error(b"You've alreade made this request!")
         
         time = datetime.datetime.now()
-        req = {b"requester":src, b"time":time.strftime("%m-%d-%H-%M"), b"type":b"friend"} #Month-Day-Hour-Minute
+        req = {b"requester":src, b"time":time.strftime("%d/%m - %H:%M"), b"type":b"friend"} #Month-Day-Hour-Minute
         users.update({b"username":target}, {"$push": {b"requests": req}})
         pushReq(target,{b"type":b"1", b"user":src})
         return ok(b"")
@@ -154,7 +154,7 @@ def addFriendReq(src, target):
     else:
         return error("User is already friend with you or you've aldready made a friend request!")
 
-def accepReq(src, requester, reqType):
+def acceptReq(src, requester, reqType):
     print "src="+ src + "req="+ requester
         
     if reqType == "group":
@@ -188,7 +188,12 @@ def getRequests(username):
 
 def clearRequests(username):
     users.update({b"username":username},{"$set":{b"requests":[]}})
-    return ok("")
+    return ok(b"")
+
+def remFriend(username, target):
+    users.update({b"username":username}, {"$pop":{b"friends":target}})
+    users.update({b"username":target}, {"$pop":{b"friends":username}})
+    return ok(b"")
 
 #Returns both friends and requests
 def getFriends(username):
@@ -259,7 +264,7 @@ def addGroupMember(username, groupID, newUser):
     if isGroupAdmin(username, groupID):
 
         time = datetime.datetime.now()
-        req = {"groupID": groupID, b"requester":username, b"time":time.strftime("%m-%d-%H-%M"), b"type":b"group"} #Month-Day-Hour-Minute
+        req = {"groupID": groupID, b"requester":username, b"time":time.strftime("%d/%m - %H:%M"), b"type":b"group"} #Month-Day-Hour-Minute
         users.update({b"username":newUser}, {"$push": {b"requests": req}})
         groupName = groups.find_one({b"groupID":groupID})["name"]
         pushReq(newUser,{b"type":b"2", b"user":username, b"group":groupName})

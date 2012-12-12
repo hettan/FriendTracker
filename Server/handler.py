@@ -38,7 +38,7 @@ def changePassword(data):
     return db.changePassword(data["username"], data["old"], data["new"])
 
 def login(data):
-    return db.login(data["username"], data["password"], data["pushID"])
+    return db.login(data["username"], data["password"])
 
 def logoff(data):
     return db.logoff(data["session"])
@@ -61,6 +61,9 @@ def getRequests(data):
 
 def clearRequests(data):
     return db.clearRequests(data["username"])
+
+def remFriend(data):
+    return db.remFriend(data["username"], data["target"])
 
 def getFriends(data):
     return db.getFriends(data["username"])
@@ -144,6 +147,7 @@ handler["acceptReq"] = acceptReq
 handler["getFriendReq"] = getFriendReq
 handler["getRequests"] = getRequests
 handler["clearRequests"] = clearRequests
+handler["remFriend"] = remFriend
 handler["getFriends"] = getFriends
 handler["getFriendsNotGroup"] = getFriendsNotGroup
 handler["getFriendsIfMod"] = getFriendsIfMod
