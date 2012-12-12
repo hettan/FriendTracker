@@ -12,7 +12,7 @@ public class Config {
 	public static Object andersMamma = null;
 	public static Dictionary<String, String> STATUS;
 	public static String ADMIN = "";
-	
+	public static Object temp;
 	// Sender id for GCM registration
 	public static String SENDER_ID = "377927318664";
 	
