@@ -87,11 +87,6 @@ public class NotificationsTab extends TabActivity{
 
 		tabAll.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView parent, View view, int position, long id) {
-				
-				Log.v(TAG, "Outside Anders Mamma");
-				Intent goDia = new Intent(getBaseContext(), DialogAct.class);
-				startActivity(goDia);
-				Log.v(TAG, "After Anders Mamma");
 			}
 		});
 		tabFriendReq.setOnItemClickListener(new OnItemClickListener() {
@@ -166,9 +161,9 @@ public class NotificationsTab extends TabActivity{
 					JSONArray data = new JSONArray(res);
 					
 					List<HashMap<String,String>> listAll = new ArrayList<HashMap<String,String>>();
-					List<String[]> listFriend = new ArrayList<String[]>();
-					List<String[]> listGroup = new ArrayList<String[]>();
-					List<String[]> listBuzz = new ArrayList<String[]>();
+					List<HashMap<String,String>> listFriend = new ArrayList<HashMap<String,String>>();
+					List<HashMap<String,String>> listGroup = new ArrayList<HashMap<String,String>>();
+					List<HashMap<String,String>> listBuzz = new ArrayList<HashMap<String,String>>();
 					String info;
 					for(int i=0; i < data.length();i++){
 						HashMap<String,String> map = new HashMap<String,String>();
@@ -176,21 +171,30 @@ public class NotificationsTab extends TabActivity{
 						map.put("Info", data.getJSONObject(i).getString("type"));
 						map.put("Tstamp", data.getJSONObject(i).getString("time"));
 						listAll.add(map);
-						/*
-						if (info[2].contentEquals("friend")) {
-							listFriend.add(info);
+						
+						if (data.getJSONObject(i).getString("type").contentEquals("friend")) {
+							listFriend.add(map);
 						}
-						else if (info[2].contentEquals("group")) {
-							listGroup.add(info);
+						if (data.getJSONObject(i).getString("type").contentEquals("group")) {
+							listGroup.add(map);
 						}
-						else if (info[2].contentEquals("buzz")) {
-							listBuzz.add(info);
+						if (data.getJSONObject(i).getString("type").contentEquals("buzz")) {
+							listBuzz.add(map);
 						}
-						*/
+						
 					}
 					
-					SimpleAdapter adapter = new SimpleAdapter(this,listAll,R.xml.notificationitem,from,to);
-					tabAll.setAdapter(adapter);
+					SimpleAdapter adapter1 = new SimpleAdapter(this,listAll,R.xml.notificationitem,from,to);
+					tabAll.setAdapter(adapter1);
+					
+					SimpleAdapter adapter2 = new SimpleAdapter(this,listFriend,R.xml.notificationitem,from,to);
+					tabFriendReq.setAdapter(adapter2);
+					
+					SimpleAdapter adapter3 = new SimpleAdapter(this,listGroup,R.xml.notificationitem,from,to);
+					tabGroupReq.setAdapter(adapter3);
+					
+					SimpleAdapter adapter4 = new SimpleAdapter(this,listBuzz,R.xml.notificationitem,from,to);
+					tabBuzz.setAdapter(adapter4);
 					
 					noteManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 					

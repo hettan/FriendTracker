@@ -151,7 +151,18 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
+       
+        <activity
+            android:name=".DialogRemFriend"
+            android:label="@string/title_activity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="sv.teamAwesome.friendtracker.DIALOGREMFRIEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Exit"
             android:label="@string/title_activity"

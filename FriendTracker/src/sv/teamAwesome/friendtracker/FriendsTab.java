@@ -68,7 +68,32 @@ public class FriendsTab extends TabActivity {
 				return listView3;
 			}
 		}));
-		
+		listView1.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView parent, View view, int position, long id) {
+				Intent goDia = new Intent(getBaseContext(), DialogRemFriend.class);
+								
+				String item = (String) listView1.getAdapter().getItem(position);
+				
+				goDia.putExtra("item", item);
+				Config.temp = me;
+				ItemPos = position;
+				
+				startActivity(goDia);
+			}
+		});
+		listView2.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView parent, View view, int position, long id) {
+				Intent goDia = new Intent(getBaseContext(), DialogRemFriend.class);
+								
+				String item = (String) listView2.getAdapter().getItem(position);
+				
+				goDia.putExtra("item", item);
+				Config.temp = me;
+				ItemPos = position;
+				
+				startActivity(goDia);
+			}
+		});
 		listView3.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView parent, View view, int position, long id) {
 				Intent goDia = new Intent(getBaseContext(), DialogAct.class);
@@ -196,6 +221,16 @@ public class FriendsTab extends TabActivity {
 	}
 	
 	public void CallbackAccept(String res, Boolean error) {
+		Log.v(TAG, "Callback: " + res);
+		if(!error) {
+			lv3.remove((String)listView3.getAdapter().getItem(ItemPos));
+			lv3.notifyDataSetChanged();
+		}
+		else {	
+			Log.v(TAG, "Error");
+		}
+	}
+	public void CallbackRem(String res, Boolean error) {
 		Log.v(TAG, "Callback: " + res);
 		if(!error) {
 			lv3.remove((String)listView3.getAdapter().getItem(ItemPos));
