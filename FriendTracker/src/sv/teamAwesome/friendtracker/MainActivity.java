@@ -9,6 +9,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 
 /*
@@ -96,7 +98,6 @@ public class MainActivity extends Activity {
 			}
 		});
 	}
-
 	public void Callback(String res, Boolean error) {
 		Intent granted = new Intent("sv.teamAwesome.friendtracker.FRONTPAGE");
 		Log.v(TAG, "Callback: " + res);

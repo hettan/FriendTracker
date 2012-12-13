@@ -14,6 +14,7 @@ public class DialogAct extends FragmentActivity implements ShowPopUp.NoticeDialo
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState); {
+			Config.PopMsg = "Do you want this user as a new friend?";
 			showNoticeDialog();
 		}
 	}

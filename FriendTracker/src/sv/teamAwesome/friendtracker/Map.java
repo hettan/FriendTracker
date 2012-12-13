@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -63,6 +64,7 @@ public class Map extends MapActivity {
 		
 		final Object me = this;
 
+		Log.v(TAG, "asdsadsad");
 		
 		mapView = (TapControlledMapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
@@ -273,7 +275,12 @@ public class Map extends MapActivity {
 				item.setTitle("Hide Friends");
 				//showFriends = true;
 			}
-
+		}
+		if(item.getItemId() == 4) {
+			Log.v(TAG, "Inside Item 4");
+			Intent goDia = new Intent(getBaseContext(), DialogMapGroups.class);
+			startActivity(goDia);
+			Log.v(TAG, "After Item 4");
 		}
 		return true;
 	}

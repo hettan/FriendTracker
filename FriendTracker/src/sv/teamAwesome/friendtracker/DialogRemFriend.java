@@ -13,6 +13,7 @@ public class DialogRemFriend extends FragmentActivity implements ShowPopUp.Notic
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState); {
+			Config.PopMsg = "Do you want this user to be removed?";
 			showNoticeDialog();
 		}
 	}
