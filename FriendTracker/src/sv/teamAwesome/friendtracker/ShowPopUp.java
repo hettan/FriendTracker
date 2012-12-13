@@ -42,6 +42,7 @@ public class ShowPopUp extends DialogFragment {
     	setRetainInstance(true);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(Config.PopMsg)
+        		.setCancelable(false)
                .setPositiveButton(R.string.agree, new DialogInterface.OnClickListener() {
                    public void onClick(DialogInterface dialog, int id) {
                 	mListener.onDialogPositiveClick(ShowPopUp.this);

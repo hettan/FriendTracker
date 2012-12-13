@@ -20,7 +20,6 @@ public class DialogMapGroups extends FragmentActivity implements ShowListPopUp.N
 	}
 	public void onDialogPositiveClick(DialogFragment dialog) {
 		Log.v(TAG,"Listposition: " + ShowListPopUp.GivePos());
-		
 		finish();
 	}
 	public void onDialogNegativeClick(DialogFragment dialog) {

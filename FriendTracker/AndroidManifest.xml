@@ -54,7 +54,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+        <activity 
+            android:name=".Test"
+            android:label="@string/title_activity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <category android:name="sv.teamAwesome.friendtracker.TEST" />
+                <action android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity 
             android:name=".Setting"
             android:label="@string/title_activity"

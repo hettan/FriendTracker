@@ -39,8 +39,10 @@ public void onAttach(Activity activity) {
 
 @Override
 public Dialog onCreateDialog(Bundle savedInstanceState) {
+	
     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
     builder.setTitle("Choose A Group To Show")
+    		.setCancelable(false)
     		.setSingleChoiceItems(R.array.MapGroupValues,pos,new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					pos = which;

@@ -6,7 +6,9 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -63,8 +65,6 @@ public class Map extends MapActivity {
 		importPanel.setVisibility(View.INVISIBLE);
 		
 		final Object me = this;
-
-		Log.v(TAG, "asdsadsad");
 		
 		mapView = (TapControlledMapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
@@ -184,7 +184,8 @@ public class Map extends MapActivity {
 				Log.v(TAG, "setPoint: " + setPoint);
 				if(setPoint) {
 					// POPUP
-					
+					Intent go = new Intent(getBaseContext(),Test.class);
+					startActivity(go);
 					// SKICKA RP TILL SERVER
 					setPoint = false;
 				}
