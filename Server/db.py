@@ -197,6 +197,17 @@ def getFriends(username):
     #out = decode_dict({b"friends":friends, b"requests":requests})
     return ok({b"friends":friends, b"requests":requests})
 
+def getFriendsNotGroup(username, groupID):
+    user = users.find_one({b"username":username})
+    group = groups.find_one({b"groupID":groupID})
+    
+    friends = []
+    for friend in user[b"friends"]:
+        if friend not in group["members"]:
+            friends.append(friend)
+    
+    return ok(friends)
+
 def getFriendsIfMod(username, ts):
     user = users.find_one({b"username":username})
     if user[b"friendsMod"] != ts:
