@@ -13,6 +13,7 @@ public class Config {
 	public static Dictionary<String, String> STATUS;
 	public static String ADMIN = "";
 	public static Object temp;
+	public static String PopMsg;
 	// Sender id for GCM registration
 	public static String SENDER_ID = "377927318664";
 	
