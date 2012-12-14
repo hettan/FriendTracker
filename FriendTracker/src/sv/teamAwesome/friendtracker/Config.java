@@ -16,7 +16,6 @@ public class Config {
 	public static String PopMsg;
 	// Sender id for GCM registration
 	public static String SENDER_ID = "377927318664";
-	
 	// IP-adress and port for server.
 	//130.236.187.198
 	//85.229.131.109

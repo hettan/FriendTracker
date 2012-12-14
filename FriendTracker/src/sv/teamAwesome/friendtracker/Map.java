@@ -184,7 +184,7 @@ public class Map extends MapActivity {
 				Log.v(TAG, "setPoint: " + setPoint);
 				if(setPoint) {
 					// POPUP
-					Intent go = new Intent(getBaseContext(),Test.class);
+					Intent go = new Intent(getBaseContext(),PointText.class);
 					startActivity(go);
 					// SKICKA RP TILL SERVER
 					setPoint = false;
@@ -192,8 +192,6 @@ public class Map extends MapActivity {
 				return true;
 			}
 		});
-		
-
 		
 		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.USER_POSITION_UPDATE_INTERVAL, 0, listener);
 		
@@ -260,10 +258,17 @@ public class Map extends MapActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == 1) {
+			Intent go = new Intent(getBaseContext(), StatusText.class);
+			Object me = this;
+			Config.temp = me;
+			startActivity(go);
+			
+			/*
 			if(importPanel.getVisibility() != View.VISIBLE)
 				importPanel.setVisibility(View.VISIBLE);
 			else
 				importPanel.setVisibility(View.INVISIBLE);
+				*/
 		}
 		if (item.getItemId() == 2) {
 			setPoint = true;
