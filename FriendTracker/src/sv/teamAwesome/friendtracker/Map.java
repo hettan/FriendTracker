@@ -47,6 +47,7 @@ public class Map extends MapActivity {
 	GeoPoint point;
 	MapController control;
 	View importPanel;
+	View pointerPanel;
 	Boolean FirstLoc = true;
 	Boolean setPoint = false;
 	String myGroupID = "";
@@ -62,7 +63,10 @@ public class Map extends MapActivity {
 		getWindow().addContentView(inflatedDrawerLayout, params);
 		
 		importPanel = ((ViewStub) findViewById(R.id.stub_import)).inflate();
-		importPanel.setVisibility(View.INVISIBLE);
+		importPanel.setVisibility(View.GONE);
+		
+		pointerPanel = ((ViewStub) findViewById(R.id.stub_import2)).inflate();
+		pointerPanel.setVisibility(View.GONE);
 		
 		final Object me = this;
 		
@@ -104,7 +108,7 @@ public class Map extends MapActivity {
 				InputMethodManager imm = (InputMethodManager)getSystemService(
 					      Context.INPUT_METHOD_SERVICE);
 					imm.hideSoftInputFromWindow(statustxt.getWindowToken(), 0);
-				importPanel.setVisibility(View.INVISIBLE);
+				importPanel.setVisibility(View.GONE);
 			}				
 		});
 
@@ -184,16 +188,20 @@ public class Map extends MapActivity {
 				Log.v(TAG, "setPoint: " + setPoint);
 				if(setPoint) {
 					// POPUP
-					Intent go = new Intent(getBaseContext(),Test.class);
+					if(pointerPanel.getVisibility() != View.VISIBLE)
+						pointerPanel.setVisibility(View.VISIBLE);
+					else
+						pointerPanel.setVisibility(View.GONE);
+					
+					Intent go = new Intent(getBaseContext(),PointText.class);
 					startActivity(go);
+
 					// SKICKA RP TILL SERVER
 					setPoint = false;
 				}
 				return true;
 			}
 		});
-		
-
 		
 		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.USER_POSITION_UPDATE_INTERVAL, 0, listener);
 		
@@ -260,12 +268,21 @@ public class Map extends MapActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == 1) {
+			Intent go = new Intent(getBaseContext(), StatusText.class);
+			Object me = this;
+			Config.temp = me;
+			startActivity(go);
+			
+			/*
 			if(importPanel.getVisibility() != View.VISIBLE)
 				importPanel.setVisibility(View.VISIBLE);
 			else
+				importPanel.setVisibility(View.GONE);
 				importPanel.setVisibility(View.INVISIBLE);
+				*/
 		}
 		if (item.getItemId() == 2) {
+
 			setPoint = true;
 		}
 		if(item.getItemId() == 3) {

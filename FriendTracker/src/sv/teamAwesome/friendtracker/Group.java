@@ -136,8 +136,9 @@ public class Group extends Activity {
 	}
 	public void CallbackDel(String res, Boolean err) {
 		if(!err) {
-			Intent groups = new Intent("sv.teamAwesome.friendtracker.GROUPS");
-			startActivity(groups);
+			//Intent groups = new Intent("sv.teamAwesome.friendtracker.GROUPS");
+			//startActivity(groups);
+			finish();
 		} else {
 			
 		}
