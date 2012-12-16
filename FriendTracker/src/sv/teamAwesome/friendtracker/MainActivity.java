@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
 		getWindow().setFormat(PixelFormat.RGBA_8888);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
 		setContentView(R.layout.activity_main);
-		
+
 		final EditText username = (EditText) findViewById(R.id.usernametv);
 		final EditText password = (EditText) findViewById(R.id.passwordtv);
 		Button login = (Button) findViewById(R.id.loginbtn);
@@ -77,6 +77,7 @@ public class MainActivity extends Activity {
 					Log.v(TAG, "Error: " + e.toString());
 				}
 			}
+
 		});
 		
 		register.setOnClickListener(new View.OnClickListener() {

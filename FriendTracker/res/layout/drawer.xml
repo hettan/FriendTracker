@@ -10,6 +10,16 @@
 	  android:layout="@layout/progress_overlay"	
 	  android:layout_width="fill_parent"
 	  android:layout_height="wrap_content"
-	  android:layout_gravity="top" />
+	  android:layout_gravity="top"
+	  android:visibility="gone" />
+	
+	<ViewStub
+	  android:id="@+id/stub_import2"
+	  android:inflatedId="@+id/panel_import2"	
+	  android:layout="@layout/pointstatus"	
+	  android:layout_width="fill_parent"
+	  android:layout_height="wrap_content"
+	  android:layout_gravity="top" 
+	  android:visibility="gone"/>
     
 </LinearLayout>

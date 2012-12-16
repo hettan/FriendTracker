@@ -44,6 +44,7 @@ public class Map extends MapActivity {
 	GeoPoint point;
 	MapController control;
 	View importPanel;
+	View pointerPanel;
 	Boolean FirstLoc = true;
 	Boolean setPoint = false;
 	String myGroupID = "";
@@ -59,7 +60,10 @@ public class Map extends MapActivity {
 		getWindow().addContentView(inflatedDrawerLayout, params);
 		
 		importPanel = ((ViewStub) findViewById(R.id.stub_import)).inflate();
-		importPanel.setVisibility(View.INVISIBLE);
+		importPanel.setVisibility(View.GONE);
+		
+		pointerPanel = ((ViewStub) findViewById(R.id.stub_import2)).inflate();
+		pointerPanel.setVisibility(View.GONE);
 		
 		final Object me = this;
 
@@ -102,7 +106,7 @@ public class Map extends MapActivity {
 				InputMethodManager imm = (InputMethodManager)getSystemService(
 					      Context.INPUT_METHOD_SERVICE);
 					imm.hideSoftInputFromWindow(statustxt.getWindowToken(), 0);
-				importPanel.setVisibility(View.INVISIBLE);
+				importPanel.setVisibility(View.GONE);
 			}				
 		});
 
@@ -182,6 +186,10 @@ public class Map extends MapActivity {
 				Log.v(TAG, "setPoint: " + setPoint);
 				if(setPoint) {
 					// POPUP
+					if(pointerPanel.getVisibility() != View.VISIBLE)
+						pointerPanel.setVisibility(View.VISIBLE);
+					else
+						pointerPanel.setVisibility(View.GONE);
 					
 					// SKICKA RP TILL SERVER
 					setPoint = false;
@@ -260,9 +268,10 @@ public class Map extends MapActivity {
 			if(importPanel.getVisibility() != View.VISIBLE)
 				importPanel.setVisibility(View.VISIBLE);
 			else
-				importPanel.setVisibility(View.INVISIBLE);
+				importPanel.setVisibility(View.GONE);
 		}
 		if (item.getItemId() == 2) {
+
 			setPoint = true;
 		}
 		if(item.getItemId() == 3) {
