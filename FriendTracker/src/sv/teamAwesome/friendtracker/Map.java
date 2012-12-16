@@ -6,7 +6,10 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -66,7 +69,6 @@ public class Map extends MapActivity {
 		pointerPanel.setVisibility(View.GONE);
 		
 		final Object me = this;
-
 		
 		mapView = (TapControlledMapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
@@ -191,14 +193,15 @@ public class Map extends MapActivity {
 					else
 						pointerPanel.setVisibility(View.GONE);
 					
+					Intent go = new Intent(getBaseContext(),PointText.class);
+					startActivity(go);
+
 					// SKICKA RP TILL SERVER
 					setPoint = false;
 				}
 				return true;
 			}
 		});
-		
-
 		
 		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.USER_POSITION_UPDATE_INTERVAL, 0, listener);
 		
@@ -265,10 +268,18 @@ public class Map extends MapActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == 1) {
+			Intent go = new Intent(getBaseContext(), StatusText.class);
+			Object me = this;
+			Config.temp = me;
+			startActivity(go);
+			
+			/*
 			if(importPanel.getVisibility() != View.VISIBLE)
 				importPanel.setVisibility(View.VISIBLE);
 			else
 				importPanel.setVisibility(View.GONE);
+				importPanel.setVisibility(View.INVISIBLE);
+				*/
 		}
 		if (item.getItemId() == 2) {
 
@@ -282,7 +293,12 @@ public class Map extends MapActivity {
 				item.setTitle("Hide Friends");
 				//showFriends = true;
 			}
-
+		}
+		if(item.getItemId() == 4) {
+			Log.v(TAG, "Inside Item 4");
+			Intent goDia = new Intent(getBaseContext(), DialogMapGroups.class);
+			startActivity(goDia);
+			Log.v(TAG, "After Item 4");
 		}
 		return true;
 	}

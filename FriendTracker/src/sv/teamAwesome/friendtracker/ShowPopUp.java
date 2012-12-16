@@ -41,7 +41,8 @@ public class ShowPopUp extends DialogFragment {
         // Use the Builder class for convenient dialog construction			
     	setRetainInstance(true);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(R.string.Ask)
+        builder.setMessage(Config.PopMsg)
+        		.setCancelable(false)
                .setPositiveButton(R.string.agree, new DialogInterface.OnClickListener() {
                    public void onClick(DialogInterface dialog, int id) {
                 	mListener.onDialogPositiveClick(ShowPopUp.this);

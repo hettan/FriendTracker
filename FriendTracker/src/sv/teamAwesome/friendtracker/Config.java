@@ -13,9 +13,9 @@ public class Config {
 	public static Dictionary<String, String> STATUS;
 	public static String ADMIN = "";
 	public static Object temp;
+	public static String PopMsg;
 	// Sender id for GCM registration
 	public static String SENDER_ID = "377927318664";
-	
 	// IP-adress and port for server.
 	//130.236.187.198
 	//85.229.131.109

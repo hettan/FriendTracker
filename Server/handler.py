@@ -51,7 +51,7 @@ def addReq(data):
     return db.addFriendReq(data["src"], data["target"])
     
 def acceptReq(data):
-    return db.acceptFriendReq(data["src"], data["requester"])
+    return db.acceptReq(data["src"], data["requester"], data["type"])
 
 def getFriendReq(data):
     return db.getFriendReq(data["username"])
@@ -68,6 +68,9 @@ def remFriend(data):
 def getFriends(data):
     return db.getFriends(data["username"])
 
+def getFriendsNotGroup(data):
+    return db.getFriendsNotGroup(data["username"], data["groupID"])
+
 def getFriendsIfMod(data):
     return db.getFriends(data["username"], data["ts"])
 
@@ -79,7 +82,7 @@ def createGroup(data):
     return db.createGroup(data["username"], data["name"])
 
 def addGroupMember(data):
-    return db.addGroupMember(data["admin"], data["groupID"], data["username"])
+    return db.addGroupMember(data["username"], data["groupID"], data["username"])
 
 def remFromGroup(data):
     return db.remFromGroup(data["admin"], data["groupID"], data["username"])
@@ -143,6 +146,7 @@ handler["getRequests"] = getRequests
 handler["clearRequests"] = clearRequests
 handler["remFriend"] = remFriend
 handler["getFriends"] = getFriends
+handler["getFriendsNotGroup"] = getFriendsNotGroup
 handler["getFriendsIfMod"] = getFriendsIfMod
 handler["userSearch"] = userSearch
 

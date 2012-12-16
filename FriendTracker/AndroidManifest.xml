@@ -54,7 +54,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+
         <activity 
             android:name=".Setting"
             android:label="@string/title_activity"
@@ -151,7 +151,17 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-       
+       <activity
+            android:name=".DialogMapGroups"
+            android:label="@string/title_activity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="sv.teamAwesome.friendtracker.DIALOGMAPGROUPS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".DialogRemFriend"
             android:label="@string/title_activity"
@@ -217,6 +227,29 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity 
+            android:name=".PointText"
+            android:label="@string/title_activity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <category android:name="sv.teamAwesome.friendtracker.POINTTEXT" />
+                <action android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity 
+            android:name=".StatusText"
+            android:label="@string/title_activity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <category android:name="sv.teamAwesome.friendtracker.STATUSTEXT" />
+                <action android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
         
     </application>
 </manifest>
