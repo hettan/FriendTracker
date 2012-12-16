@@ -101,16 +101,17 @@ public class MainActivity extends Activity {
 	}
 	public void Callback(String res, Boolean error) {
 		Intent granted = new Intent("sv.teamAwesome.friendtracker.FRONTPAGE");
+		TextView denied = (TextView) findViewById(R.id.logintv);
 		Log.v(TAG, "Callback: " + res);
 		if(!error) {
 			final EditText username = (EditText) findViewById(R.id.usernametv);
 			Config.USERNAME = username.getText().toString();
 			Config.SESSION_ID = res;
+			denied.setText("");
 			startActivity(granted);
 			Log.v(TAG, "Access Granted");
 
 		} else {
-			TextView denied = (TextView) findViewById(R.id.logintv);
 			InputMethodManager imm = (InputMethodManager)getSystemService(
 				      Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(denied.getWindowToken(), 0);
