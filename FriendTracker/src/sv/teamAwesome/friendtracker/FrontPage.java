@@ -24,8 +24,6 @@ public class FrontPage extends Activity{
 		GCMRegistrar.checkManifest(this);
 		if ((GCMRegistrar.getRegistrationId(this)).equals("")) {
 			GCMRegistrar.register(this, Config.SENDER_ID);
-		} else {
-			GCMRegistrar.unregister(this);
 		}
 		
 		// TODO Auto-generated method stub
