@@ -16,11 +16,11 @@ public class StatusText extends Activity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		    builder.setTitle("Make a awesome Status for showz");
+		    builder.setTitle("Tell your friends what you are doing");
 		    final EditText input = new EditText(this); 
 		    builder.setView(input);
 		    builder.setCancelable(false);
-		    builder.setPositiveButton("Post status!", new DialogInterface.OnClickListener() { 
+		    builder.setPositiveButton("Post Status!", new DialogInterface.OnClickListener() { 
 		               public void onClick(DialogInterface dialog, int which) {
 		            	String status = input.getText().toString();
 		            	   
@@ -48,7 +48,7 @@ public class StatusText extends Activity{
 		            	finish();
 		           }
 		    });
-			builder.setNegativeButton("Nah, changed my mind",new DialogInterface.OnClickListener() {
+			builder.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog,int id) {
 					// if this button is clicked, just close
 					// the dialog box and do nothing
