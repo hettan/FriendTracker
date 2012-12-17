@@ -53,6 +53,9 @@ public class Map extends MapActivity {
 	String myGroupID = "";
 	Boolean showFriends = true;
 	
+	LocationListener listener;
+	LocationManager manager;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -113,9 +116,9 @@ public class Map extends MapActivity {
 			}				
 		});*/
 
-		LocationManager manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+		manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		
-		LocationListener listener = new LocationListener() {
+		listener = new LocationListener() {
 			
 			public void onLocationChanged(Location location) {
 				point = new GeoPoint((int)(location.getLatitude()*1E6), (int)(location.getLongitude()*1E6));
@@ -183,7 +186,7 @@ public class Map extends MapActivity {
 				// TODO Auto-generated method stub
 			}
 		};
-
+		
 		mapView.setOnSingleTapListener(new OnSingleTapListener() {
 			public boolean onSingleTap(MotionEvent event) {
 				GeoPoint RP = mapView.getProjection().fromPixels((int) event.getX(), (int) event.getY());
@@ -206,7 +209,7 @@ public class Map extends MapActivity {
 			}
 		});
 		
-		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.USER_POSITION_UPDATE_INTERVAL, 0, listener);
+		//manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.USER_POSITION_UPDATE_INTERVAL, 0, listener);
 		
 		myLocation = new MyLocationOverlay(this, mapView);
 		mapView.getOverlays().add(myLocation);
@@ -241,18 +244,25 @@ public class Map extends MapActivity {
 		
 	}	
 
-
 	
 	@Override
-	protected void onPause() {
-		super.onPause();
-		myLocation.disableMyLocation();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
+	protected void onStart() {
+		super.onStart();
 		myLocation.enableMyLocation();
+		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.USER_POSITION_UPDATE_INTERVAL, 0, listener);
+		Intent backgroundService = new Intent(getApplicationContext(), BackgroundService.class);
+	    stopService(backgroundService);
+	    Log.v(TAG, "Starting manager and listener..");
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		myLocation.disableMyLocation();
+		manager.removeUpdates(listener);
+		Intent backgroundService = new Intent(getApplicationContext(), BackgroundService.class);
+	    startService(backgroundService);
+	    Log.v(TAG, "Stopping manager and listener..");
 	}
 		
 	@Override

@@ -38,12 +38,17 @@
     			<category android:name="sv.teamAwesome.friendtracker" />
   			</intent-filter>
 		</receiver>
+		
+        <receiver android:name=".ActivityKiller" >
+  			<intent-filter>
+    			<action android:name="sv.teamAwesome.friendtracker.LOGOUT" />
+    			<category android:name="sv.teamAwesome.friendtracker" />
+  			</intent-filter>
+		</receiver>
         
         <service android:name=".GCMIntentService" />
         
-        <service
-   			android:enabled="true"
-   			android:name=".BackgroundService" />
+        <service android:name=".BackgroundService" />
         
         <activity
             android:name=".MainActivity"

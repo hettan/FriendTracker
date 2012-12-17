@@ -3,9 +3,13 @@ package sv.teamAwesome.friendtracker;
 import com.google.android.gcm.GCMRegistrar;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -15,7 +19,6 @@ public class FrontPage extends Activity{
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
 		// Logged in, registering PUSH!!
 		GCMRegistrar.checkDevice(this);
 		GCMRegistrar.checkManifest(this);
@@ -32,6 +35,13 @@ public class FrontPage extends Activity{
 		setContentView(R.layout.frontpage);
 		
 		Intent backgroundService = new Intent(getApplicationContext(), BackgroundService.class);
+		//
+	    startService(backgroundService);
+	    stopService(backgroundService);
+	    //
+	    startService(backgroundService);
+	    stopService(backgroundService);
+	    //
 	    startService(backgroundService);
 	}
 	
@@ -53,5 +63,12 @@ public class FrontPage extends Activity{
         Intent menuSwap = new Intent(v.getContext(), aClass);
         menuSwap.putExtra("type", "All");
         startActivity(menuSwap);
-	}	
+	}
+	/*@Override
+	public void onResume() {
+		super.onResume();
+		Log.v("FRONTPAGE", "resumed, USERNAME: "+Config.USERNAME);
+		if(Config.USERNAME == "")
+			finish();
+	}*/
 }
