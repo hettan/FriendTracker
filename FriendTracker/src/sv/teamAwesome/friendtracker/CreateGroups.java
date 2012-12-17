@@ -63,8 +63,8 @@ public class CreateGroups extends Activity {
 	}
 	public void Callback(String res, Boolean error) {
 		if(!error) {
-			//Intent ok = new Intent("sv.teamAwesome.friendtracker.GROUPS");
-			//startActivity(ok);
+			Intent ok = new Intent("sv.teamAwesome.friendtracker.GROUPS");
+			startActivity(ok);
 			finish();
 		} else {
 

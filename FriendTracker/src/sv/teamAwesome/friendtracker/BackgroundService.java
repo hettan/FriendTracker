@@ -23,8 +23,8 @@ public class BackgroundService extends Service{
 	final Object me = this;
 	public static String TAG = "BackgroundService";
 	
-	LocationManager manager;
-	LocationListener listener;
+	static LocationManager manager;
+	static LocationListener listener;
 	
 	@Override
 	public IBinder onBind(Intent intent) {

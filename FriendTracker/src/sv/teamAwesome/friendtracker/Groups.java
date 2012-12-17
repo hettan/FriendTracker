@@ -123,6 +123,7 @@ public class Groups extends Activity {
 		if (item.getItemId() == 0) {
 			Intent create = new Intent("sv.teamAwesome.friendtracker.CREATEGROUPS");
 			startActivity(create);
+			finish();
 		}
 		return true;
 	}
