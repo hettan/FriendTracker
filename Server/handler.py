@@ -48,7 +48,7 @@ def setStatus(data):
     
 #### Requests/Friends ####        
 def addReq(data):
-    return db.addFriendReq(data["src"], data["target"])
+    return db.addFriendReq(data["src"], data["target"], data["itemPos"])
     
 def acceptReq(data):
     return db.acceptReq(data["src"], data["requester"], data["type"])
@@ -60,7 +60,7 @@ def getRequests(data):
     return db.getRequests(data["username"])
 
 def remRequest(data):
-    return db.remRequest(data["username"], data["target"], data["type"])
+    return db.remRequest(data["username"], data["target"], data["type"], data["itemPos"])
 
 def clearRequests(data):
     return db.clearRequests(data["username"])
@@ -127,6 +127,9 @@ def getGroupPos(data):
 def getFriendsPos(data):
     return db.getFriendsPos(data["username"])
 
+def getPositions(data):
+    return db.getPositions(data["username"], data["showFriends"], data["groupID"])
+
 #### Push ####
 def registerPush(data):
     return db.registerPush(data["username"], data["pushID"])
@@ -171,6 +174,7 @@ handler["setPos"] = setPos
 handler["getPos"] = getPos
 handler["getGroupPos"] = getGroupPos
 handler["getFriendsPos"] = getFriendsPos
+handler["getPositions"] = getPositions
 
 handler["registerPush"] = registerPush
 handler["removePush"] = removePush

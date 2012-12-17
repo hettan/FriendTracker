@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 from pymongo import Connection
-import time,random,datetime
+import time,random,datetime,md5
 
 from gcm import GCM
 
@@ -58,10 +58,14 @@ def decode_list(data):
         rv.append(item)
     return rv
 
+def getHash(text):
+    return md5.new(text).hexdigest()
+
 #### Account Management #####
 
 def register(username, password, mail):
     if users.find_one({b"username": username}) == None:
+        password = getHash(password)
         new_user = {b"username": username, b"password": password, b"mail": mail,
                     b"friends":[], b"active":False, b"requests":[], b"groups":[],
                     b"pos":{b"lat":0,b"lon":0}, "pushID": "", b"friendsMod":0,
@@ -75,7 +79,9 @@ def register(username, password, mail):
 def changePassword(username, oldPassword, newPassword):
     user = users.find_one({b"username": username})
     if user != None:
+        oldPassword = getHash(oldPassword)
         if user[b"password"] == oldPassword:
+            newPassword = getHash(newPassword)
             users.update({b"username":username},{"$set":{b"password":newPassword}})
             return ok(b"Password changed!")
         
@@ -87,7 +93,7 @@ def changePassword(username, oldPassword, newPassword):
 
 def login(username, password):
     user = users.find_one({b"username": username})
-    if user != None and user[b"password"] == password:
+    if user != None and user[b"password"] == getHash(password):
         users.update({b"username":username},{"$set":{b"active":True}})
         #users.update({b"username":username},{"$set":{b"pushID":pushID}})
         return ok(setSession(username))
@@ -143,7 +149,7 @@ def isFriend(src,target):
 
         return (src in target[b"friends"] or requestSent)  
 
-def addFriendReq(src, target):
+def addFriendReq(src, target, itemPos):
     if not isFriend(src,target):
         time = datetime.datetime.now()
         reqTarget = {b"requester":src, b"time":time.strftime("%d/%m - %H:%M"), b"type":b"friend"} #Month-Day-Hour-Minute
@@ -151,7 +157,9 @@ def addFriendReq(src, target):
         users.update({b"username":target}, {"$push": {b"requests": reqTarget}})
         users.update({b"username":src}, {"$push": {b"requestSent": reqSrc}})
         pushReq(target,{b"type":b"1", b"user":src})
-        return ok(b"")
+        
+        #return itemPos and username so client knows what item to update locally
+        return ok({b"itemPos":itemPos, b"username":target})
     
     else:
         return error("User is already friend with you or you've aldready made a friend request!")
@@ -181,13 +189,13 @@ def getRequests(username):
     user = users.find_one({b"username":username})
     return ok(user[b"requests"])
 
-def remRequest(username, target, reqType):
+def remRequest(username, target, reqType, itemPos):
     print "usr="+username
     #Remove from requests
     users.update({b"username":target},{"$pop":{b"requests":{b"requester":username, b"reqType":reqType}}})
     #Remove from requestSent
     users.update({b"username":username},{"$pop":{b"requestSent":{b"target":target, b"type":reqType}}})
-    return ok(b"")
+    return ok({b"username":target, b"itemPos":itemPos})
 
 def clearRequests(username):
     user = users.find_one({b"username":username})
@@ -437,7 +445,37 @@ def getFriendsPos(username):
             positions.append({b"username": friend, b"pos":res[b"pos"], b"status":res[b"status"]})
         return ok(positions)
 
+def getPositions(username, showFriends, groupID):
+    user = users.find_one({b"username":username})
+    res = {}
+    group = groups.find_one({b"groupID":groupID})
+    if len(groupID) > 0:
+        groupArray = []
+        for member in group[b"members"]:
+            if member != username:
+                temp = users.find_one({b"username":member})
+                groupArray.append({b"username":member, b"pos":temp[b"pos"], b"status":temp[b"status"]})
+        
+        res["group"] = groupArray
     
+    if showFriends:
+        friendArray = []
+        for friend in user[b"friends"]:
+            if not userInGroup(friend, group[b"members"]):
+                temp = users.find_one({b"username":friend})
+                friendArray.append({b"username":friend, b"pos": temp[b"pos"], b"status":temp[b"status"]})
+        
+        res["friends"] = friendArray
+    
+    return ok(res)
+
+def userInGroup(user, groupList):
+    for member in groupList:
+        if member == user:
+            return True
+
+    return False
+
 #### Push ####
 
 def registerPush(username, pushID):

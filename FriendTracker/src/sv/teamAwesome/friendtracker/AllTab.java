@@ -12,8 +12,5 @@ public class AllTab extends ListActivity {
         TextView textView = new TextView(this);
         textView.setText("All Friends");
         setContentView(textView);
-
     }
-
-
 }
