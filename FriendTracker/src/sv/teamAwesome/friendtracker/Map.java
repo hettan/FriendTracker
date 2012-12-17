@@ -48,13 +48,14 @@ public class Map extends MapActivity {
 	MapController control;
 	View importPanel;
 	View pointerPanel;
-	Boolean FirstLoc = true;
+	Boolean FirstLoc;
 	Boolean setPoint = false;
 	String myGroupID = "";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		FirstLoc = true;
 		setContentView(R.layout.map);
 
 		View inflatedDrawerLayout = getLayoutInflater().inflate(R.layout.drawer, null);
@@ -117,6 +118,7 @@ public class Map extends MapActivity {
 		LocationListener listener = new LocationListener() {
 			
 			public void onLocationChanged(Location location) {
+				Log.v(TAG, "OnlocationChange");
 				point = new GeoPoint((int)(location.getLatitude()*1E6), (int)(location.getLongitude()*1E6));
 				if(FirstLoc) {
 					control.animateTo(point);

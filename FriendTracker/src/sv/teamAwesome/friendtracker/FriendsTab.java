@@ -6,9 +6,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.app.ListActivity;
 import android.app.TabActivity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,13 +16,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TabHost;
-import android.widget.ArrayAdapter;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TabHost.TabContentFactory;
-import android.widget.TextView;
 
 public class FriendsTab extends TabActivity {
 	private static final String TAG = "FRIENDS";
@@ -69,7 +64,7 @@ public class FriendsTab extends TabActivity {
 			}
 		}));
 		listView1.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView parent, View view, int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent goDia = new Intent(getBaseContext(), DialogRemFriend.class);
 								
 				String item = (String) listView1.getAdapter().getItem(position);
@@ -82,7 +77,7 @@ public class FriendsTab extends TabActivity {
 			}
 		});
 		listView2.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView parent, View view, int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent goDia = new Intent(getBaseContext(), DialogRemFriend.class);
 								
 				String item = (String) listView2.getAdapter().getItem(position);
@@ -95,7 +90,7 @@ public class FriendsTab extends TabActivity {
 			}
 		});
 		listView3.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView parent, View view, int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent goDia = new Intent(getBaseContext(), DialogAct.class);
 								
 				String item = (String) listView3.getAdapter().getItem(position);
@@ -195,15 +190,15 @@ public class FriendsTab extends TabActivity {
 					}
 				}
 
-				lv1 = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listActive);
-				lv2 = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listAll);
+				lv1 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,listActive);
+				lv2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,listAll);
 
 				JSONArray requests = data.getJSONArray("requests");
 				List<String> listReq = new ArrayList<String>();
 				for(int i=0; i < requests.length();i++) {
 					listReq.add(requests.getJSONObject(i).getString("requester"));
 				}
-				lv3 = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listReq);
+				lv3 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,listReq);
 				
 				//listView3.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,listReq));
 				listView1.setAdapter(lv1);
