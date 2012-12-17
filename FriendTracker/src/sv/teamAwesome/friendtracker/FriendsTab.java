@@ -35,8 +35,7 @@ public class FriendsTab extends TabActivity {
 	  private ArrayAdapter<String> lv2;
 	  private ArrayAdapter<String> lv3;
 
-	  private int ItemPos;
-
+	  private int itemPos;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,10 +67,8 @@ public class FriendsTab extends TabActivity {
 				Intent goDia = new Intent(getBaseContext(), DialogRemFriend.class);
 								
 				String item = (String) listView1.getAdapter().getItem(position);
-				
 				goDia.putExtra("item", item);
 				Config.temp = me;
-				ItemPos = position;
 				
 				startActivity(goDia);
 			}
@@ -81,10 +78,8 @@ public class FriendsTab extends TabActivity {
 				Intent goDia = new Intent(getBaseContext(), DialogRemFriend.class);
 								
 				String item = (String) listView2.getAdapter().getItem(position);
-				
 				goDia.putExtra("item", item);
-				Config.temp = me;
-				ItemPos = position;
+				Config.temp = me;		
 				
 				startActivity(goDia);
 			}
@@ -94,10 +89,8 @@ public class FriendsTab extends TabActivity {
 				Intent goDia = new Intent(getBaseContext(), DialogAct.class);
 								
 				String item = (String) listView3.getAdapter().getItem(position);
-				
 				goDia.putExtra("item", item);
 				Config.temp = me;
-				ItemPos = position;
 				
 				startActivity(goDia);
 			}
@@ -217,8 +210,8 @@ public class FriendsTab extends TabActivity {
 	
 	public void CallbackAccept(String res, Boolean error) {
 		Log.v(TAG, "Callback: " + res);
-		if(!error) {
-			lv3.remove((String)listView3.getAdapter().getItem(ItemPos));
+		if(!error){
+			lv3.remove((String)listView3.getAdapter().getItem(itemPos));
 			lv3.notifyDataSetChanged();
 		}
 		else {	
@@ -228,7 +221,7 @@ public class FriendsTab extends TabActivity {
 	public void CallbackRem(String res, Boolean error) {
 		Log.v(TAG, "Callback: " + res);
 		if(!error) {
-			lv3.remove((String)listView3.getAdapter().getItem(ItemPos));
+			lv3.remove((String)listView3.getAdapter().getItem(itemPos));
 			lv3.notifyDataSetChanged();
 		}
 		else {	

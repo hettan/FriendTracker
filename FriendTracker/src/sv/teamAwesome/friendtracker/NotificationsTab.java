@@ -86,20 +86,35 @@ public class NotificationsTab extends TabActivity{
         tabHost.setCurrentTabByTag(extras.getString("type"));
 
 		tabAll.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView parent, View view, int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				
 			}
 		});
 		tabFriendReq.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView parent, View view, int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent goDia = new Intent(getBaseContext(), DialogAct.class);
+				
+				String item = (String) tabFriendReq.getAdapter().getItem(position);
+				goDia.putExtra("item", item);
+				Config.temp = me;
+				Config.itemPos = position;
+				startActivity(goDia);
 			}
 		});
 		
 		tabGroupReq.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView parent, View view, int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent goDia = new Intent(getBaseContext(), DialogAcceptGroup.class);
+				
+				String item = (String) tabGroupReq.getAdapter().getItem(position);
+				goDia.putExtra("item", item);
+				Config.temp = me;
+				Config.itemPos = position;
+				startActivity(goDia);
 			}
 		});
 		tabBuzz.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView parent, View view, int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			}
 		});
 		
@@ -112,15 +127,15 @@ public class NotificationsTab extends TabActivity{
 			    }
 			    else if (i ==1) {
 					Update();
-					noteManager.cancel(1);
+					noteManager.cancel(null, 1);
 			    }
 			    else if (i ==2) {
 					Update();
-					noteManager.cancel(2);
+					noteManager.cancel(null, 2);
 			    }
 			    else if (i ==3) {
 					Update();
-					noteManager.cancel(3);
+					noteManager.cancel(null, 3);
 			    }
 			  }
 			});
@@ -245,6 +260,17 @@ public class NotificationsTab extends TabActivity{
 				            getSystemService(NOTIFICATION_SERVICE);
 					nm.cancelAll();
 					Update();
+				}
+				catch(Exception e){
+					Log.v(TAG, "Error: "+ e.toString());
+					Log.v(TAG, "Cause: "+ e.getCause());
+				}
+			}
+		}
+		public void CallbackGroup(String res, Boolean error) {
+			Log.v(TAG, "Callback: " + res);
+			if(!error) {
+				try {
 				}
 				catch(Exception e){
 					Log.v(TAG, "Error: "+ e.toString());
