@@ -15,6 +15,10 @@ public class Exit extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		
+		Intent backgroundService = new Intent(getApplicationContext(), BackgroundService.class);
+	    stopService(backgroundService);j
+	    j
+		
 		Log.v("EXIT", "USERNAME: "+Config.USERNAME);
 		Log.v("EXIT", "USERNAME: "+Config.SESSION_ID);
 		

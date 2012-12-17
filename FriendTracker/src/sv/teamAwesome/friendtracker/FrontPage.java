@@ -33,13 +33,6 @@ public class FrontPage extends Activity{
 		setContentView(R.layout.frontpage);
 		
 		Intent backgroundService = new Intent(getApplicationContext(), BackgroundService.class);
-		//
-	    startService(backgroundService);
-	    stopService(backgroundService);
-	    //
-	    startService(backgroundService);
-	    stopService(backgroundService);
-	    //
 	    startService(backgroundService);
 	}
 	
