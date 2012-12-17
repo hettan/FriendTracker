@@ -25,7 +25,7 @@
         android:background="@null"
         android:onClick="MenuBtn"
         android:src="@drawable/back"
-        android:tag="MainActivity" />
+        android:tag="Exit" />
 
     <ImageButton
         android:id="@+id/settingsmenu"

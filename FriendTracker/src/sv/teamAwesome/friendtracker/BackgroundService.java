@@ -23,6 +23,9 @@ public class BackgroundService extends Service{
 	final Object me = this;
 	public static String TAG = "BackgroundService";
 	
+	LocationManager manager;
+	LocationListener listener;
+	
 	@Override
 	public IBinder onBind(Intent intent) {
 		// TODO Auto-generated method stub
@@ -34,14 +37,15 @@ public class BackgroundService extends Service{
 	}
 	
 	public void onDestroy() {
-		
+		manager.removeUpdates(listener);
+		Log.v(TAG, "Stopping BackgroundService..");
 	}
 	
 	public void onStart(Intent intent, int startId) {
 		Log.v(TAG, "Starting BackgroundService..");
-		LocationManager manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+		manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		
-		LocationListener listener = new LocationListener() {
+		listener = new LocationListener() {
 			
 			public void onLocationChanged(Location location) {
 

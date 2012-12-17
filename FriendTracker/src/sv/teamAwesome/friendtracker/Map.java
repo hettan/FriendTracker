@@ -48,14 +48,18 @@ public class Map extends MapActivity {
 	MapController control;
 	View importPanel;
 	View pointerPanel;
-	Boolean FirstLoc = true;
+	Boolean FirstLoc;
 	Boolean setPoint = false;
 	String myGroupID = "";
 	Boolean showFriends = true;
 	
+	LocationListener listener;
+	LocationManager manager;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		FirstLoc = true;
 		setContentView(R.layout.map);
 		
 		final Object me = this;
@@ -66,11 +70,12 @@ public class Map extends MapActivity {
 
 		final Drawable drawable = getResources().getDrawable(R.drawable.marker);
 
-		LocationManager manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+		manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		
-		LocationListener listener = new LocationListener() {
+		listener = new LocationListener() {
 			
 			public void onLocationChanged(Location location) {
+				Log.v(TAG, "OnlocationChange");
 				point = new GeoPoint((int)(location.getLatitude()*1E6), (int)(location.getLongitude()*1E6));
 				if(FirstLoc) {
 					control.animateTo(point);
@@ -136,7 +141,7 @@ public class Map extends MapActivity {
 				// TODO Auto-generated method stub
 			}
 		};
-
+		
 		mapView.setOnSingleTapListener(new OnSingleTapListener() {
 			public boolean onSingleTap(MotionEvent event) {
 				GeoPoint RP = mapView.getProjection().fromPixels((int) event.getX(), (int) event.getY());
@@ -160,24 +165,37 @@ public class Map extends MapActivity {
 			}
 		});
 		
-		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.USER_POSITION_UPDATE_INTERVAL, 0, listener);
+		//manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.USER_POSITION_UPDATE_INTERVAL, 0, listener);
 		
 		myLocation = new MyLocationOverlay(this, mapView);
 		mapView.getOverlays().add(myLocation);
 		mapOverlays = mapView.getOverlays();
 		
+<<<<<<< HEAD
+	}
+=======
+	}	
+
+>>>>>>> branch 'master' of https://github.com/hettan/FriendTracker.git
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		myLocation.enableMyLocation();
+		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.USER_POSITION_UPDATE_INTERVAL, 0, listener);
+		Intent backgroundService = new Intent(getApplicationContext(), BackgroundService.class);
+	    stopService(backgroundService);
+	    Log.v(TAG, "Starting manager and listener..");
 	}
 	
 	@Override
-	protected void onPause() {
-		super.onPause();
+	protected void onStop() {
+		super.onStop();
 		myLocation.disableMyLocation();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		myLocation.enableMyLocation();
+		manager.removeUpdates(listener);
+		Intent backgroundService = new Intent(getApplicationContext(), BackgroundService.class);
+	    startService(backgroundService);
+	    Log.v(TAG, "Stopping manager and listener..");
 	}
 		
 	@Override
