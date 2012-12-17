@@ -161,33 +161,6 @@ public class Map extends MapActivity {
 		mapView.getOverlays().add(myLocation);
 		mapOverlays = mapView.getOverlays();
 		
-		
-		
-		/*if(showhide) {
-			JSONObject toServer = new JSONObject();
-			JSONObject data = new JSONObject();
-			try {
-				data.put("showFriends", "true");
-				data.put("groupID", myGroupID);
-				data.put("username", Config.USERNAME);
-				toServer.put("type", "getPositions");
-				toServer.put("data", data);
-			} catch (Exception e) {
-				
-			}
-			String toSend = toServer.toString();
-			try {
-	            Class[] params2 = {String.class, Boolean.class};
-				
-				ConnectionData connData = new ConnectionData(Map.class.getMethod("CallbackShow", params2), me, toSend);
-	
-				AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
-			}
-			catch(Exception e) {
-				Log.v(TAG, "Error: " + e.toString());
-			}
-		}*/
-		
 	}	
 
 
