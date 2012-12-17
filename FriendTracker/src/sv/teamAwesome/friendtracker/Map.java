@@ -170,13 +170,8 @@ public class Map extends MapActivity {
 		myLocation = new MyLocationOverlay(this, mapView);
 		mapView.getOverlays().add(myLocation);
 		mapOverlays = mapView.getOverlays();
-		
-<<<<<<< HEAD
-	}
-=======
 	}	
 
->>>>>>> branch 'master' of https://github.com/hettan/FriendTracker.git
 	
 	@Override
 	protected void onStart() {
