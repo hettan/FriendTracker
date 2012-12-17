@@ -146,9 +146,14 @@ public class Map extends MapActivity {
 					// POPUP
 					
 					Intent go = new Intent(getBaseContext(),PointText.class);
+					go.putExtra("lat", (int)RP.getLatitudeE6());
+					go.putExtra("lon", (int)RP.getLongitudeE6());
+					Log.v(TAG, "Lat Map: " + (int)RP.getLatitudeE6());
+					Log.v(TAG, "Lon Map: " + (int)RP.getLongitudeE6());
 					startActivity(go);
 
 					// SKICKA RP TILL SERVER
+					
 					setPoint = false;
 				}
 				return true;
@@ -161,9 +166,7 @@ public class Map extends MapActivity {
 		mapView.getOverlays().add(myLocation);
 		mapOverlays = mapView.getOverlays();
 		
-	}	
-
-
+	}
 	
 	@Override
 	protected void onPause() {
@@ -309,10 +312,11 @@ public class Map extends MapActivity {
 				/// Handle group data
 				JSONArray rallypoints = data.getJSONArray("rallypoints");
 				List<String> rallyStatus = new ArrayList<String>();
-				for(int i=0; i < group.length();i++){
-					username = rallypoints.getJSONObject(i).getString("username");
+				Log.v(TAG, "rally_len: " + rallypoints.length());
+				for(int i=0; i < rallypoints.length();i++){
+					username = rallypoints.getJSONObject(i).getString("created_by");
 					Log.v(TAG, "USERNAME = " + username);
-					rallyStatus.add(rallypoints.getJSONObject(i).getString("text") + "-" + rallypoints.getJSONObject(i).getString("created_by"));
+					rallyStatus.add(rallypoints.getJSONObject(i).getString("text"));
 					pos = rallypoints.getJSONObject(i).getJSONObject("pos");
 					int lon = Integer.parseInt(pos.getString("lon"));
 					Log.v(TAG, "LONGITUDE = " + lon);
@@ -325,7 +329,7 @@ public class Map extends MapActivity {
 				
 				/// Add group data to map
 				final Drawable drawableRally= getResources().getDrawable(R.drawable.marker_friends);
-				for(int i = 0; i < gUser.size(); i++) {
+				for(int i = 0; i < rUser.size(); i++) {
 					Log.v(TAG, "Round "+i+", Starting..");
 						
 					PointerOverlay pointerOverlay = new PointerOverlay(drawableRally, mapView);
