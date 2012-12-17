@@ -1,16 +1,16 @@
 package sv.teamAwesome.friendtracker;
 
-import java.util.Dictionary;
-
 public class Config {
-	
+	//Change from settings:
 	public static long USER_POSITION_UPDATE_INTERVAL = 2000;
+	//public static Dictionary<String, String> STATUS;
+	public static String STATUS;
+	
+	
 	public static long USER_BACKGROUND_POSITION_UPDATE_INTERVAL = 60000;
 	public static String USERNAME = "";
 	public static String SESSION_ID = "";
 	public static String selectedGroupID = "";
-	public static Object andersMamma = null;
-	public static Dictionary<String, String> STATUS;
 	public static String ADMIN = "";
 	public static Object temp;
 	public static String PopMsg;
