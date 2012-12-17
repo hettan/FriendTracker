@@ -69,6 +69,7 @@ public class Group extends Activity {
 			case 0:
 				Intent addFriend = new Intent("sv.teamAwesome.friendtracker.ADDFRIENDSGROUP");
 				startActivity(addFriend);
+				finish();
 				return true;
 			case 1:
 				JSONObject toServer = new JSONObject();

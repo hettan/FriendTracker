@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -93,6 +94,8 @@ public class AddFriendsGroup extends Activity {
 		done.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
+				Intent back = new Intent("sv.teamAwesome.friendtracker.GROUP");
+				startActivity(back);
 				finish();
 			}
 		});
