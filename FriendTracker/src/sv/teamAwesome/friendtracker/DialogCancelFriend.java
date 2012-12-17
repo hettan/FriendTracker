@@ -1,19 +1,18 @@
 package sv.teamAwesome.friendtracker;
 
 import org.json.JSONObject;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
-public class DialogAskFriend extends FragmentActivity implements ShowPopUp.NoticeDialogListener{
-	private static final String TAG = "DiaAskFriend";
+public class DialogCancelFriend extends FragmentActivity implements ShowPopUp.NoticeDialogListener{
+	private static final String TAG = "DiaDeclineFriend";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState); {
-		Config.PopMsg = "Do you want to send a friendrequest?";
+		Config.PopMsg = "Do you want to cancel the friendrequest?";
 		DialogFragment pop = new ShowPopUp();
 		pop.show(getSupportFragmentManager(), "PopShow");
 		}
@@ -27,10 +26,11 @@ public class DialogAskFriend extends FragmentActivity implements ShowPopUp.Notic
 		JSONObject toServer = new JSONObject();
 		JSONObject data = new JSONObject();
 		try {		
-			data.put("src", Config.USERNAME);
+			data.put("username", Config.USERNAME);
 			data.put("target", item);
+			data.put("type", "friend");
 			data.put("itemPos", pos);
-			toServer.put("type", "request");
+			toServer.put("type", "remRequest");
 			toServer.put("data", data);
 		}
 		catch (Exception e) {
@@ -39,7 +39,7 @@ public class DialogAskFriend extends FragmentActivity implements ShowPopUp.Notic
 		try {
             Class[] params = {String.class, Boolean.class};
 			
-			ConnectionData connData = new ConnectionData(Search.class.getMethod("CallbackReq", params), Config.temp, toSend);
+			ConnectionData connData = new ConnectionData(Search.class.getMethod("CallbackCancelReq", params), Config.temp, toSend);
 
 			AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
 		} catch(Exception e) {
@@ -47,8 +47,8 @@ public class DialogAskFriend extends FragmentActivity implements ShowPopUp.Notic
 		}
 		finish();
 	}    	
-
 	public void onDialogNegativeClick(DialogFragment pop) {
+		
     	finish();
 	}
 

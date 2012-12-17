@@ -48,7 +48,7 @@ public class Map extends MapActivity {
 	MapController control;
 	View importPanel;
 	View pointerPanel;
-	Boolean FirstLoc = true;
+	Boolean FirstLoc;
 	Boolean setPoint = false;
 	String myGroupID = "";
 	Boolean showFriends = true;
@@ -59,18 +59,8 @@ public class Map extends MapActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		FirstLoc = true;
 		setContentView(R.layout.map);
-
-		/*View inflatedDrawerLayout = getLayoutInflater().inflate(R.layout.drawer, null);
-		int width = getWindow().getAttributes().width, height = getWindow().getAttributes().height;
-		LayoutParams params = new LayoutParams(width, height);
-		getWindow().addContentView(inflatedDrawerLayout, params);*/
-		
-		/*importPanel = ((ViewStub) findViewById(R.id.stub_import)).inflate();
-		importPanel.setVisibility(View.GONE);
-		
-		pointerPanel = ((ViewStub) findViewById(R.id.stub_import2)).inflate();
-		pointerPanel.setVisibility(View.GONE);*/
 		
 		final Object me = this;
 		
@@ -79,48 +69,13 @@ public class Map extends MapActivity {
 		control = mapView.getController();
 
 		final Drawable drawable = getResources().getDrawable(R.drawable.marker);
-		
-		/*Button statusbtn = (Button) findViewById(R.id.statusBtn);
-		final EditText statustxt = (EditText) findViewById(R.id.statusTxt);
-		statusbtn.setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				String status = statustxt.getText().toString();
-				
-				JSONObject toServer = new JSONObject();
-				JSONObject data = new JSONObject();
-				try {
-					data.put("username", Config.USERNAME);
-					data.put("status", status);
-					toServer.put("type", "setStatus");
-					toServer.put("data", data);
-				} catch (Exception e) {
-					
-				}
-				String toSend = toServer.toString();
-				try {
-		            Class[] params = {String.class, Boolean.class};
-					
-					ConnectionData connData = new ConnectionData(Map.class.getMethod("Callback", params), me, toSend);
-
-					AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
-				}
-				catch(Exception e) {
-					Log.v(TAG, "Error: " + e.toString());
-				}
-				statustxt.setText("");
-				InputMethodManager imm = (InputMethodManager)getSystemService(
-					      Context.INPUT_METHOD_SERVICE);
-					imm.hideSoftInputFromWindow(statustxt.getWindowToken(), 0);
-				//importPanel.setVisibility(View.GONE);
-			}				
-		});*/
 
 		manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		
 		listener = new LocationListener() {
 			
 			public void onLocationChanged(Location location) {
+				Log.v(TAG, "OnlocationChange");
 				point = new GeoPoint((int)(location.getLatitude()*1E6), (int)(location.getLongitude()*1E6));
 				if(FirstLoc) {
 					control.animateTo(point);
@@ -194,10 +149,6 @@ public class Map extends MapActivity {
 				Log.v(TAG, "setPoint: " + setPoint);
 				if(setPoint) {
 					// POPUP
-					/*if(pointerPanel.getVisibility() != View.VISIBLE)
-						pointerPanel.setVisibility(View.VISIBLE);
-					else
-						pointerPanel.setVisibility(View.GONE);*/
 					
 					Intent go = new Intent(getBaseContext(),PointText.class);
 					startActivity(go);
@@ -214,33 +165,6 @@ public class Map extends MapActivity {
 		myLocation = new MyLocationOverlay(this, mapView);
 		mapView.getOverlays().add(myLocation);
 		mapOverlays = mapView.getOverlays();
-		
-		
-		
-		/*if(showhide) {
-			JSONObject toServer = new JSONObject();
-			JSONObject data = new JSONObject();
-			try {
-				data.put("showFriends", "true");
-				data.put("groupID", myGroupID);
-				data.put("username", Config.USERNAME);
-				toServer.put("type", "getPositions");
-				toServer.put("data", data);
-			} catch (Exception e) {
-				
-			}
-			String toSend = toServer.toString();
-			try {
-	            Class[] params2 = {String.class, Boolean.class};
-				
-				ConnectionData connData = new ConnectionData(Map.class.getMethod("CallbackShow", params2), me, toSend);
-	
-				AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
-			}
-			catch(Exception e) {
-				Log.v(TAG, "Error: " + e.toString());
-			}
-		}*/
 		
 	}	
 
@@ -287,14 +211,6 @@ public class Map extends MapActivity {
 			Object me = this;
 			Config.temp = me;
 			startActivity(go);
-			
-			/*
-			if(importPanel.getVisibility() != View.VISIBLE)
-				importPanel.setVisibility(View.VISIBLE);
-			else
-				importPanel.setVisibility(View.GONE);
-				importPanel.setVisibility(View.INVISIBLE);
-				*/
 		}
 		if (item.getItemId() == 2) {
 
@@ -332,6 +248,8 @@ public class Map extends MapActivity {
 		List<String> fUser = new ArrayList<String>();
 		List<GeoPoint> gPos = new ArrayList<GeoPoint>();
 		List<String> gUser = new ArrayList<String>();
+		List<GeoPoint> rPos = new ArrayList<GeoPoint>();
+		List<String> rUser = new ArrayList<String>();
 		mapOverlays.clear();
 		mapOverlays.add(myLocation);
 		if(!error) {
@@ -357,7 +275,6 @@ public class Map extends MapActivity {
 					fPos.add(friend);
 					fUser.add(username);
 				}
-				//58,395516, 15,578237
 				
 				/// Add friends data to map
 				final Drawable drawableFriends = getResources().getDrawable(R.drawable.marker_friends);
@@ -396,6 +313,35 @@ public class Map extends MapActivity {
 						
 					PointerOverlay pointerOverlay = new PointerOverlay(drawableGroup, mapView);
 					OverlayItem overlayitem = new OverlayItem(gPos.get(i), gUser.get(i), groupStatus.get(i));
+					pointerOverlay.addOverlay(overlayitem);
+					mapOverlays.add(pointerOverlay);
+					Log.v(TAG, "Round "+i+", Done.");
+				}
+				
+				/// Handle group data
+				JSONArray rallypoints = data.getJSONArray("rallypoints");
+				List<String> rallyStatus = new ArrayList<String>();
+				for(int i=0; i < group.length();i++){
+					username = rallypoints.getJSONObject(i).getString("username");
+					Log.v(TAG, "USERNAME = " + username);
+					rallyStatus.add(rallypoints.getJSONObject(i).getString("text") + "-" + rallypoints.getJSONObject(i).getString("created_by"));
+					pos = rallypoints.getJSONObject(i).getJSONObject("pos");
+					int lon = Integer.parseInt(pos.getString("lon"));
+					Log.v(TAG, "LONGITUDE = " + lon);
+					int lat = Integer.parseInt(pos.getString("lat"));
+					Log.v(TAG, "LATITUDE = " + lat);
+					GeoPoint groupPoint = new GeoPoint(lat, lon);
+					rPos.add(groupPoint);
+					rUser.add(username);
+				}
+				
+				/// Add group data to map
+				final Drawable drawableRally= getResources().getDrawable(R.drawable.marker_friends);
+				for(int i = 0; i < gUser.size(); i++) {
+					Log.v(TAG, "Round "+i+", Starting..");
+						
+					PointerOverlay pointerOverlay = new PointerOverlay(drawableRally, mapView);
+					OverlayItem overlayitem = new OverlayItem(rPos.get(i), rUser.get(i), rallyStatus.get(i));
 					pointerOverlay.addOverlay(overlayitem);
 					mapOverlays.add(pointerOverlay);
 					Log.v(TAG, "Round "+i+", Done.");

@@ -1,21 +1,18 @@
 package sv.teamAwesome.friendtracker;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -26,6 +23,7 @@ public class Search extends Activity {
 	private ListView listView1;
 	private ArrayList<HashMap<String,String>> listRes;
 	private SimpleAdapter adapter;
+	private ArrayList<String> disabledItems;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,56 +34,38 @@ public class Search extends Activity {
 		final Object me = this;
 		
 		final EditText searchtxt = (EditText) findViewById(R.id.searchTxt);
+		disabledItems = new ArrayList<String>();
 		Button searchbtn = (Button) findViewById(R.id.searchBtn);
 		listView1 = (ListView) findViewById(R.id.list1);
 		listView1.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView parent, View view, int position, long id) {
-				HashMap<String,String> item = (HashMap<String,String>) listView1.getAdapter().getItem(position);
-				
-				JSONObject toServer = new JSONObject();
-				JSONObject data = new JSONObject();
-				String status = "";
-				try {
-				if(item.get("searchRequest").length() == 0) {			
-					data.put("src", Config.USERNAME);
-					data.put("target", item.get("searchUser"));
-					toServer.put("type", "request");
-					toServer.put("data", data);
-					status = "Request sent";
-				}
-				else {
-					data.put("username", Config.USERNAME);
-					data.put("target", item.get("searchUser"));
-					data.put("type", "friend");
-					toServer.put("type", "remRequest");
-					toServer.put("data", data);
-				}
-					String toSend = toServer.toString();
-					try {
-			            Class[] params = {String.class, Boolean.class};
-						
-						ConnectionData connData = new ConnectionData(Search.class.getMethod("CallbackReq", params), me, toSend);
-
-						AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
-					} catch(Exception e) {
-						Log.v(TAG, "Error: " + e.toString());
+				HashMap<String,String> selItem = (HashMap<String,String>) listView1.getAdapter().getItem(position);
+				Log.v(TAG,"DERPMODE");
+				String user = selItem.get("searchUser");
+				if (!disabledItems.contains(user)) {
+					disabledItems.add(user);
+					if(selItem.get("searchRequest").length() == 0) {		
+						//send request
+						Intent go = new Intent(getBaseContext(),DialogAskFriend.class);
+						String sendItem = user;
+						go.putExtra("item", sendItem);
+						go.putExtra("pos", position);
+						Config.temp = me;
+						startActivity(go);			
 					}
-					if(listRes != null) {
-						Log.v(TAG, "NOT NULL");
-						//HashMap<String,String> temp = item;
-						//HashMap<String,String> temp = listRes.get(position);
-						item.put("searchRequest", status);
-						listRes.set(position, item);
-						//listRes.add(position, temp);
-						//listRes.remove(position);
-						adapter.notifyDataSetChanged();
+					else {
+						//remove request
+						Intent go = new Intent(getBaseContext(),DialogCancelFriend.class);
+						String sendItem = user;
+						go.putExtra("item", sendItem);
+						go.putExtra("pos", position);
+						Config.temp = me;
+						startActivity(go);
 					}
-					Log.v(TAG, "NULL");
-			} catch (Exception e) {
-			}
+				}
 			}
 		});
-		
+			
 		searchbtn.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
@@ -116,6 +96,7 @@ public class Search extends Activity {
 		});
 		
 	}
+
 	public void Callback(String res, Boolean error) {
 		Log.v(TAG, "Callback: " + res);
 		if(!error) {
@@ -158,8 +139,41 @@ public class Search extends Activity {
 		Log.v(TAG, "Callback: " + res);
 		if(!error) {
 			Log.v(TAG, "Ej Err");
-
+			try {
+				JSONObject data = new JSONObject(res);
+				HashMap<String,String> item = new HashMap<String,String>();
+				item.put("searchUser", data.getString("username"));
+				item.put("searchRequest", "Request Sent");
+				listRes.set(data.getInt("itemPos"), item);
+				disabledItems.remove(data.getString("username"));
+				
+				adapter.notifyDataSetChanged();
+			} catch(Exception e){
+				
+			}
 		} else {
+			disabledItems.clear();
+			Log.v(TAG, "Err");
+		}
+	}
+	public void CallbackCancelReq(String res, Boolean error) {
+		Log.v(TAG, "Callback: " + res);
+		if(!error) {
+			Log.v(TAG, "Ej Err");
+			try {
+				JSONObject data = new JSONObject(res);
+				HashMap<String,String> item = new HashMap<String,String>();
+				item.put("searchUser", data.getString("username"));
+				item.put("searchRequest", "");
+				listRes.set(data.getInt("itemPos"), item);
+				disabledItems.remove(data.getString("username"));
+				
+				adapter.notifyDataSetChanged();
+			} catch(Exception e){
+				
+			}
+		} else {
+			disabledItems.clear();
 			Log.v(TAG, "Err");
 		}
 	}
