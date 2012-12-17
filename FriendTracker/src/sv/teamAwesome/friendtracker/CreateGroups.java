@@ -1,20 +1,15 @@
 package sv.teamAwesome.friendtracker;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 
 public class CreateGroups extends Activity {
 
@@ -49,10 +44,11 @@ public class CreateGroups extends Activity {
 				String toSend = toServer.toString();
 
 				try {
-		            Class[] params = {String.class, Boolean.class};
+		            @SuppressWarnings("rawtypes")
+					Class[] params = {String.class, Boolean.class};
 					
 					ConnectionData connData = new ConnectionData(CreateGroups.class.getMethod("Callback", params), me, toSend);
-					AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+					new ConnectionHandler().execute(connData);
 				}
 				catch(Exception e) {
 

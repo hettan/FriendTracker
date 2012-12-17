@@ -1,8 +1,6 @@
 package sv.teamAwesome.friendtracker;
 
 import org.json.JSONObject;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
@@ -37,11 +35,11 @@ public class DialogAskFriend extends FragmentActivity implements ShowPopUp.Notic
 		}
 		String toSend = toServer.toString();
 		try {
-            Class[] params = {String.class, Boolean.class};
+            @SuppressWarnings("rawtypes")
+			Class[] params = {String.class, Boolean.class};
 			
 			ConnectionData connData = new ConnectionData(Search.class.getMethod("CallbackReq", params), Config.temp, toSend);
-
-			AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+			new ConnectionHandler().execute(connData);
 		} catch(Exception e) {
 			Log.v(TAG, "Error: " + e.toString());
 		}

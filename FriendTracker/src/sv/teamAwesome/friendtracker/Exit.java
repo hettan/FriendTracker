@@ -16,8 +16,7 @@ public class Exit extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		Intent backgroundService = new Intent(getApplicationContext(), BackgroundService.class);
-	    stopService(backgroundService);j
-	    j
+	    stopService(backgroundService);
 		
 		Log.v("EXIT", "USERNAME: "+Config.USERNAME);
 		Log.v("EXIT", "USERNAME: "+Config.SESSION_ID);

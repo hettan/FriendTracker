@@ -10,7 +10,6 @@ import org.json.JSONObject;
 import android.app.NotificationManager;
 import android.app.TabActivity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -155,9 +154,10 @@ public class NotificationsTab extends TabActivity{
 			}
 			String toSend = toServer.toString();
 			try {
-	        	Class[] params = {String.class, Boolean.class};	
+	        	@SuppressWarnings("rawtypes")
+				Class[] params = {String.class, Boolean.class};	
 		 		ConnectionData connData = new ConnectionData(NotificationsTab.class.getMethod("Callback", params), me, toSend);
-		 		AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+		 		new ConnectionHandler().execute(connData);
 				}
 				catch(Exception e) {
 					Log.v(TAG, "Error: " + e.toString());
@@ -179,7 +179,6 @@ public class NotificationsTab extends TabActivity{
 					List<HashMap<String,String>> listFriend = new ArrayList<HashMap<String,String>>();
 					List<HashMap<String,String>> listGroup = new ArrayList<HashMap<String,String>>();
 					List<HashMap<String,String>> listBuzz = new ArrayList<HashMap<String,String>>();
-					String info;
 					for(int i=0; i < data.length();i++){
 						HashMap<String,String> map = new HashMap<String,String>();
 						map.put("Header", data.getJSONObject(i).getString("requester"));
@@ -242,9 +241,10 @@ public class NotificationsTab extends TabActivity{
 				}
 				String toSend = toServer.toString();
 				try {
-			        Class[] params = {String.class, Boolean.class};	
+			        @SuppressWarnings("rawtypes")
+					Class[] params = {String.class, Boolean.class};	
 				 	ConnectionData connData = new ConnectionData(NotificationsTab.class.getMethod("CallbackClear", params), me, toSend);
-					AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+					new ConnectionHandler().execute(connData);
 					}
 					catch(Exception e) {
 						Log.v(TAG, "Error: " + e.toString());

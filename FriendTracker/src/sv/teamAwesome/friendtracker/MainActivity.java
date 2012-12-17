@@ -2,14 +2,7 @@ package sv.teamAwesome.friendtracker;
 
 import org.json.JSONObject;
 
-import com.google.android.gcm.GCMRegistrar;
-
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -20,7 +13,6 @@ import android.widget.TextView;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 
 /*
@@ -69,11 +61,11 @@ public class MainActivity extends Activity {
 				}
 				String toSend = toServer.toString();
 				try {
-		            Class[] params = {String.class, Boolean.class};
+		            @SuppressWarnings("rawtypes")
+					Class[] params = {String.class, Boolean.class};
 					
 					ConnectionData connData = new ConnectionData(MainActivity.class.getMethod("Callback", params), me, toSend);
-
-					AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+					new ConnectionHandler().execute(connData);
 				}
 				catch(Exception e) {
 					Log.v(TAG, "Error: " + e.toString());
