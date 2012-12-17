@@ -38,7 +38,6 @@ public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		
 		if(GroupAdapter == null || GroupAdapter.isEmpty()) {
-			Log.v(TAG, "derpsdasd");
 			builder.setTitle("You dont have any groups to show");
 			builder.setNegativeButton("No Groups", new DialogInterface.OnClickListener() { 
 	               public void onClick(DialogInterface dialog, int which) {

@@ -13,18 +13,12 @@ public class DialogRemFriend extends FragmentActivity implements ShowPopUp.Notic
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState); {
-			Config.PopMsg = "Do you want this user to be removed?";
-			showNoticeDialog();
-		}
-	}
-	public void showNoticeDialog() {
-	// Create an instance of the dialog fragment and show it
+		Config.PopMsg = "Do you want this user to be removed?";
 		DialogFragment pop = new ShowPopUp();
 		pop.show(getSupportFragmentManager(), "PopShow");
+		}
 	}
-	// The dialog fragment receives a reference to this Activity through the
 	public void onDialogPositiveClick(DialogFragment pop) {
-		// User touched the dialog's positive button
 		Bundle extras = getIntent().getExtras();
 		String item = extras.getString("item");
 		
@@ -53,7 +47,6 @@ public class DialogRemFriend extends FragmentActivity implements ShowPopUp.Notic
 	}
 
 	public void onDialogNegativeClick(DialogFragment pop) {
-		// User touched the dialog's negative button
     	finish();
 	}
 

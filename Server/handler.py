@@ -59,6 +59,9 @@ def getFriendReq(data):
 def getRequests(data):
     return db.getRequests(data["username"])
 
+def remRequest(data):
+    return db.remRequest(data["username"], data["target"], data["type"])
+
 def clearRequests(data):
     return db.clearRequests(data["username"])
 
@@ -143,6 +146,7 @@ handler["request"] = addReq
 handler["acceptReq"] = acceptReq
 handler["getFriendReq"] = getFriendReq
 handler["getRequests"] = getRequests
+handler["remRequest"] = remRequest
 handler["clearRequests"] = clearRequests
 handler["remFriend"] = remFriend
 handler["getFriends"] = getFriends

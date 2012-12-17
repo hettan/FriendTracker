@@ -10,11 +10,11 @@ public class PointText extends Activity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		    builder.setTitle("Type the shit u wantz");
+		    builder.setTitle("Type in a header for your point");
 		    final EditText input = new EditText(this); 
 		    builder.setView(input);
 		    builder.setCancelable(false);
-		    builder.setPositiveButton("Forizzle Yeah", new DialogInterface.OnClickListener() { 
+		    builder.setPositiveButton("Set Point", new DialogInterface.OnClickListener() { 
 		               public void onClick(DialogInterface dialog, int which) {
 		            	   
 		            	   finish();

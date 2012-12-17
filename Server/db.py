@@ -64,7 +64,8 @@ def register(username, password, mail):
     if users.find_one({b"username": username}) == None:
         new_user = {b"username": username, b"password": password, b"mail": mail,
                     b"friends":[], b"active":False, b"requests":[], b"groups":[],
-                    b"pos":{b"lat":0,b"lon":0}, "pushID": "", b"friendsMod":0, b"status":b""}
+                    b"pos":{b"lat":0,b"lon":0}, "pushID": "", b"friendsMod":0,
+                    b"status":b"", b"requestSent":[]}
         users.insert(new_user)
         return ok(b"User was successfully registred!")
     
@@ -133,16 +134,22 @@ def getSession(session):
 def isFriend(src,target):
     print target
     target = users.find_one({b"username": target})
+    requestSent = False
     if target == None:
         return True
     else:
-        return (src in target[b"friends"]) or ({b"requester":src, b"type":b"friend"} in target[b"requests"])  
+        for req in target[b"requests"]:
+            requestSent = (req[b"requester"] == src and req[b"type"] == "friend")
+
+        return (src in target[b"friends"] or requestSent)  
 
 def addFriendReq(src, target):
     if not isFriend(src,target):
         time = datetime.datetime.now()
-        req = {b"requester":src, b"time":time.strftime("%d/%m - %H:%M"), b"type":b"friend"} #Month-Day-Hour-Minute
-        users.update({b"username":target}, {"$push": {b"requests": req}})
+        reqTarget = {b"requester":src, b"time":time.strftime("%d/%m - %H:%M"), b"type":b"friend"} #Month-Day-Hour-Minute
+        reqSrc = {b"target":target, b"type":"friend"}
+        users.update({b"username":target}, {"$push": {b"requests": reqTarget}})
+        users.update({b"username":src}, {"$push": {b"requestSent": reqSrc}})
         pushReq(target,{b"type":b"1", b"user":src})
         return ok(b"")
     
@@ -152,7 +159,10 @@ def addFriendReq(src, target):
 def acceptReq(src, requester, reqType):
     print "src="+ src + "req="+ requester
     #Remove from requests
-    users.update({b"username":src},{"$pop":{b"requests":{b"username":requester}}})
+    users.update({b"username":src},{"$pop":{b"requests":{b"requester":requester,b"reqType":reqType}}})
+    
+    #Remove from requestSent
+    users.update({b"username":requester},{"$pop":{b"requestSent":{b"target":src,b"type":reqType}}})
     
     #Update friends
     users.update({b"username":src},{"$push":{b"friends":requester}})
@@ -171,7 +181,18 @@ def getRequests(username):
     user = users.find_one({b"username":username})
     return ok(user[b"requests"])
 
+def remRequest(username, target, reqType):
+    print "usr="+username
+    #Remove from requests
+    users.update({b"username":target},{"$pop":{b"requests":{b"requester":username, b"reqType":reqType}}})
+    #Remove from requestSent
+    users.update({b"username":username},{"$pop":{b"requestSent":{b"target":target, b"type":reqType}}})
+    return ok(b"")
+
 def clearRequests(username):
+    user = users.find_one({b"username":username})
+    for target in user["requests"]:
+        users.update({b"username":target},{"$pop":{b"requestSent":{b"target":username}}})
     users.update({b"username":username},{"$set":{b"requests":[]}})
     return ok(b"")
 
@@ -217,19 +238,26 @@ def getFriendsIfMod(username, ts):
         return error(b"No change")
 
 def userSearch(username, query):
-      regexp = "(?i).*(" + query + ")+.*"; #Gets all users that contains the phrase in their username
-      search_res = users.find({b"username":{"$regex":regexp}})
-      print "query = "+query
-      res = []
-      for user in search_res:
-          if user["username"] != username:
-              res.append(user[b"username"])
-          
-      if len(res) > 0:
-          res = sorted(res) 
-          return ok(res)
-      else:
-          return error(b"No user found")
+    src = users.find_one({b"username":username})
+    regexp = "(?i).*(" + query + ")+.*"; #Gets all users that contains the phrase in their username
+    search_res = users.find({b"username":{"$regex":regexp}})
+    print "query = "+query
+    res = []
+    for user in search_res:
+        if user[b"username"] != username:
+            requestSent = False
+            for req in src[b"requestSent"]:
+                requestSent = (req[b"target"] == user[b"username"] and req[b"type"] == b"friend")
+                if requestSent:
+                    break
+            item = {b"username":user[b"username"], b"requestSent": requestSent}  
+            res.append(item)
+            
+    if len(res) > 0:
+        res = sorted(res) 
+        return ok(res)
+    else:
+        return error(b"No user found")
 
 ###### Groups ######
 
@@ -248,8 +276,10 @@ def addGroupMember(username, groupID, newUser):
     if isGroupAdmin(username, groupID):
 
         time = datetime.datetime.now()
-        req = {"groupID": groupID, b"requester":username, b"time":time.strftime("%d/%m - %H:%M"), b"type":b"group"} #Month-Day-Hour-Minute
-        users.update({b"username":newUser}, {"$push": {b"requests": req}})
+        reqTarget = {b"groupID": groupID, b"requester":username, b"time":time.strftime("%d/%m - %H:%M"), b"type":b"group"} #Month-Day-Hour-Minute
+        reqSrc = {b"target": newUser, b"type":"group"}
+        users.update({b"username":newUser}, {"$push": {b"requests": reqTarget}})
+        users.update({b"username":username}, {"$push": {b"requestSent": reqSrc}})
         groupName = groups.find_one({b"groupID":groupID})["name"]
         pushReq(newUser,{b"type":b"2", b"user":username, b"group":groupName})
         

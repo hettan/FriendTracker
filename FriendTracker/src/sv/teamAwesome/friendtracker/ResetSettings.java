@@ -21,16 +21,4 @@ public class ResetSettings extends Activity {
      finish();
      startActivity(new Intent(this, Setting.class));
  	}
-
- 
-/*
-  SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-  StringBuilder builder = new StringBuilder(); 
-  builder.append("\n" + sharedPrefs.getBoolean("perform_updates", false));
-  builder.append("\n" + sharedPrefs.getString("updates_interval", "-1"));
-  builder.append("\n" + sharedPrefs.getString("status_msg", "NULL"));
-
-  TextView settingsTextView = (TextView) findViewById(R.id.settings_text_view);
-  settingsTextView.setText(builder.toString());
-*/
  }
