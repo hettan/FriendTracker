@@ -51,22 +51,23 @@ public class Map extends MapActivity {
 	Boolean FirstLoc = true;
 	Boolean setPoint = false;
 	String myGroupID = "";
+	Boolean showFriends = true;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map);
 
-		View inflatedDrawerLayout = getLayoutInflater().inflate(R.layout.drawer, null);
+		/*View inflatedDrawerLayout = getLayoutInflater().inflate(R.layout.drawer, null);
 		int width = getWindow().getAttributes().width, height = getWindow().getAttributes().height;
 		LayoutParams params = new LayoutParams(width, height);
-		getWindow().addContentView(inflatedDrawerLayout, params);
+		getWindow().addContentView(inflatedDrawerLayout, params);*/
 		
-		importPanel = ((ViewStub) findViewById(R.id.stub_import)).inflate();
+		/*importPanel = ((ViewStub) findViewById(R.id.stub_import)).inflate();
 		importPanel.setVisibility(View.GONE);
 		
 		pointerPanel = ((ViewStub) findViewById(R.id.stub_import2)).inflate();
-		pointerPanel.setVisibility(View.GONE);
+		pointerPanel.setVisibility(View.GONE);*/
 		
 		final Object me = this;
 		
@@ -76,7 +77,7 @@ public class Map extends MapActivity {
 
 		final Drawable drawable = getResources().getDrawable(R.drawable.marker);
 		
-		Button statusbtn = (Button) findViewById(R.id.statusBtn);
+		/*Button statusbtn = (Button) findViewById(R.id.statusBtn);
 		final EditText statustxt = (EditText) findViewById(R.id.statusTxt);
 		statusbtn.setOnClickListener(new View.OnClickListener() {
 			
@@ -108,9 +109,9 @@ public class Map extends MapActivity {
 				InputMethodManager imm = (InputMethodManager)getSystemService(
 					      Context.INPUT_METHOD_SERVICE);
 					imm.hideSoftInputFromWindow(statustxt.getWindowToken(), 0);
-				importPanel.setVisibility(View.GONE);
+				//importPanel.setVisibility(View.GONE);
 			}				
-		});
+		});*/
 
 		LocationManager manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		
@@ -150,7 +151,9 @@ public class Map extends MapActivity {
 				JSONObject data2 = new JSONObject();
 				try {
 					data2.put("username", Config.USERNAME);
-					toServer2.put("type", "getFriendsPos");
+					data2.put("showFriends", showFriends);
+					data2.put("groupID", Config.selectedGroupID);
+					toServer2.put("type", "getPositions");
 					toServer2.put("data", data2);
 				} catch (Exception e) {
 					
@@ -188,10 +191,10 @@ public class Map extends MapActivity {
 				Log.v(TAG, "setPoint: " + setPoint);
 				if(setPoint) {
 					// POPUP
-					if(pointerPanel.getVisibility() != View.VISIBLE)
+					/*if(pointerPanel.getVisibility() != View.VISIBLE)
 						pointerPanel.setVisibility(View.VISIBLE);
 					else
-						pointerPanel.setVisibility(View.GONE);
+						pointerPanel.setVisibility(View.GONE);*/
 					
 					Intent go = new Intent(getBaseContext(),PointText.class);
 					startActivity(go);
@@ -208,6 +211,8 @@ public class Map extends MapActivity {
 		myLocation = new MyLocationOverlay(this, mapView);
 		mapView.getOverlays().add(myLocation);
 		mapOverlays = mapView.getOverlays();
+		
+		
 		
 		/*if(showhide) {
 			JSONObject toServer = new JSONObject();
@@ -288,10 +293,10 @@ public class Map extends MapActivity {
 		if(item.getItemId() == 3) {
 			if(item.getTitle().toString().contentEquals("Hide Friends")) {
 				item.setTitle("Show Friends");
-				//showFriends = false;
+				showFriends = false;
 			} else {
 				item.setTitle("Hide Friends");
-				//showFriends = true;
+				showFriends = true;
 			}
 		}
 		if(item.getItemId() == 4) {
@@ -315,19 +320,25 @@ public class Map extends MapActivity {
 		Log.v(TAG, "Callback: " + res);
 		List<GeoPoint> fPos = new ArrayList<GeoPoint>();
 		List<String> fUser = new ArrayList<String>();
+		List<GeoPoint> gPos = new ArrayList<GeoPoint>();
+		List<String> gUser = new ArrayList<String>();
 		mapOverlays.clear();
 		mapOverlays.add(myLocation);
 		if(!error) {
 			Log.v(TAG, "Friends Positions");
 			try {
-				JSONArray data = new JSONArray(res);
+				JSONObject data =  new JSONObject(res);
+				
+				///Handle friend data
+				JSONArray friends = data.getJSONArray("friends");
 				JSONObject pos;
+				String username;
 				List<String> friendStatus = new ArrayList<String>();
-				for(int i=0; i < data.length();i++){
-					String username = data.getJSONObject(i).getString("username");
+				for(int i=0; i < friends.length();i++){
+					username = friends.getJSONObject(i).getString("username");
 					Log.v(TAG, "USERNAME = " + username);
-					friendStatus.add(data.getJSONObject(i).getString("status"));
-					pos = data.getJSONObject(i).getJSONObject("pos");
+					friendStatus.add(friends.getJSONObject(i).getString("status"));
+					pos = friends.getJSONObject(i).getJSONObject("pos");
 					int lon = Integer.parseInt(pos.getString("lon"));
 					Log.v(TAG, "LONGITUDE = " + lon);
 					int lat = Integer.parseInt(pos.getString("lat"));
@@ -335,15 +346,46 @@ public class Map extends MapActivity {
 					GeoPoint friend = new GeoPoint(lat, lon);
 					fPos.add(friend);
 					fUser.add(username);
-					
 				}
-				final Drawable drawable = getResources().getDrawable(R.drawable.marker_friends);
+				//58,395516, 15,578237
+				
+				/// Add friends data to map
+				final Drawable drawableFriends = getResources().getDrawable(R.drawable.marker_friends);
 				Log.v(TAG, "Before: " + fPos.size());
 				for(int i = 0; i < fUser.size(); i++) {
 					Log.v(TAG, "Round "+i+", Starting..");
 						
-					PointerOverlay pointerOverlay = new PointerOverlay(drawable, mapView);
+					PointerOverlay pointerOverlay = new PointerOverlay(drawableFriends, mapView);
 					OverlayItem overlayitem = new OverlayItem(fPos.get(i), fUser.get(i), friendStatus.get(i));
+					pointerOverlay.addOverlay(overlayitem);
+					mapOverlays.add(pointerOverlay);
+					Log.v(TAG, "Round "+i+", Done.");
+				}
+				
+				/// Handle group data
+				JSONArray group = data.getJSONArray("group");
+				List<String> groupStatus = new ArrayList<String>();
+				for(int i=0; i < group.length();i++){
+					username = group.getJSONObject(i).getString("username");
+					Log.v(TAG, "USERNAME = " + username);
+					groupStatus.add(group.getJSONObject(i).getString("status"));
+					pos = group.getJSONObject(i).getJSONObject("pos");
+					int lon = Integer.parseInt(pos.getString("lon"));
+					Log.v(TAG, "LONGITUDE = " + lon);
+					int lat = Integer.parseInt(pos.getString("lat"));
+					Log.v(TAG, "LATITUDE = " + lat);
+					GeoPoint groupPoint = new GeoPoint(lat, lon);
+					gPos.add(groupPoint);
+					gUser.add(username);
+				}
+				
+				/// Add group data to map
+				final Drawable drawableGroup = getResources().getDrawable(R.drawable.marker_friends);
+				for(int i = 0; i < gUser.size(); i++) {
+					Log.v(TAG, "Round "+i+", Starting..");
+						
+					PointerOverlay pointerOverlay = new PointerOverlay(drawableGroup, mapView);
+					OverlayItem overlayitem = new OverlayItem(gPos.get(i), gUser.get(i), groupStatus.get(i));
 					pointerOverlay.addOverlay(overlayitem);
 					mapOverlays.add(pointerOverlay);
 					Log.v(TAG, "Round "+i+", Done.");

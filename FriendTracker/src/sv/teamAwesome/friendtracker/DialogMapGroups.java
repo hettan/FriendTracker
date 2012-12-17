@@ -12,7 +12,7 @@ import android.widget.ArrayAdapter;
 
 public class DialogMapGroups extends FragmentActivity implements ShowListPopUp.NoticeDialogListener{
 	private static final String TAG = "DiaMapGroup";
-
+	private String[] groupIDs;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState); {
@@ -41,6 +41,7 @@ public class DialogMapGroups extends FragmentActivity implements ShowListPopUp.N
 	}
 	public void onDialogPositiveClick(DialogFragment dialog) {
 		Log.v(TAG,"Listposition: " + ShowListPopUp.GivePos());
+		Config.selectedGroupID = groupIDs[ShowListPopUp.GivePos()];
 		finish();
 	}
 	public void onDialogNegativeClick(DialogFragment dialog) {
@@ -53,7 +54,6 @@ public class DialogMapGroups extends FragmentActivity implements ShowListPopUp.N
 			Log.v(TAG, "Got Groups");
 			try {
 				ArrayAdapter<String> groupadapter;
-				String[] groupIDs;
 				JSONArray data = new JSONArray(res);
 				if(data.length() > 0) {
 				JSONObject group;
