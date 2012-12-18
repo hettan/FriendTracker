@@ -10,6 +10,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.util.Log;
 
 public class BackgroundService extends Service{
@@ -21,6 +22,9 @@ public class BackgroundService extends Service{
 	static LocationManager manager;
 	static LocationListener listener;
 	
+	static PowerManager pm;
+	static PowerManager.WakeLock wl;
+	
 	@Override
 	public IBinder onBind(Intent intent) {
 		// TODO Auto-generated method stub
@@ -28,7 +32,8 @@ public class BackgroundService extends Service{
 	}
 	
 	public void onCreate() {
-		
+		pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
 	}
 	
 	public void onDestroy() {
@@ -43,7 +48,10 @@ public class BackgroundService extends Service{
 		listener = new LocationListener() {
 			
 			public void onLocationChanged(Location location) {
-
+				
+				if(!pm.isScreenOn())
+					wl.acquire();
+				
 				JSONObject toServer = new JSONObject();
 				JSONObject data = new JSONObject();
 				try {
@@ -89,6 +97,8 @@ public class BackgroundService extends Service{
 	
 	public void Callback(String res, Boolean error) {
 		Log.v(TAG, "Callback: " + res);
+		if(wl.isHeld())
+			wl.release();
 		if(!error) {
 			Log.v(TAG, "Status Updated");
 
