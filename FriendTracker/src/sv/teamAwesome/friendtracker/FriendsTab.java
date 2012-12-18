@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import android.app.TabActivity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -35,11 +36,12 @@ public class FriendsTab extends TabActivity {
 	  private ArrayAdapter<String> lv3;
 
 	  private int itemPos;
+	  final Object me = this;
+	  
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.friends);
-    	final Object me = this;
  
         tabHost = (TabHost)findViewById(android.R.id.tabhost);
         listView1 = (ListView) findViewById(R.id.list1);
@@ -64,88 +66,58 @@ public class FriendsTab extends TabActivity {
 		listView1.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent goDia = new Intent(getBaseContext(), DialogRemFriend.class);
-								
 				String item = (String) listView1.getAdapter().getItem(position);
 				goDia.putExtra("item", item);
 				Config.temp = me;
-				
 				startActivity(goDia);
 			}
 		});
 		listView2.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent goDia = new Intent(getBaseContext(), DialogRemFriend.class);
-								
 				String item = (String) listView2.getAdapter().getItem(position);
 				goDia.putExtra("item", item);
-				Config.temp = me;		
-				
+				Config.temp = me;
 				startActivity(goDia);
 			}
 		});
 		listView3.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Intent goDia = new Intent(getBaseContext(), DialogAct.class);
-								
+				Intent goDia = new Intent(getBaseContext(), DialogAct.class);	
 				String item = (String) listView3.getAdapter().getItem(position);
 				goDia.putExtra("item", item);
 				Config.temp = me;
-				
 				startActivity(goDia);
 			}
 		});
 		
 		tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
 			public void onTabChanged(String tabId) {
-				int i = getTabHost().getCurrentTab();
-				if(i == 0) {
-				    JSONObject toServer = new JSONObject();
-					JSONObject data = new JSONObject();
-					try {
-						data.put("username", Config.USERNAME);
-						toServer.put("type", "getFriends");
-						toServer.put("data", data);
-					} catch (Exception e) {
-							
+					if(tabId.equals("Active")) {
+						listView1.setAdapter(lv1);
+						listView2.setAdapter(null);
+						listView3.setAdapter(null);
 					}
-					String toSend = toServer.toString();
-					try {
-				        @SuppressWarnings("rawtypes")
-						Class[] params = {String.class, Boolean.class};
-							
-					 	ConnectionData connData = new ConnectionData(FriendsTab.class.getMethod("Callback", params), me, toSend);
-						new ConnectionHandler().execute(connData);
-						
-					} catch(Exception e) {
-						Log.v(TAG, "Error: " + e.toString());
+					else if (tabId.equals("All")) {
+						listView2.setAdapter(lv2);
+						listView1.setAdapter(null);
+						listView3.setAdapter(null);
 					}
-				} if(i == 1) {
-				   	JSONObject toServer2 = new JSONObject();
-					JSONObject data2 = new JSONObject();
-					try {
-						data2.put("username", Config.USERNAME);
-						toServer2.put("type", "getFriends");
-						toServer2.put("data", data2);
-					} catch (Exception e) {
-							
+					else {
+						listView3.setAdapter(lv3);
+						listView2.setAdapter(null);
+						listView1.setAdapter(null);
 					}
-					String toSend2 = toServer2.toString();
-					try {
-				        @SuppressWarnings("rawtypes")
-						Class[] params = {String.class, Boolean.class};
-							
-					 	ConnectionData connData = new ConnectionData(FriendsTab.class.getMethod("Callback", params), me, toSend2);
-						new ConnectionHandler().execute(connData);
-						
-					} catch(Exception e) {
-						Log.v(TAG, "Error: " + e.toString());
-					}
-				}
+					getUpdates();
 			}
 		});
-		
+		getUpdates();
         tabHost.setCurrentTabByTag("All");
-     	/*JSONObject toServer = new JSONObject();
+
+    }
+    
+    private void getUpdates() {
+    	JSONObject toServer = new JSONObject();
 		JSONObject data = new JSONObject();
 		try {
 			data.put("username", Config.USERNAME);
@@ -156,19 +128,20 @@ public class FriendsTab extends TabActivity {
 		}
 		String toSend = toServer.toString();
 		try {
-	        Class[] params = {String.class, Boolean.class};
+	        @SuppressWarnings("rawtypes")
+			Class[] params = {String.class, Boolean.class};
 				
 		 	ConnectionData connData = new ConnectionData(FriendsTab.class.getMethod("Callback", params), me, toSend);
-
-			AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
-			}
-			catch(Exception e) {
-				Log.v(TAG, "Error: " + e.toString());
-		}*/
+			new ConnectionHandler().execute(connData);
+			
+		} catch(Exception e) {
+			Log.v(TAG, "Error: " + e.toString());
+		}
     }
     
 	public void Callback(String res, Boolean error) {
 		Log.v(TAG, "Callback: " + res);
+
 		if(!error) {
 			try {
 				Log.v(TAG, "10");
@@ -197,9 +170,23 @@ public class FriendsTab extends TabActivity {
 				lv3 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,listReq);
 				
 				//listView3.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,listReq));
-				listView1.setAdapter(lv1);
-				listView2.setAdapter(lv2);
-				listView3.setAdapter(lv3);
+				
+				int tab = tabHost.getCurrentTab();
+				if (tab == 0) {
+					listView1.setAdapter(lv1);
+					listView2.setAdapter(null);
+					listView3.setAdapter(null);
+				}
+				else if (tab == 1) {
+					listView2.setAdapter(lv2);
+					listView1.setAdapter(null);
+					listView3.setAdapter(null);
+				}
+				else {
+					listView3.setAdapter(lv3);	
+					listView1.setAdapter(null);
+					listView2.setAdapter(null);
+				}
 				
 			} catch(Exception e){
 				Log.v(TAG, "Error: "+ e.toString());
@@ -210,22 +197,10 @@ public class FriendsTab extends TabActivity {
 			Log.v(TAG, "Error");
 		}
 	}
-	
-	public void CallbackAccept(String res, Boolean error) {
-		Log.v(TAG, "Callback: " + res);
-		if(!error){
-			lv3.remove((String)listView3.getAdapter().getItem(itemPos));
-			lv3.notifyDataSetChanged();
-		}
-		else {	
-			Log.v(TAG, "Error");
-		}
-	}
+
 	public void CallbackRem(String res, Boolean error) {
-		Log.v(TAG, "Callback: " + res);
 		if(!error) {
-			lv3.remove((String)listView3.getAdapter().getItem(itemPos));
-			lv3.notifyDataSetChanged();
+			getUpdates();
 		}
 		else {	
 			Log.v(TAG, "Error");
@@ -243,8 +218,10 @@ public class FriendsTab extends TabActivity {
 		if (item.getItemId() == 0) {
 			Intent search = new Intent("sv.teamAwesome.friendtracker.SEARCH");
 			startActivity(search);
+			//finish();
 		}
 		return true;
 	}
+
 	
 }

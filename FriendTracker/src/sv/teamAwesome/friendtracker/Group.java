@@ -91,6 +91,9 @@ public class Group extends Activity {
 				catch(Exception e) {
 					Log.v(TAG, "Error: " + e.toString());
 				}
+				Intent backToGroups = new Intent("sv.teamAwesome.friendtracker.GROUPS");
+				startActivity(backToGroups);
+				finish();
 			return true;
 		}
 		return true;

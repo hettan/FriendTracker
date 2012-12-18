@@ -39,7 +39,7 @@ public class DialogAct extends FragmentActivity implements ShowPopUp.NoticeDialo
             @SuppressWarnings("rawtypes")
 			Class[] params = {String.class, Boolean.class};
 			
-			ConnectionData connData = new ConnectionData(FriendsTab.class.getMethod("CallbackAccept", params),Config.temp, toSend);
+			ConnectionData connData = new ConnectionData(FriendsTab.class.getMethod("CallbackRem", params),Config.temp, toSend);
 			new ConnectionHandler().execute(connData);
 		} catch(Exception e) {
 			Log.v(TAG, "Error: " + e.toString());

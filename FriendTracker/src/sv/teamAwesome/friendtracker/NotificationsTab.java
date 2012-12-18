@@ -35,6 +35,10 @@ public class NotificationsTab extends TabActivity{
 	private ListView tabFriendReq;
 	private ListView tabGroupReq;
 	private ListView tabBuzz;
+	private SimpleAdapter adapterAll;
+	private SimpleAdapter adapterFriend;
+	private SimpleAdapter adapterGroup;
+	private SimpleAdapter adapterBuzz;
 	NotificationManager noteManager;
     final Object me = this;
     
@@ -82,13 +86,14 @@ public class NotificationsTab extends TabActivity{
 			}
 		}));
 
-		Bundle extras = getIntent().getExtras();
+		final Bundle extras = getIntent().getExtras();
 		Log.v(TAG, "extras:" + extras.getString("type"));
         tabHost.setCurrentTabByTag(extras.getString("type"));
 
+        noteManager.cancel(extras.getString("user"), extras.getInt("cat"));
+        	
 		tabAll.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				
 			}
 		});
 		tabFriendReq.setOnItemClickListener(new OnItemClickListener() {
@@ -125,20 +130,36 @@ public class NotificationsTab extends TabActivity{
 			public void onTabChanged(String tabId) {
 			int i = getTabHost().getCurrentTab();
 			    if (i == 0) {
+					tabAll.setAdapter(adapterAll);
+					tabFriendReq.setAdapter(null);
+					tabGroupReq.setAdapter(null);
+					tabBuzz.setAdapter(null);
 			    	Update();
 			    	noteManager.cancelAll();
 			    }
 			    else if (i ==1) {
+					tabAll.setAdapter(null);
+					tabFriendReq.setAdapter(adapterFriend);
+					tabGroupReq.setAdapter(null);
+					tabBuzz.setAdapter(null);
 					Update();
-					noteManager.cancel(null, 1);
+					noteManager.cancel(extras.getString("user"), 1);
 			    }
 			    else if (i ==2) {
+					tabAll.setAdapter(null);
+					tabFriendReq.setAdapter(null);
+					tabGroupReq.setAdapter(adapterGroup);
+					tabBuzz.setAdapter(null);
 					Update();
-					noteManager.cancel(null, 2);
+					noteManager.cancel(extras.getString("user"), 2);
 			    }
 			    else if (i ==3) {
+					tabAll.setAdapter(null);
+					tabFriendReq.setAdapter(null);
+					tabGroupReq.setAdapter(null);
+					tabBuzz.setAdapter(adapterBuzz);
 					Update();
-					noteManager.cancel(null, 3);
+					noteManager.cancel(extras.getString("user"), 3);
 			    }
 			  }
 			});
@@ -201,19 +222,50 @@ public class NotificationsTab extends TabActivity{
 						}
 						listAll.add(map);
 					}
+					adapterAll = new SimpleAdapter(this,listAll,R.xml.notificationitem,from,to);
+					adapterFriend = new SimpleAdapter(this,listFriend,R.xml.notificationitem,from,to);
+					adapterGroup = new SimpleAdapter(this,listGroup,R.xml.notificationitem,from,to);
+					adapterBuzz = new SimpleAdapter(this,listBuzz,R.xml.notificationitem,from,to);
 					
-					SimpleAdapter adapter1 = new SimpleAdapter(this,listAll,R.xml.notificationitem,from,to);
+					int tab = tabHost.getCurrentTab();
+					if (tab == 0) {
+						tabAll.setAdapter(adapterAll);
+						tabFriendReq.setAdapter(null);
+						tabGroupReq.setAdapter(null);
+						tabBuzz.setAdapter(null);
+					}
+					else if (tab == 1) {
+						tabAll.setAdapter(null);
+						tabFriendReq.setAdapter(adapterFriend);
+						tabGroupReq.setAdapter(null);
+						tabBuzz.setAdapter(null);
+					}
+					else if (tab == 2) {
+						tabAll.setAdapter(null);
+						tabFriendReq.setAdapter(null);
+						tabGroupReq.setAdapter(adapterGroup);
+						tabBuzz.setAdapter(null);
+					}
+					else {
+						tabAll.setAdapter(null);
+						tabFriendReq.setAdapter(null);
+						tabGroupReq.setAdapter(null);
+						tabBuzz.setAdapter(adapterBuzz);
+					}
+					
+					
+					/*
 					tabAll.setAdapter(adapter1);
 					
-					SimpleAdapter adapter2 = new SimpleAdapter(this,listFriend,R.xml.notificationitem,from,to);
+					
 					tabFriendReq.setAdapter(adapter2);
 					
-					SimpleAdapter adapter3 = new SimpleAdapter(this,listGroup,R.xml.notificationitem,from,to);
+					
 					tabGroupReq.setAdapter(adapter3);
 					
-					SimpleAdapter adapter4 = new SimpleAdapter(this,listBuzz,R.xml.notificationitem,from,to);
-					tabBuzz.setAdapter(adapter4);
 					
+					tabBuzz.setAdapter(adapter4);
+					*/
 					noteManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 					
 				} catch(Exception e){
