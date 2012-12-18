@@ -16,22 +16,17 @@ public class Exit extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		Intent backgroundService = new Intent(getApplicationContext(), BackgroundService.class);
-	    stopService(backgroundService);j
-	    j
+	    stopService(backgroundService);
 		
 		Log.v("EXIT", "USERNAME: "+Config.USERNAME);
-		Log.v("EXIT", "USERNAME: "+Config.SESSION_ID);
+		Log.v("EXIT", "SESSION_ID: "+Config.SESSION_ID);
 		
 		Config.USERNAME = "";
 		Config.SESSION_ID = "";
 		GCMRegistrar.unregister(this);
 		
 		Log.v("EXIT", "USERNAME: "+Config.USERNAME);
-		Log.v("EXIT", "USERNAME: "+Config.SESSION_ID);
-		
-		Intent killer = new Intent("logout");
-		killer.setType("kill");
-		sendBroadcast(killer);
+		Log.v("EXIT", "SESSION_ID: "+Config.SESSION_ID);
 		
 		Intent intent = new Intent(this,MainActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|
