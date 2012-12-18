@@ -12,14 +12,6 @@
     <string name="repass">Re-enter Password</string>
     <string name="regbtn">Submit</string>
 	<string	name="errorstring">CHECK</string>
-	<string name="setting1">Setting1</string>
-	<string name="setting2">Setting2</string>
-	<string name="setting3">Setting3</string>
-	<string name="setting4">Setting4</string>
-	<string name="setting5">Setting5</string>
-	<string name="setting6">Setting6</string>
-	<string name="setting7">Setting7</string>
-	<string name="setting8">Setting8</string>
 	<string name="cancel">Cancel</string>
 	<string name="agree">Agree</string>
 </resources>

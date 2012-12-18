@@ -17,7 +17,9 @@ public class Setting extends PreferenceActivity implements OnSharedPreferenceCha
     @Override
     public void onCreate(Bundle savedInstanceState) {        
         super.onCreate(savedInstanceState);        
+        Log.v(TAG,"start prefs");
         addPreferencesFromResource(R.xml.preferences);        
+        Log.v(TAG,"after prefs");
     }
     
     @Override
@@ -47,13 +49,17 @@ public class Setting extends PreferenceActivity implements OnSharedPreferenceCha
     protected void onPause() {
         super.onPause();
         // Unregister the listener whenever a key changes. 
-        getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(this);
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,String key) {
-    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+    	/*SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+    
+    	
     	//Update All settings to the Config Class
+    	
+    	//Visibility
+    	
     	
     	//Interval
     	String updateInterval = prefs.getString("updates_interval", "-1");
@@ -65,6 +71,6 @@ public class Setting extends PreferenceActivity implements OnSharedPreferenceCha
     	
     	Log.v(TAG,"Changed " + findPreference(key));
     }
-
-
+*/
+    }
 }

@@ -60,6 +60,8 @@ public class Map extends MapActivity {
 
 		final Drawable drawable = getResources().getDrawable(R.drawable.marker);
 
+
+
 		manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		
 		listener = new LocationListener() {
@@ -162,9 +164,15 @@ public class Map extends MapActivity {
 		myLocation = new MyLocationOverlay(this, mapView);
 		mapView.getOverlays().add(myLocation);
 		mapOverlays = mapView.getOverlays();
+		
+
+		boolean isGPS = manager.isProviderEnabled (LocationManager.GPS_PROVIDER);
+		if(!isGPS) {
+			Intent GPS = new Intent(this,DialogStartGPS.class);
+			startActivity(GPS);
+		}
 	}	
 
-	
 	@Override
 	protected void onStart() {
 		super.onStart();

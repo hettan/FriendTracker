@@ -41,6 +41,8 @@ public class NotificationsTab extends TabActivity{
 	private SimpleAdapter adapterBuzz;
 	NotificationManager noteManager;
     final Object me = this;
+    
+    private List<HashMap<String,String>> listGroup;
 	
     /*
 	 * ID
@@ -84,10 +86,12 @@ public class NotificationsTab extends TabActivity{
 			}
 		}));
 
-		Bundle extras = getIntent().getExtras();
+		final Bundle extras = getIntent().getExtras();
 		Log.v(TAG, "extras:" + extras.getString("type"));
         tabHost.setCurrentTabByTag(extras.getString("type"));
 
+        noteManager.cancel(extras.getString("user"), extras.getInt("cat"));
+        	
 		tabAll.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			}
@@ -96,8 +100,9 @@ public class NotificationsTab extends TabActivity{
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent goDia = new Intent(getBaseContext(), DialogAct.class);
 				
-				String item = (String) tabFriendReq.getAdapter().getItem(position);
-				goDia.putExtra("item", item);
+				@SuppressWarnings("unchecked")
+				HashMap<String,String> item = (HashMap<String,String>) tabFriendReq.getAdapter().getItem(position);
+				goDia.putExtra("item", item.get("Header"));
 				Config.temp = me;
 				Config.itemPos = position;
 				startActivity(goDia);
@@ -108,8 +113,9 @@ public class NotificationsTab extends TabActivity{
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent goDia = new Intent(getBaseContext(), DialogAcceptGroup.class);
 				
-				String item = (String) tabGroupReq.getAdapter().getItem(position);
-				goDia.putExtra("item", item);
+				//String item = (String) tabGroupReq.getAdapter().getItem(position);
+				String groupID = listGroup.get(position).get("groupID");
+				goDia.putExtra("groupID", groupID);
 				Config.temp = me;
 				Config.itemPos = position;
 				startActivity(goDia);
@@ -137,7 +143,7 @@ public class NotificationsTab extends TabActivity{
 					tabGroupReq.setAdapter(null);
 					tabBuzz.setAdapter(null);
 					Update();
-					noteManager.cancel(null, 1);
+					noteManager.cancel(extras.getString("user"), 1);
 			    }
 			    else if (i ==2) {
 					tabAll.setAdapter(null);
@@ -145,7 +151,7 @@ public class NotificationsTab extends TabActivity{
 					tabGroupReq.setAdapter(adapterGroup);
 					tabBuzz.setAdapter(null);
 					Update();
-					noteManager.cancel(null, 2);
+					noteManager.cancel(extras.getString("user"), 2);
 			    }
 			    else if (i ==3) {
 					tabAll.setAdapter(null);
@@ -153,7 +159,7 @@ public class NotificationsTab extends TabActivity{
 					tabGroupReq.setAdapter(null);
 					tabBuzz.setAdapter(adapterBuzz);
 					Update();
-					noteManager.cancel(null, 3);
+					noteManager.cancel(extras.getString("user"), 3);
 			    }
 			  }
 			});
@@ -196,25 +202,25 @@ public class NotificationsTab extends TabActivity{
 					
 					List<HashMap<String,String>> listAll = new ArrayList<HashMap<String,String>>();
 					List<HashMap<String,String>> listFriend = new ArrayList<HashMap<String,String>>();
-					List<HashMap<String,String>> listGroup = new ArrayList<HashMap<String,String>>();
+					listGroup = new ArrayList<HashMap<String,String>>();
 					List<HashMap<String,String>> listBuzz = new ArrayList<HashMap<String,String>>();
 					for(int i=0; i < data.length();i++){
 						HashMap<String,String> map = new HashMap<String,String>();
 						map.put("Header", data.getJSONObject(i).getString("requester"));
 						map.put("Info", data.getJSONObject(i).getString("type"));
 						map.put("Tstamp", data.getJSONObject(i).getString("time"));
-						listAll.add(map);
 						
 						if (data.getJSONObject(i).getString("type").contentEquals("friend")) {
 							listFriend.add(map);
 						}
 						if (data.getJSONObject(i).getString("type").contentEquals("group")) {
+							map.put("groupID", data.getJSONObject(i).getString("groupID"));
 							listGroup.add(map);
 						}
 						if (data.getJSONObject(i).getString("type").contentEquals("buzz")) {
 							listBuzz.add(map);
 						}
-						
+						listAll.add(map);
 					}
 					adapterAll = new SimpleAdapter(this,listAll,R.xml.notificationitem,from,to);
 					adapterFriend = new SimpleAdapter(this,listFriend,R.xml.notificationitem,from,to);

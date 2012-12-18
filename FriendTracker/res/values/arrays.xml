@@ -20,11 +20,4 @@
         <item name="60000">60000</item>
     </string-array>
 
-    <string-array name="MapGroupValues">
-        <item name="Anders Mamma">Anders Mamma</item>
-        <item name="Jacobs Mamma">Jacobs Mamma</item>
-        <item name="Wäggens Mamma">Wäggens Mamma</item>
-        <item name="Derps Mamma">Derps Mamma</item>
-    </string-array>
-    
 </resources>

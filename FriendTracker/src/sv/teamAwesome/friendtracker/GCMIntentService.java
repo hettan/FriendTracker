@@ -168,11 +168,12 @@ public class GCMIntentService extends GCMBaseIntentService{
         	break;
         }
         targetIntent.putExtra("type", notificationType);
+        targetIntent.putExtra("user", nUser);
+        targetIntent.putExtra("cat", nCategory);
         
         Log.v(TAG, "sent: " + notificationType); 
-        
         PendingIntent nIntent = 
-                PendingIntent.getActivity(context, nCategory, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.getActivity(context, nUser.hashCode(), targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         
         Notification note = new Notification(
             R.drawable.ic_launcher, 
