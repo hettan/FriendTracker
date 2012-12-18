@@ -94,6 +94,22 @@ public class NotificationsTab extends TabActivity{
         	
 		tabAll.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				HashMap<String,String> item = (HashMap<String,String>) tabFriendReq.getAdapter().getItem(position);
+				if (item.get("Info").equals("group")) {
+					Intent goDia = new Intent(getBaseContext(), DialogAcceptGroup.class);
+					String groupID = listGroup.get(position).get("groupID");
+					goDia.putExtra("groupID", groupID);
+					Config.temp = me;
+					//Config.itemPos = position;
+					startActivity(goDia);
+				}
+				else {
+					Intent goDia = new Intent(getBaseContext(), DialogAct.class);
+					goDia.putExtra("item", item.get("Header"));
+					Config.temp = me;
+					//Config.itemPos = position;
+					startActivity(goDia);
+				}
 			}
 		});
 		tabFriendReq.setOnItemClickListener(new OnItemClickListener() {
@@ -104,7 +120,7 @@ public class NotificationsTab extends TabActivity{
 				HashMap<String,String> item = (HashMap<String,String>) tabFriendReq.getAdapter().getItem(position);
 				goDia.putExtra("item", item.get("Header"));
 				Config.temp = me;
-				Config.itemPos = position;
+				//Config.itemPos = position;
 				startActivity(goDia);
 			}
 		});
@@ -114,7 +130,7 @@ public class NotificationsTab extends TabActivity{
 				Intent goDia = new Intent(getBaseContext(), DialogAcceptGroup.class);
 				
 				//String item = (String) tabGroupReq.getAdapter().getItem(position);
-				String groupID = listGroup.get(position).get("groupID");
+				String groupID = listGroup.remove(position).get("groupID");
 				goDia.putExtra("groupID", groupID);
 				Config.temp = me;
 				Config.itemPos = position;
@@ -134,7 +150,6 @@ public class NotificationsTab extends TabActivity{
 					tabFriendReq.setAdapter(null);
 					tabGroupReq.setAdapter(null);
 					tabBuzz.setAdapter(null);
-			    	Update();
 			    	noteManager.cancelAll();
 			    }
 			    else if (i ==1) {
@@ -142,7 +157,6 @@ public class NotificationsTab extends TabActivity{
 					tabFriendReq.setAdapter(adapterFriend);
 					tabGroupReq.setAdapter(null);
 					tabBuzz.setAdapter(null);
-					Update();
 					noteManager.cancel(extras.getString("user"), 1);
 			    }
 			    else if (i ==2) {
@@ -150,7 +164,6 @@ public class NotificationsTab extends TabActivity{
 					tabFriendReq.setAdapter(null);
 					tabGroupReq.setAdapter(adapterGroup);
 					tabBuzz.setAdapter(null);
-					Update();
 					noteManager.cancel(extras.getString("user"), 2);
 			    }
 			    else if (i ==3) {
@@ -158,9 +171,9 @@ public class NotificationsTab extends TabActivity{
 					tabFriendReq.setAdapter(null);
 					tabGroupReq.setAdapter(null);
 					tabBuzz.setAdapter(adapterBuzz);
-					Update();
 					noteManager.cancel(extras.getString("user"), 3);
 			    }
+		    	Update();
 			  }
 			});
 		Update();
@@ -253,19 +266,6 @@ public class NotificationsTab extends TabActivity{
 						tabBuzz.setAdapter(adapterBuzz);
 					}
 					
-					
-					/*
-					tabAll.setAdapter(adapter1);
-					
-					
-					tabFriendReq.setAdapter(adapter2);
-					
-					
-					tabGroupReq.setAdapter(adapter3);
-					
-					
-					tabBuzz.setAdapter(adapter4);
-					*/
 					noteManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 					
 				} catch(Exception e){
@@ -327,6 +327,7 @@ public class NotificationsTab extends TabActivity{
 			Log.v(TAG, "Callback: " + res);
 			if(!error) {
 				try {
+					Update();
 				}
 				catch(Exception e){
 					Log.v(TAG, "Error: "+ e.toString());
