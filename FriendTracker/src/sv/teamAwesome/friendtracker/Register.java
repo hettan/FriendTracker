@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.PixelFormat;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -75,10 +74,11 @@ public class Register extends Activity {
 							}
 							String toSend = toServer.toString();
 							try {
+								@SuppressWarnings("rawtypes")
 								Class[] params = {String.class, Boolean.class};
 						
 								ConnectionData connData = new ConnectionData(Register.class.getMethod("Callback", params), me, toSend);
-								AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+								new ConnectionHandler().execute(connData);
 							}
 							catch(Exception e) {
 								Log.v(TAG, "Error: " + e.toString());

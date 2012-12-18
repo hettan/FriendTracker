@@ -3,7 +3,6 @@ package sv.teamAwesome.friendtracker;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
@@ -29,10 +28,11 @@ public class DialogMapGroups extends FragmentActivity implements ShowListPopUp.N
 			String toSend = toServer.toString();
 			Log.v(TAG, "1");
 			try {
+				@SuppressWarnings("rawtypes")
 				Class[] params = {String.class, Boolean.class};
 
 				ConnectionData connData = new ConnectionData(DialogMapGroups.class.getMethod("Callback", params), me, toSend);
-				AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+				new ConnectionHandler().execute(connData);
 			}
 			catch(Exception e) {
 				Log.v(TAG, "Error: " + e.toString());

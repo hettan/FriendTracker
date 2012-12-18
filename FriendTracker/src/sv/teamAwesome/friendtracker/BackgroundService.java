@@ -2,17 +2,12 @@ package sv.teamAwesome.friendtracker;
 
 import org.json.JSONObject;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.OverlayItem;
-
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -64,11 +59,11 @@ public class BackgroundService extends Service{
 				String toSend = toServer.toString();
 				Log.v(TAG, "Sending data to server..");
 				try {
-		            Class[] params = {String.class, Boolean.class};
+		            @SuppressWarnings("rawtypes")
+					Class[] params = {String.class, Boolean.class};
 					
 					ConnectionData connData = new ConnectionData(BackgroundService.class.getMethod("Callback", params), me, toSend);
-
-					AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+					new ConnectionHandler().execute(connData);
 				}
 				catch(Exception e) {
 					Log.v(TAG, "Error: " + e.toString());

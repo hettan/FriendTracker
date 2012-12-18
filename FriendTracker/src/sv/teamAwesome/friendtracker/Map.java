@@ -6,31 +6,21 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
-import android.view.ViewStub;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
-import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
@@ -95,11 +85,12 @@ public class Map extends MapActivity {
 				}
 				String toSend = toServer.toString();
 				try {
-		            Class[] params = {String.class, Boolean.class};
+		            @SuppressWarnings("rawtypes")
+					Class[] params = {String.class, Boolean.class};
 					
 					ConnectionData connData = new ConnectionData(MainActivity.class.getMethod("Callback", params), me, toSend);
 
-					AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+					new ConnectionHandler().execute(connData);
 				}
 				catch(Exception e) {
 					Log.v(TAG, "Error: " + e.toString());
@@ -118,11 +109,12 @@ public class Map extends MapActivity {
 				}
 				String toSend2 = toServer2.toString();
 				try {
-		            Class[] params = {String.class, Boolean.class};
+		            @SuppressWarnings("rawtypes")
+					Class[] params = {String.class, Boolean.class};
 					
 					ConnectionData connData = new ConnectionData(Map.class.getMethod("CallbackFriends", params), me, toSend2);
 
-					AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+					new ConnectionHandler().execute(connData);
 				}
 				catch(Exception e) {
 					Log.v(TAG, "Error: " + e.toString());
@@ -145,7 +137,7 @@ public class Map extends MapActivity {
 		mapView.setOnSingleTapListener(new OnSingleTapListener() {
 			public boolean onSingleTap(MotionEvent event) {
 				GeoPoint RP = mapView.getProjection().fromPixels((int) event.getX(), (int) event.getY());
-				PointerOverlay pointerOverlay = new PointerOverlay(drawable, mapView);
+				new PointerOverlay(drawable, mapView);
 				Log.v(TAG, "setPoint: " + setPoint);
 				if(setPoint) {
 					// POPUP

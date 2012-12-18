@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Looper;
 import android.util.Log;
 
@@ -45,16 +44,18 @@ public class GCMIntentService extends GCMBaseIntentService{
 			    
 			    String toSend = toServer.toString();
 			    try {
-			    	Class[] params = {String.class, Boolean.class};
+			    	@SuppressWarnings("rawtypes")
+					Class[] params = {String.class, Boolean.class};
 			    	ConnectionData connData = new ConnectionData(LooperThread.class.getMethod("Callback", params), this, toSend);
-			    	AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+			    	new ConnectionHandler().execute(connData);
 			    }
 			    catch(Exception e) {
 			    	Log.v(TAG, "Error: " + e.toString());
 			    }
 			    Looper.loop();
 			  }
-			  public void Callback(String res, Boolean error) {
+			  @SuppressWarnings("unused")
+			public void Callback(String res, Boolean error) {
 				  	Log.v("GCMCallback", "Callback: "+res);
 				 	try {
 				 		Looper.myLooper().quit();
@@ -86,16 +87,18 @@ public class GCMIntentService extends GCMBaseIntentService{
 			    
 			    String toSend = toServer.toString();
 			    try {
-			    	Class[] params = {String.class, Boolean.class};
+			    	@SuppressWarnings("rawtypes")
+					Class[] params = {String.class, Boolean.class};
 			    	ConnectionData connData = new ConnectionData(LooperThread.class.getMethod("Callback", params), this, toSend);
-			    	AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+			    	new ConnectionHandler().execute(connData);
 			    }
 			    catch(Exception e) {
 			    	Log.v(TAG, "Error: " + e.toString());
 			    }
 			    Looper.loop();
 			  }
-			  public void Callback(String res, Boolean error) {
+			  @SuppressWarnings("unused")
+			public void Callback(String res, Boolean error) {
 				  	Log.v("GCMCallback", "Callback: "+res);
 				 	try {
 				 		Looper.myLooper().quit();

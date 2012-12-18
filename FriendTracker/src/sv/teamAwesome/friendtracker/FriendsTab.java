@@ -8,7 +8,6 @@ import org.json.JSONObject;
 
 import android.app.TabActivity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -111,10 +110,12 @@ public class FriendsTab extends TabActivity {
 					}
 					String toSend = toServer.toString();
 					try {
-				        Class[] params = {String.class, Boolean.class};
+				        @SuppressWarnings("rawtypes")
+						Class[] params = {String.class, Boolean.class};
 							
 					 	ConnectionData connData = new ConnectionData(FriendsTab.class.getMethod("Callback", params), me, toSend);
-						AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+						new ConnectionHandler().execute(connData);
+						
 					} catch(Exception e) {
 						Log.v(TAG, "Error: " + e.toString());
 					}
@@ -130,10 +131,12 @@ public class FriendsTab extends TabActivity {
 					}
 					String toSend2 = toServer2.toString();
 					try {
-				        Class[] params = {String.class, Boolean.class};
+				        @SuppressWarnings("rawtypes")
+						Class[] params = {String.class, Boolean.class};
 							
 					 	ConnectionData connData = new ConnectionData(FriendsTab.class.getMethod("Callback", params), me, toSend2);
-						AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+						new ConnectionHandler().execute(connData);
+						
 					} catch(Exception e) {
 						Log.v(TAG, "Error: " + e.toString());
 					}

@@ -38,7 +38,8 @@ public class Search extends Activity {
 		Button searchbtn = (Button) findViewById(R.id.searchBtn);
 		listView1 = (ListView) findViewById(R.id.list1);
 		listView1.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView parent, View view, int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				@SuppressWarnings("unchecked")
 				HashMap<String,String> selItem = (HashMap<String,String>) listView1.getAdapter().getItem(position);
 				Log.v(TAG,"DERPMODE");
 				String user = selItem.get("searchUser");
@@ -83,10 +84,12 @@ public class Search extends Activity {
 				}
 				String toSend = toServer.toString();
 				try {
-		            Class[] params = {String.class, Boolean.class};
+		            @SuppressWarnings("rawtypes")
+					Class[] params = {String.class, Boolean.class};
 					
 					ConnectionData connData = new ConnectionData(Search.class.getMethod("Callback", params), me, toSend);
 
+					@SuppressWarnings("unused")
 					AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
 				}
 				catch(Exception e) {
