@@ -2,10 +2,8 @@ package sv.teamAwesome.friendtracker;
 
 public class Config {
 	//Change from settings:
-	public static long USER_POSITION_UPDATE_INTERVAL = 2000;
+	public static int USER_POSITION_UPDATE_INTERVAL = 2000;
 	//public static Dictionary<String, String> STATUS;
-	public static String STATUS;
-	
 	
 	public static long USER_BACKGROUND_POSITION_UPDATE_INTERVAL = 60000;
 	public static String USERNAME = "";
