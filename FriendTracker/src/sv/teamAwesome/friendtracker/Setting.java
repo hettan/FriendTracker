@@ -1,14 +1,18 @@
 package sv.teamAwesome.friendtracker;
 
+import org.json.JSONObject;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 
 
 public class Setting extends PreferenceActivity implements OnSharedPreferenceChangeListener {
@@ -17,9 +21,7 @@ public class Setting extends PreferenceActivity implements OnSharedPreferenceCha
     @Override
     public void onCreate(Bundle savedInstanceState) {        
         super.onCreate(savedInstanceState);        
-        Log.v(TAG,"start prefs");
         addPreferencesFromResource(R.xml.preferences);        
-        Log.v(TAG,"after prefs");
     }
     
     @Override
@@ -53,24 +55,56 @@ public class Setting extends PreferenceActivity implements OnSharedPreferenceCha
     }
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,String key) {
-    	/*SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-    
-    	
     	//Update All settings to the Config Class
     	
     	//Visibility
-    	
-    	
-    	//Interval
-    	String updateInterval = prefs.getString("updates_interval", "-1");
-    	int temp = Integer.parseInt(updateInterval);
-    	Config.USER_POSITION_UPDATE_INTERVAL = temp;
-    	
-    	//Status
-    	Config.STATUS = prefs.getString("status_msg", "Using this awesome new App, its great!");
+    	if("set_visibility".equals(key)) {
+    		Log.v(TAG,key);
+    		Boolean bool = sharedPreferences.getBoolean("set_visibility", true);
+    		JSONObject toServer = new JSONObject();
+			JSONObject data = new JSONObject();
+			try {
+				data.put("username", Config.USERNAME);
+				data.put("visible",bool);
+				toServer.put("type", "setVisible");
+				toServer.put("data", data);
+			} catch (Exception e) {
+				
+			}
+			String toSend = toServer.toString();
+			try {
+		        @SuppressWarnings("rawtypes")
+				Class[] params = {String.class, Boolean.class};
+					
+				ConnectionData connData = new ConnectionData(Setting.class.getMethod("Callback", params), this, toSend);
+				new ConnectionHandler().execute(connData);
+			}
+			catch(Exception e) {
+				Log.v(TAG, "Error: " + e.toString());
+			}
+    	}
+    	else if("updates_interval".equals(key)) {
+    		Log.v(TAG,key);
+    		int tempi = 6666;
+    		String temps = sharedPreferences.getString("updates_interval", "1000");
+    		try {
+    		    tempi = Integer.parseInt(temps);
+    		} catch(NumberFormatException nfe) {
+    			Log.v(TAG,"fucked int parse");
+    		}
+    		Config.USER_POSITION_UPDATE_INTERVAL = tempi;
+    	}
+    	else if("status_msg".equals(key)) {
+    		Log.v(TAG,key);
+    	}
     	
     	Log.v(TAG,"Changed " + findPreference(key));
     }
-*/
+    public void Callback(String res, Boolean error) {
+    	try {
+    	}
+    	catch (Exception e) {
+    			
+    	}
     }
 }

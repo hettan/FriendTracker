@@ -6,9 +6,9 @@
         android:key="first_category">
         
         <CheckBoxPreference 
-            android:key="perform_updates"
-            android:summary="Enable or disable data updates"
-            android:title="Enable updates" 
+            android:key="set_visibility"
+            android:summary="Set your visibility on the map"
+            android:title="Show me on the map" 
             android:defaultValue="true"
         />
         
@@ -19,23 +19,7 @@
             android:defaultValue="1000" 
             android:entries="@array/updateInterval"
             android:entryValues="@array/updateIntervalValues"
-            android:dependency="perform_updates"
         />    
             
     </PreferenceCategory>
-
-    <PreferenceCategory 
-        android:title="Misc info"
-        android:key="second_category">
-
-        <EditTextPreference
-            android:key="status_msg"
-            android:title="Set your own status" 
-            android:summary="Show your friends what you are doing"
-            android:dialogTitle="Status"
-            android:dialogMessage="Provide a status"    
-            android:defaultValue="Using this awesome new app!" />
-
-    </PreferenceCategory>
-    
 </PreferenceScreen>

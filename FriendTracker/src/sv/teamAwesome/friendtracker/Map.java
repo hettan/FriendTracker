@@ -2,6 +2,8 @@ package sv.teamAwesome.friendtracker;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,6 +15,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,9 +45,11 @@ public class Map extends MapActivity {
 	Boolean setPoint = false;
 	String myGroupID = "";
 	Boolean showFriends = true;
-	
+	Handler h = new Handler();
 	LocationListener listener;
 	LocationManager manager;
+	
+	final Object me = this;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,20 +57,17 @@ public class Map extends MapActivity {
 		FirstLoc = true;
 		setContentView(R.layout.map);
 		
-		final Object me = this;
+
 		
 		mapView = (TapControlledMapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
 		control = mapView.getController();
 
 		final Drawable drawable = getResources().getDrawable(R.drawable.marker);
-
-
-
+		
 		manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		
 		listener = new LocationListener() {
-			
 			public void onLocationChanged(Location location) {
 				Log.v(TAG, "OnlocationChange");
 				point = new GeoPoint((int)(location.getLatitude()*1E6), (int)(location.getLongitude()*1E6));
@@ -91,30 +93,6 @@ public class Map extends MapActivity {
 					Class[] params = {String.class, Boolean.class};
 					
 					ConnectionData connData = new ConnectionData(MainActivity.class.getMethod("Callback", params), me, toSend);
-
-					new ConnectionHandler().execute(connData);
-				}
-				catch(Exception e) {
-					Log.v(TAG, "Error: " + e.toString());
-				}
-				
-				JSONObject toServer2 = new JSONObject();
-				JSONObject data2 = new JSONObject();
-				try {
-					data2.put("username", Config.USERNAME);
-					data2.put("showFriends", showFriends);
-					data2.put("groupID", Config.selectedGroupID);
-					toServer2.put("type", "getPositions");
-					toServer2.put("data", data2);
-				} catch (Exception e) {
-					
-				}
-				String toSend2 = toServer2.toString();
-				try {
-		            @SuppressWarnings("rawtypes")
-					Class[] params = {String.class, Boolean.class};
-					
-					ConnectionData connData = new ConnectionData(Map.class.getMethod("CallbackFriends", params), me, toSend2);
 
 					new ConnectionHandler().execute(connData);
 				}
@@ -171,7 +149,41 @@ public class Map extends MapActivity {
 			Intent GPS = new Intent(this,DialogStartGPS.class);
 			startActivity(GPS);
 		}
-	}	
+		Log.v(TAG, "Innan Timer..");
+		
+		
+	}
+	
+	public Runnable myRunnable = new Runnable() {
+		public void run() {
+		Log.v(TAG, "Updating...");
+		Log.v(TAG, "timer= " + Config.USER_POSITION_UPDATE_INTERVAL);
+		JSONObject toServer2 = new JSONObject();
+		JSONObject data2 = new JSONObject();
+		try {
+			data2.put("username", Config.USERNAME);
+			data2.put("showFriends", showFriends);
+			data2.put("groupID", Config.selectedGroupID);
+			toServer2.put("type", "getPositions");
+			toServer2.put("data", data2);
+		} catch (Exception e) {
+			
+		}
+		String toSend2 = toServer2.toString();
+		try {
+            @SuppressWarnings("rawtypes")
+			Class[] params = {String.class, Boolean.class};
+			
+			ConnectionData connData = new ConnectionData(Map.class.getMethod("CallbackFriends", params), me, toSend2);
+
+			new ConnectionHandler().execute(connData);
+		}
+		catch(Exception e) {
+			Log.v(TAG, "Error: " + e.toString());
+		}
+		h.postDelayed(myRunnable, Config.USER_POSITION_UPDATE_INTERVAL);
+		}
+	};
 
 	@Override
 	protected void onStart() {
@@ -180,6 +192,7 @@ public class Map extends MapActivity {
 		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.USER_POSITION_UPDATE_INTERVAL, 0, listener);
 		Intent backgroundService = new Intent(getApplicationContext(), BackgroundService.class);
 	    stopService(backgroundService);
+	    h.postDelayed(myRunnable, 2000);
 	    Log.v(TAG, "Starting manager and listener..");
 	}
 	
@@ -190,6 +203,7 @@ public class Map extends MapActivity {
 		manager.removeUpdates(listener);
 		Intent backgroundService = new Intent(getApplicationContext(), BackgroundService.class);
 	    startService(backgroundService);
+	    h.removeCallbacks(myRunnable);
 	    Log.v(TAG, "Stopping manager and listener..");
 	}
 		

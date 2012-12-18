@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.app.Activity;
 import android.content.Context;
@@ -38,13 +39,17 @@ public class MainActivity extends Activity {
 
 		final EditText username = (EditText) findViewById(R.id.usernametv);
 		final EditText password = (EditText) findViewById(R.id.passwordtv);
+		final ProgressBar mProgress = (ProgressBar) findViewById(R.id.loginProg);
 		Button login = (Button) findViewById(R.id.loginbtn);
 		Button register = (Button) findViewById(R.id.regbtn);
-		Button override = (Button) findViewById(R.id.override);
+		
+		mProgress.setVisibility(ProgressBar.INVISIBLE);
 		
 		login.setOnClickListener(new View.OnClickListener() {
-			
 			public void onClick(View v) {
+				TextView denied = (TextView) findViewById(R.id.logintv);
+				denied.setText("");	
+				
 				//If something, something, then do something, something.
 				String checkUser = username.getText().toString();
 				String checkPass = password.getText().toString();
@@ -61,6 +66,7 @@ public class MainActivity extends Activity {
 				}
 				String toSend = toServer.toString();
 				try {
+					mProgress.setVisibility(ProgressBar.VISIBLE);
 		            @SuppressWarnings("rawtypes")
 					Class[] params = {String.class, Boolean.class};
 					
@@ -82,28 +88,23 @@ public class MainActivity extends Activity {
 				startActivity(regis);
 			}
 		});
-		
-		override.setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				Intent skip = new Intent("sv.teamAwesome.friendtracker.FRONTPAGE");
-				startActivity(skip);
-			}
-		});
 	}
 	public void Callback(String res, Boolean error) {
 		Intent granted = new Intent("sv.teamAwesome.friendtracker.FRONTPAGE");
 		TextView denied = (TextView) findViewById(R.id.logintv);
+		final ProgressBar mProgress = (ProgressBar) findViewById(R.id.loginProg);
 		Log.v(TAG, "Callback: " + res);
 		if(!error) {
 			final EditText username = (EditText) findViewById(R.id.usernametv);
 			Config.USERNAME = username.getText().toString();
 			Config.SESSION_ID = res;
 			denied.setText("");
+			mProgress.setVisibility(ProgressBar.INVISIBLE);
 			startActivity(granted);
 			Log.v(TAG, "Access Granted");
 
 		} else {
+			mProgress.setVisibility(ProgressBar.INVISIBLE);
 			InputMethodManager imm = (InputMethodManager)getSystemService(
 				      Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(denied.getWindowToken(), 0);

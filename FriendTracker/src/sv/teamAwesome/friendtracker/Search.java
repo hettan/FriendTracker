@@ -24,6 +24,8 @@ public class Search extends Activity {
 	private ArrayList<HashMap<String,String>> listRes;
 	private SimpleAdapter adapter;
 	private ArrayList<String> disabledItems;
+	private String searcht;
+	final Object me = this;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +33,15 @@ public class Search extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
 		//listRes = new ArrayList<HashMap<String,String>>();
-		final Object me = this;
+		
+		final Button done = (Button) findViewById(R.id.searchDoneBtn);
+		done.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				finish();	
+			}
+		});
+		
 		
 		final EditText searchtxt = (EditText) findViewById(R.id.searchTxt);
 		disabledItems = new ArrayList<String>();
@@ -43,9 +53,10 @@ public class Search extends Activity {
 				HashMap<String,String> selItem = (HashMap<String,String>) listView1.getAdapter().getItem(position);
 				Log.v(TAG,"DERPMODE");
 				String user = selItem.get("searchUser");
-				if (!disabledItems.contains(user)) {
+					Log.v(TAG,"DERPMODE2");
 					disabledItems.add(user);
-					if(selItem.get("searchRequest").length() == 0) {		
+					if(selItem.get("searchRequest").length() == 0) {	
+						Log.v(TAG,"DERPMODE3");
 						//send request
 						Intent go = new Intent(getBaseContext(),DialogAskFriend.class);
 						String sendItem = user;
@@ -63,41 +74,43 @@ public class Search extends Activity {
 						Config.temp = me;
 						startActivity(go);
 					}
-				}
 			}
 		});
 			
 		searchbtn.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				String searcht = searchtxt.getText().toString();
-				
-				JSONObject toServer = new JSONObject();
-				JSONObject data = new JSONObject();
-				try {
-					data.put("query", searcht);
-					data.put("username", Config.USERNAME);
-					toServer.put("type", "userSearch");
-					toServer.put("data", data);
-				} catch (Exception e) {
-					
-				}
-				String toSend = toServer.toString();
-				try {
-		            @SuppressWarnings("rawtypes")
-					Class[] params = {String.class, Boolean.class};
-					
-					ConnectionData connData = new ConnectionData(Search.class.getMethod("Callback", params), me, toSend);
-
-					@SuppressWarnings("unused")
-					AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
-				}
-				catch(Exception e) {
-					Log.v(TAG, "Error: " + e.toString());
-				}
+				searcht = searchtxt.getText().toString();
+				getSearchRes();
 			}
 		});
 		
+	}
+	
+	public void getSearchRes() {
+		JSONObject toServer = new JSONObject();
+		JSONObject data = new JSONObject();
+		try {
+			data.put("query", searcht);
+			data.put("username", Config.USERNAME);
+			toServer.put("type", "userSearch");
+			toServer.put("data", data);
+		} catch (Exception e) {
+			
+		}
+		String toSend = toServer.toString();
+		try {
+            @SuppressWarnings("rawtypes")
+			Class[] params = {String.class, Boolean.class};
+			
+			ConnectionData connData = new ConnectionData(Search.class.getMethod("Callback", params), me, toSend);
+
+			@SuppressWarnings("unused")
+			AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+		}
+		catch(Exception e) {
+			Log.v(TAG, "Error: " + e.toString());
+		}
 	}
 
 	public void Callback(String res, Boolean error) {
@@ -144,6 +157,9 @@ public class Search extends Activity {
 			Log.v(TAG, "Ej Err");
 			try {
 				JSONObject data = new JSONObject(res);
+				getSearchRes();
+				/*
+				JSONObject data = new JSONObject(res);
 				HashMap<String,String> item = new HashMap<String,String>();
 				item.put("searchUser", data.getString("username"));
 				item.put("searchRequest", "Request Sent");
@@ -151,6 +167,7 @@ public class Search extends Activity {
 				disabledItems.remove(data.getString("username"));
 				
 				adapter.notifyDataSetChanged();
+				*/
 			} catch(Exception e){
 				
 			}
@@ -164,6 +181,8 @@ public class Search extends Activity {
 		if(!error) {
 			Log.v(TAG, "Ej Err");
 			try {
+				getSearchRes();
+				/*
 				JSONObject data = new JSONObject(res);
 				HashMap<String,String> item = new HashMap<String,String>();
 				item.put("searchUser", data.getString("username"));
@@ -171,7 +190,7 @@ public class Search extends Activity {
 				listRes.set(data.getInt("itemPos"), item);
 				disabledItems.remove(data.getString("username"));
 				
-				adapter.notifyDataSetChanged();
+				adapter.notifyDataSetChanged();*/
 			} catch(Exception e){
 				
 			}
