@@ -48,7 +48,7 @@ public class ShowPopUp extends DialogFragment {
                })
                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                    public void onClick(DialogInterface dialog, int id) {
-                	   mListener.onDialogPositiveClick(ShowPopUp.this);
+                	   mListener.onDialogNegativeClick(ShowPopUp.this);
                    }
                });
         // Create the AlertDialog object and return it
