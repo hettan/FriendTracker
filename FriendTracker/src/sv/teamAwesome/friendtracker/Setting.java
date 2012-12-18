@@ -55,6 +55,9 @@ public class Setting extends PreferenceActivity implements OnSharedPreferenceCha
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
     	//Update All settings to the Config Class
     	
+    	//Visibility
+    	
+    	
     	//Interval
     	String updateInterval = prefs.getString("updates_interval", "-1");
     	int temp = Integer.parseInt(updateInterval);

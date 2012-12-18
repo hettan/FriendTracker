@@ -19,13 +19,13 @@ public class DialogAcceptGroup extends FragmentActivity implements ShowPopUp.Not
 
 	public void onDialogPositiveClick(DialogFragment pop) {
 		Bundle extras = getIntent().getExtras();
-		String item = extras.getString("item");
+		String groupID = extras.getString("groupID");
 				
 		JSONObject toServer = new JSONObject();
 		JSONObject data = new JSONObject();
 		try {		
 			data.put("src", Config.USERNAME);
-			data.put("requester", item);
+			data.put("requester", groupID);
 			data.put("type","group");
 			toServer.put("type", "acceptReq");
 			toServer.put("data", data);
