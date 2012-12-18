@@ -15,6 +15,7 @@ public class Config {
 	public static Object temp;
 	public static String PopMsg;
 	public static int itemPos;
+	public static String currentTab = "";
 	public static String RALLY_POINT_MESSAGE = "";
 	// Sender id for GCM registration
 	public static String SENDER_ID = "377927318664";

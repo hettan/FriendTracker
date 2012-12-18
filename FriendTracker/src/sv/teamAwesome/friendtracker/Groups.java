@@ -61,7 +61,8 @@ public class Groups extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Config.selectedGroupID = groupIDs[position];
 				Intent group = new Intent("sv.teamAwesome.friendtracker.GROUP");
-				startActivity(group);		
+				startActivity(group);
+				finish();
 			}
 		});
 		
