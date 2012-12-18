@@ -6,12 +6,10 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -19,9 +17,6 @@ import android.widget.TextView;
 
 public class Group extends Activity {
 	private static final String TAG = "GROUP";
-	private static final int ADD_FRIENDS = 0;
-	private static final int CANCEL_GROUP = 0;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,11 +39,12 @@ public class Group extends Activity {
 		}
 		String toSend = toServer.toString();
 		try {
-            Class[] params = {String.class, Boolean.class};
+			@SuppressWarnings("rawtypes")
+			Class[] params = {String.class, Boolean.class};
 			
 			ConnectionData connData = new ConnectionData(Group.class.getMethod("Callback", params), me, toSend);
 
-			AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+			new ConnectionHandler().execute(connData);
 		} catch(Exception e) {
 			Log.v(TAG, "Error: " + e.toString());
 		}
@@ -84,12 +80,13 @@ public class Group extends Activity {
 				}
 				String toSend = toServer.toString();
 				try {
-		            Class[] params = {String.class, Boolean.class};
+					@SuppressWarnings("rawtypes")
+					Class[] params = {String.class, Boolean.class};
 					
 					ConnectionData connData = new ConnectionData(Group.class.getMethod("CallbackDel", params), this, toSend);
 					//ConnectionData connData = new ConnectionData(MainActivity.class.getMethod("Callback", params), MainActivity.class.newInstance(), toSend);
 	
-					AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+					new ConnectionHandler().execute(connData);
 				}
 				catch(Exception e) {
 					Log.v(TAG, "Error: " + e.toString());

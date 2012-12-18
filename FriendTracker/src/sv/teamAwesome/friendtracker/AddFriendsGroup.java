@@ -9,12 +9,10 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -50,16 +48,17 @@ public class AddFriendsGroup extends Activity {
 		}
 		String toSend = toServer.toString();
 		try {
-	        Class[] params = {String.class, Boolean.class};
+	        @SuppressWarnings("rawtypes")
+			Class[] params = {String.class, Boolean.class};
 				
 		 	ConnectionData connData = new ConnectionData(AddFriendsGroup.class.getMethod("Callback", params), me, toSend);
-			AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+			new ConnectionHandler().execute(connData);
 		} catch(Exception e) {
 			Log.v(TAG, "Error: " + e.toString());
 		}
 		
 		listv.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView parent, View view, int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				String item = (String) listv.getAdapter().getItem(position);
 				if(item != null) {			
 					JSONObject toServer = new JSONObject();
@@ -76,11 +75,11 @@ public class AddFriendsGroup extends Activity {
 					String toSend = toServer.toString();
 					Log.v(TAG, "me= " + me.toString());
 					try {
-			            Class[] params = {String.class, Boolean.class};
-						
+			            @SuppressWarnings("rawtypes")
+						Class[] params = {String.class, Boolean.class};
 						ConnectionData connData = new ConnectionData(AddFriendsGroup.class.getMethod("CallbackAdd", params), me, toSend);
-
-						AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+						new ConnectionHandler().execute(connData);
+						
 					} catch(Exception e) {
 						Log.v(TAG, "Error: " + e.toString());
 					}
@@ -111,7 +110,7 @@ public class AddFriendsGroup extends Activity {
 				username = friends.getString(i);
 				listAll.add(username);
 			}
-			lv1 = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listAll);
+			lv1 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,listAll);
 			listv.setAdapter(lv1);
 		} catch(Exception e) {
 			

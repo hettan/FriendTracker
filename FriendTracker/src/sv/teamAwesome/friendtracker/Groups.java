@@ -4,7 +4,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.AsyncTask;
@@ -47,9 +46,11 @@ public class Groups extends Activity {
 		String toSend = toServer.toString();
 		Log.v(TAG, "4");
 		try {
+			@SuppressWarnings("rawtypes")
 			Class[] params = {String.class, Boolean.class};
 
 			ConnectionData connData = new ConnectionData(Groups.class.getMethod("UpdateGroups", params), me, toSend);
+			@SuppressWarnings("unused")
 			AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
 		}
 		catch(Exception e) {
@@ -57,7 +58,7 @@ public class Groups extends Activity {
 		}
 		listViewGroups = (ListView) findViewById(R.id.groupslist);
 		listViewGroups.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView parent, View view, int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Config.selectedGroupID = groupIDs[position];
 				Intent group = new Intent("sv.teamAwesome.friendtracker.GROUP");
 				startActivity(group);		

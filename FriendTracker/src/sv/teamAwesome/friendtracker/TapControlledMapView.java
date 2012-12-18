@@ -1,16 +1,11 @@
 package sv.teamAwesome.friendtracker;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
-import android.widget.Toast;
-
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.readystatesoftware.maps.OnSingleTapListener;
 
@@ -18,7 +13,7 @@ public class TapControlledMapView extends MapView implements OnGestureListener {
 
     private GestureDetector gd;    
     private OnSingleTapListener singleTapListener;
-    private OnDoubleTapListener doubleTapListener;
+ //   private OnDoubleTapListener doubleTapListener;
 
 	public TapControlledMapView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -42,7 +37,7 @@ public class TapControlledMapView extends MapView implements OnGestureListener {
         gd.setOnDoubleTapListener(new OnDoubleTapListener() {
 
 			public boolean onSingleTapConfirmed(MotionEvent e) {
-			    final MapController mc = TapControlledMapView.this.getController();
+			    //final MapController mc = TapControlledMapView.this.getController();
 				if (singleTapListener != null) {
 //		              GeoPoint p = TapControlledMapView.this.getProjection().fromPixels(
 //			                   (int) e.getX(),
@@ -84,9 +79,9 @@ public class TapControlledMapView extends MapView implements OnGestureListener {
 	public void setOnSingleTapListener(OnSingleTapListener singleTapListener) {
 		this.singleTapListener = singleTapListener;
 	}
-	public void setOnDoubleTapListener(OnDoubleTapListener doubleTapListener) {
-		this.doubleTapListener = doubleTapListener;
-	}
+//	public void setOnDoubleTapListener(OnDoubleTapListener doubleTapListener) {
+//		this.doubleTapListener = doubleTapListener;
+//	}
 //	public void setOnLongClickListener(OnLongClickListener longlistener)
 //	{
 //		this.longClickListener = longlistener;

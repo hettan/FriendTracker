@@ -10,7 +10,6 @@ import org.json.JSONObject;
 import android.app.NotificationManager;
 import android.app.TabActivity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -38,6 +37,8 @@ public class NotificationsTab extends TabActivity{
 	private ListView tabBuzz;
 	NotificationManager noteManager;
     final Object me = this;
+    
+    private List<HashMap<String,String>> listGroup;
 	
     /*
 	 * ID
@@ -94,8 +95,9 @@ public class NotificationsTab extends TabActivity{
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent goDia = new Intent(getBaseContext(), DialogAct.class);
 				
-				String item = (String) tabFriendReq.getAdapter().getItem(position);
-				goDia.putExtra("item", item);
+				@SuppressWarnings("unchecked")
+				HashMap<String,String> item = (HashMap<String,String>) tabFriendReq.getAdapter().getItem(position);
+				goDia.putExtra("item", item.get("Header"));
 				Config.temp = me;
 				Config.itemPos = position;
 				startActivity(goDia);
@@ -106,8 +108,9 @@ public class NotificationsTab extends TabActivity{
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent goDia = new Intent(getBaseContext(), DialogAcceptGroup.class);
 				
-				String item = (String) tabGroupReq.getAdapter().getItem(position);
-				goDia.putExtra("item", item);
+				//String item = (String) tabGroupReq.getAdapter().getItem(position);
+				String groupID = listGroup.get(position).get("groupID");
+				goDia.putExtra("groupID", groupID);
 				Config.temp = me;
 				Config.itemPos = position;
 				startActivity(goDia);
@@ -155,9 +158,10 @@ public class NotificationsTab extends TabActivity{
 			}
 			String toSend = toServer.toString();
 			try {
-	        	Class[] params = {String.class, Boolean.class};	
+	        	@SuppressWarnings("rawtypes")
+				Class[] params = {String.class, Boolean.class};	
 		 		ConnectionData connData = new ConnectionData(NotificationsTab.class.getMethod("Callback", params), me, toSend);
-		 		AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+		 		new ConnectionHandler().execute(connData);
 				}
 				catch(Exception e) {
 					Log.v(TAG, "Error: " + e.toString());
@@ -177,26 +181,25 @@ public class NotificationsTab extends TabActivity{
 					
 					List<HashMap<String,String>> listAll = new ArrayList<HashMap<String,String>>();
 					List<HashMap<String,String>> listFriend = new ArrayList<HashMap<String,String>>();
-					List<HashMap<String,String>> listGroup = new ArrayList<HashMap<String,String>>();
+					listGroup = new ArrayList<HashMap<String,String>>();
 					List<HashMap<String,String>> listBuzz = new ArrayList<HashMap<String,String>>();
-					String info;
 					for(int i=0; i < data.length();i++){
 						HashMap<String,String> map = new HashMap<String,String>();
 						map.put("Header", data.getJSONObject(i).getString("requester"));
 						map.put("Info", data.getJSONObject(i).getString("type"));
 						map.put("Tstamp", data.getJSONObject(i).getString("time"));
-						listAll.add(map);
 						
 						if (data.getJSONObject(i).getString("type").contentEquals("friend")) {
 							listFriend.add(map);
 						}
 						if (data.getJSONObject(i).getString("type").contentEquals("group")) {
+							map.put("groupID", data.getJSONObject(i).getString("groupID"));
 							listGroup.add(map);
 						}
 						if (data.getJSONObject(i).getString("type").contentEquals("buzz")) {
 							listBuzz.add(map);
 						}
-						
+						listAll.add(map);
 					}
 					
 					SimpleAdapter adapter1 = new SimpleAdapter(this,listAll,R.xml.notificationitem,from,to);
@@ -242,9 +245,10 @@ public class NotificationsTab extends TabActivity{
 				}
 				String toSend = toServer.toString();
 				try {
-			        Class[] params = {String.class, Boolean.class};	
+			        @SuppressWarnings("rawtypes")
+					Class[] params = {String.class, Boolean.class};	
 				 	ConnectionData connData = new ConnectionData(NotificationsTab.class.getMethod("CallbackClear", params), me, toSend);
-					AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+					new ConnectionHandler().execute(connData);
 					}
 					catch(Exception e) {
 						Log.v(TAG, "Error: " + e.toString());

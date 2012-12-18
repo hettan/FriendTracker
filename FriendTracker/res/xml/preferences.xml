@@ -6,9 +6,9 @@
         android:key="first_category">
         
         <CheckBoxPreference 
-            android:key="perform_updates"
-            android:summary="Enable or disable data updates"
-            android:title="Enable updates" 
+            android:key="set_visibility"
+            android:summary="Enable or disable your visibility"
+            android:title="Set Visibility" 
             android:defaultValue="true"
         />
         

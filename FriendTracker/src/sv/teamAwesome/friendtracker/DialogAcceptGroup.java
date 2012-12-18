@@ -1,8 +1,6 @@
 package sv.teamAwesome.friendtracker;
 
 import org.json.JSONObject;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
@@ -21,13 +19,13 @@ public class DialogAcceptGroup extends FragmentActivity implements ShowPopUp.Not
 
 	public void onDialogPositiveClick(DialogFragment pop) {
 		Bundle extras = getIntent().getExtras();
-		String item = extras.getString("item");
+		String groupID = extras.getString("groupID");
 				
 		JSONObject toServer = new JSONObject();
 		JSONObject data = new JSONObject();
 		try {		
 			data.put("src", Config.USERNAME);
-			data.put("requester", item);
+			data.put("requester", groupID);
 			data.put("type","group");
 			toServer.put("type", "acceptReq");
 			toServer.put("data", data);
@@ -36,11 +34,11 @@ public class DialogAcceptGroup extends FragmentActivity implements ShowPopUp.Not
 		}
 		String toSend = toServer.toString();
 		try {
-            Class[] params = {String.class, Boolean.class};
+            @SuppressWarnings("rawtypes")
+			Class[] params = {String.class, Boolean.class};
 			
 			ConnectionData connData = new ConnectionData(NotificationsTab.class.getMethod("CallbackGroup", params), Config.temp, toSend);
-
-			AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+			new ConnectionHandler().execute(connData);
 		} catch(Exception e) {
 			Log.v(TAG, "Error: " + e.toString());
 		}

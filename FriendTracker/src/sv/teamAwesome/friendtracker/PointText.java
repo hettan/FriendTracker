@@ -5,7 +5,6 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
@@ -46,11 +45,12 @@ public class PointText extends Activity{
 							}
 							String toSend = toServer.toString();
 							try {
-					            Class[] params = {String.class, Boolean.class};
+					            @SuppressWarnings("rawtypes")
+								Class[] params = {String.class, Boolean.class};
 								
 								ConnectionData connData = new ConnectionData(Map.class.getMethod("Callback", params), me, toSend);
 
-								AsyncTask<ConnectionData, Integer, String> conn = new ConnectionHandler().execute(connData);
+								new ConnectionHandler().execute(connData);
 							}
 							catch(Exception e) {
 								Log.v(TAG, "Error: " + e.toString());
