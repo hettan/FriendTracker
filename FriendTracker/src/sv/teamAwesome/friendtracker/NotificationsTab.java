@@ -82,10 +82,12 @@ public class NotificationsTab extends TabActivity{
 			}
 		}));
 
-		Bundle extras = getIntent().getExtras();
+		final Bundle extras = getIntent().getExtras();
 		Log.v(TAG, "extras:" + extras.getString("type"));
         tabHost.setCurrentTabByTag(extras.getString("type"));
 
+        noteManager.cancel(extras.getString("user"), extras.getInt("cat"));
+        	
 		tabAll.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				
@@ -130,15 +132,15 @@ public class NotificationsTab extends TabActivity{
 			    }
 			    else if (i ==1) {
 					Update();
-					noteManager.cancel(null, 1);
+					noteManager.cancel(extras.getString("user"), 1);
 			    }
 			    else if (i ==2) {
 					Update();
-					noteManager.cancel(null, 2);
+					noteManager.cancel(extras.getString("user"), 2);
 			    }
 			    else if (i ==3) {
 					Update();
-					noteManager.cancel(null, 3);
+					noteManager.cancel(extras.getString("user"), 3);
 			    }
 			  }
 			});
