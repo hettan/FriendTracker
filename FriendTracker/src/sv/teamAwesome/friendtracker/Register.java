@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 public class Register extends Activity {
 	private static final String TAG = "REGISTER";
+	private ProgressDialog dialog;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,8 @@ public class Register extends Activity {
 				String pass1 = regpass1.getText().toString();
 				String pass2 = regpass2.getText().toString();
 				boolean filled = false;
+			
+				loading();
 				
 				if(usr.length() != 0 && mail.length() != 0 && pass1.length() != 0 && pass2.length() != 0) {
 					filled = true;
@@ -60,31 +64,35 @@ public class Register extends Activity {
 				
 				if(filled) {
 					if(pass1.contentEquals(pass2)) {
-						if(matchFound) {
-							JSONObject toServer = new JSONObject();
-							JSONObject data = new JSONObject();
-							try {
-								data.put("username", usr);
-								data.put("mail", mail);
-								data.put("password", pass1);
-								toServer.put("type", "register");
-								toServer.put("data", data);
-							} catch (Exception e) {
-					
-							}
-							String toSend = toServer.toString();
-							try {
-								@SuppressWarnings("rawtypes")
-								Class[] params = {String.class, Boolean.class};
+						if(pass1.length() > 3) {
+							if(matchFound) {
+								JSONObject toServer = new JSONObject();
+								JSONObject data = new JSONObject();
+								try {
+									data.put("username", usr);
+									data.put("mail", mail);
+									data.put("password", pass1);
+									toServer.put("type", "register");
+									toServer.put("data", data);
+								} catch (Exception e) {
 						
-								ConnectionData connData = new ConnectionData(Register.class.getMethod("Callback", params), me, toSend);
-								new ConnectionHandler().execute(connData);
-							}
-							catch(Exception e) {
-								Log.v(TAG, "Error: " + e.toString());
-							}
+								}
+								String toSend = toServer.toString();
+								try {
+									@SuppressWarnings("rawtypes")
+									Class[] params = {String.class, Boolean.class};
+							
+									ConnectionData connData = new ConnectionData(Register.class.getMethod("Callback", params), me, toSend);
+									new ConnectionHandler().execute(connData);
+								}
+								catch(Exception e) {
+									Log.v(TAG, "Error: " + e.toString());
+								}
+							} else {
+								errortxt.setText("Email is invalid");
+							} 
 						} else {
-							errortxt.setText("Email is invalid");
+							errortxt.setText("Password has to be atleast 3 characters long");
 						}
 					} else {
 						errortxt.setText("Passwords does not match");
@@ -95,6 +103,10 @@ public class Register extends Activity {
 			}
 		});
 	}
+	public void loading() {
+		dialog = ProgressDialog.show(this, "Loading", "Waiting for server");
+	}
+	
 	public void Callback(String res, Boolean error) {
 		Log.v(TAG, "Callback: " + res);
 		if(!error) {
@@ -105,5 +117,6 @@ public class Register extends Activity {
 			final TextView errortxt = (TextView) findViewById(R.id.regerror);
 			errortxt.setText(res);
 		}
+        dialog.dismiss();
 	}
 }

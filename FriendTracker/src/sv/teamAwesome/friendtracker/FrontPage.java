@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -17,7 +18,10 @@ public class FrontPage extends Activity{
 		GCMRegistrar.checkDevice(this);
 		GCMRegistrar.checkManifest(this);
 		if ((GCMRegistrar.getRegistrationId(this)).equals("")) {
+			Log.v("GCM", "Not registred. Registering device..");
 			GCMRegistrar.register(this, Config.SENDER_ID);
+		} else {
+			Log.v("GCM", "Already registred.\nPushID: " + GCMRegistrar.getRegistrationId(this));
 		}
 		
 		// TODO Auto-generated method stub

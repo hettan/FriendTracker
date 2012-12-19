@@ -28,7 +28,7 @@ public class GCMIntentService extends GCMBaseIntentService{
 	@Override
 	protected void onRegistered(final Context context, final String regId) {
 		
-		Log.v(TAG, "** onRegistered");
+		Log.v(TAG, "Registred. Sending PushID to server..");
 		
 		class LooperThread extends Thread {
 			  public void run() {
@@ -55,13 +55,14 @@ public class GCMIntentService extends GCMBaseIntentService{
 			    Looper.loop();
 			  }
 			  @SuppressWarnings("unused")
-			public void Callback(String res, Boolean error) {
+			  public void Callback(String res, Boolean error) {
 				  	Log.v("GCMCallback", "Callback: "+res);
 				 	try {
 				 		Looper.myLooper().quit();
 				 	} catch(Exception e) {
 				 		Log.v("GCMCallback", "Error: "+e);
 				 	}
+				 	Log.v(TAG, "Done.");
 			  }
 		}
 		LooperThread TCPThread = new LooperThread();
@@ -70,7 +71,7 @@ public class GCMIntentService extends GCMBaseIntentService{
 
 	@Override
 	protected void onUnregistered(final Context context, final String regId) {
-		Log.v(TAG, "** onUnregistered");
+		Log.v(TAG, "Unregistred. Removing PushID from server..");
 		/*
 		 * Borde kanske kunna avregistrera push i settings??
 		 */
@@ -98,13 +99,14 @@ public class GCMIntentService extends GCMBaseIntentService{
 			    Looper.loop();
 			  }
 			  @SuppressWarnings("unused")
-			public void Callback(String res, Boolean error) {
+			  public void Callback(String res, Boolean error) {
 				  	Log.v("GCMCallback", "Callback: "+res);
 				 	try {
 				 		Looper.myLooper().quit();
 				 	} catch(Exception e) {
 				 		Log.v("GCMCallback", "Error: "+e);
 				 	}
+				 	Log.v(TAG, "Done.");
 			  }
 		}
 		LooperThread TCPThread = new LooperThread();
