@@ -6,13 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
 
 
 public class Setting extends PreferenceActivity implements OnSharedPreferenceChangeListener {
@@ -68,6 +65,7 @@ public class Setting extends PreferenceActivity implements OnSharedPreferenceCha
 				data.put("visible",bool);
 				toServer.put("type", "setVisible");
 				toServer.put("data", data);
+				Log.v(TAG,"qewqeweqeqweqweqew");
 			} catch (Exception e) {
 				
 			}
@@ -75,7 +73,7 @@ public class Setting extends PreferenceActivity implements OnSharedPreferenceCha
 			try {
 		        @SuppressWarnings("rawtypes")
 				Class[] params = {String.class, Boolean.class};
-					
+		        Log.v(TAG,"asdsadsadasdsadsad");
 				ConnectionData connData = new ConnectionData(Setting.class.getMethod("Callback", params), this, toSend);
 				new ConnectionHandler().execute(connData);
 			}
@@ -101,6 +99,7 @@ public class Setting extends PreferenceActivity implements OnSharedPreferenceCha
     	Log.v(TAG,"Changed " + findPreference(key));
     }
     public void Callback(String res, Boolean error) {
+    	Log.v(TAG, "Callback");
     	try {
     	}
     	catch (Exception e) {
