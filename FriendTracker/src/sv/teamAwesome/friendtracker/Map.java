@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
@@ -55,13 +56,11 @@ public class Map extends MapActivity {
 		FirstLoc = true;
 		setContentView(R.layout.map);
 		
-
-		
 		mapView = (TapControlledMapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
 		control = mapView.getController();
 
-		final Drawable drawable = getResources().getDrawable(R.drawable.marker);
+		final Drawable drawableRed = getResources().getDrawable(R.drawable.markerred);
 		
 		manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		
@@ -69,8 +68,9 @@ public class Map extends MapActivity {
 			public void onLocationChanged(Location location) {
 				point = new GeoPoint((int)(location.getLatitude()*1E6), (int)(location.getLongitude()*1E6));
 				if(FirstLoc) {
+					Log.v(TAG,"----------------LOCK ON POS -----------------");
 					control.animateTo(point);
-					control.setZoom(100);
+					control.setZoom(350);
 					FirstLoc = false;
 				}
 				JSONObject toServer = new JSONObject();
@@ -114,15 +114,13 @@ public class Map extends MapActivity {
 		mapView.setOnSingleTapListener(new OnSingleTapListener() {
 			public boolean onSingleTap(MotionEvent event) {
 				GeoPoint RP = mapView.getProjection().fromPixels((int) event.getX(), (int) event.getY());
-				new PointerOverlay(drawable, mapView);
+				new PointerOverlay(drawableRed, mapView);
 				if(setPoint) {
 					// POPUP
-					
 					Intent go = new Intent(getBaseContext(),PointText.class);
 					go.putExtra("lat", (int)RP.getLatitudeE6());
 					go.putExtra("lon", (int)RP.getLongitudeE6());
 					startActivity(go);
-					
 					// SKICKA RP TILL SERVER
 					setPoint = false;
 				}
@@ -264,9 +262,7 @@ public class Map extends MapActivity {
 	}
 	public void Callback(String res, Boolean error) {
 		if(!error) {
-			Log.v(TAG, "Status Updated");
 		} else {
-			Log.v(TAG, "Status Not Updated");
 		}
 	}
 	public void CallbackFriends(String res, Boolean error) {
@@ -302,7 +298,7 @@ public class Map extends MapActivity {
 				}
 				
 				/// Add friends data to map
-				final Drawable drawableFriends = getResources().getDrawable(R.drawable.marker_friends);
+				final Drawable drawableFriends = getResources().getDrawable(R.drawable.markerblue);
 				Log.v(TAG, "Before: " + fPos.size());
 				for(int i = 0; i < fUser.size(); i++) {
 					Log.v(TAG, "Round "+i+", Starting..");
@@ -332,7 +328,7 @@ public class Map extends MapActivity {
 				}
 				
 				/// Add group data to map
-				final Drawable drawableGroup = getResources().getDrawable(R.drawable.marker_friends);
+				final Drawable drawableGroup = getResources().getDrawable(R.drawable.markergreen);
 				for(int i = 0; i < gUser.size(); i++) {
 					Log.v(TAG, "Round "+i+", Starting..");
 						
@@ -343,7 +339,7 @@ public class Map extends MapActivity {
 					Log.v(TAG, "Round "+i+", Done.");
 				}
 				
-				/// Handle group data
+				/// Handle rally data
 				JSONArray rallypoints = data.getJSONArray("rallypoints");
 				List<String> rallyStatus = new ArrayList<String>();
 				Log.v(TAG, "rally_len: " + rallypoints.length());
@@ -361,8 +357,8 @@ public class Map extends MapActivity {
 					rUser.add(username);
 				}
 				
-				/// Add group data to map
-				final Drawable drawableRally= getResources().getDrawable(R.drawable.marker_friends);
+				/// Add rally data to map
+				final Drawable drawableRally= getResources().getDrawable(R.drawable.markerred);
 				for(int i = 0; i < rUser.size(); i++) {
 					Log.v(TAG, "Round "+i+", Starting..");
 						

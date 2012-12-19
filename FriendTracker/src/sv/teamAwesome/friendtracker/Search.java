@@ -161,7 +161,6 @@ public class Search extends Activity {
 		if(!error) {
 			Log.v(TAG, "Ej Err");
 			try {
-				JSONObject data = new JSONObject(res);
 				getSearchRes();
 				/*
 				JSONObject data = new JSONObject(res);
