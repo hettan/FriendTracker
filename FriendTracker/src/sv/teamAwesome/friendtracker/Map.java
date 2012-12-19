@@ -166,7 +166,7 @@ public class Map extends MapActivity {
 		catch(Exception e) {
 			Log.v(TAG, "Error: " + e.toString());
 		}
-		
+		if(!FirstLoc) {
 		Location loc = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 		point = new GeoPoint((int)(loc.getLatitude()*1E6), (int)(loc.getLongitude()*1E6));
 		JSONObject toServer = new JSONObject();
@@ -191,6 +191,7 @@ public class Map extends MapActivity {
 		}
 		catch(Exception e) {
 			Log.v(TAG, "Error: " + e.toString());
+		}
 		}
 		h.postDelayed(myRunnable, Config.USER_POSITION_UPDATE_INTERVAL);
 		}
