@@ -1,5 +1,7 @@
 package sv.teamAwesome.friendtracker;
 
+import java.lang.reflect.InvocationTargetException;
+
 import com.google.android.gcm.GCMRegistrar;
 
 import android.app.Activity;
@@ -11,9 +13,11 @@ import android.view.View;
 import android.view.WindowManager;
 
 public class FrontPage extends Activity{
+	private static final String TAG = "FRONTPAGE";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+	
 		// Logged in, registering PUSH!!
 		GCMRegistrar.checkDevice(this);
 		GCMRegistrar.checkManifest(this);
@@ -30,8 +34,30 @@ public class FrontPage extends Activity{
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
 		setContentView(R.layout.frontpage);
 		
+		
+		try {
+			Log.v(TAG,"DERP?!");
+			Setting.class.getMethod("init").invoke(new Setting(), null);
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		Intent backgroundService = new Intent(getApplicationContext(), BackgroundService.class);
 	    startService(backgroundService);
+	    
 	}
 	
 	public void MenuBtn(View v) {

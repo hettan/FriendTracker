@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 public class Group extends Activity {
 	private static final String TAG = "GROUP";
+	private ProgressDialog dialog;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -25,6 +27,7 @@ public class Group extends Activity {
 		setContentView(R.layout.group);
 		
 		final Object me = this;
+		dialog = ProgressDialog.show(this, "Loading", "Waiting for server");
 
 		
 		JSONObject toServer = new JSONObject();
@@ -133,6 +136,7 @@ public class Group extends Activity {
 				Log.v(TAG, "Error: "+ e.toString());
 				Log.v(TAG, "Cause: "+ e.getCause());
 			}
+			dialog.dismiss();
 		}
 	}
 	public void CallbackDel(String res, Boolean err) {

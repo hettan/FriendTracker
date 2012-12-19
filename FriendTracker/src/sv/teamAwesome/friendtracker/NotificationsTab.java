@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.NotificationManager;
+import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ public class NotificationsTab extends TabActivity{
 	private static final String LIST4_TAB_TAG = "Buzz";
 	
 	TabHost tabHost;
+	private ProgressDialog dialog;
 	private ListView tabAll;
 	private ListView tabFriendReq;
 	private ListView tabGroupReq;
@@ -41,6 +43,7 @@ public class NotificationsTab extends TabActivity{
 	private SimpleAdapter adapterBuzz;
 	NotificationManager noteManager;
     final Object me = this;
+    
     
     private List<HashMap<String,String>> listGroup;
 	
@@ -57,7 +60,6 @@ public class NotificationsTab extends TabActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.notifications);
-		
 		noteManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 	
 	    tabHost = (TabHost)findViewById(android.R.id.tabhost);
@@ -94,6 +96,7 @@ public class NotificationsTab extends TabActivity{
         	
 		tabAll.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				@SuppressWarnings("unchecked")
 				HashMap<String,String> item = (HashMap<String,String>) tabAll.getAdapter().getItem(position);
 				if (item.get("Info").equals("group")) {
 					Intent goDia = new Intent(getBaseContext(), DialogAcceptGroup.class);
@@ -182,7 +185,7 @@ public class NotificationsTab extends TabActivity{
 		}
 		
 		public void Update() {
-			
+			loading();
 			JSONObject toServer = new JSONObject();
 			JSONObject data = new JSONObject();
 			try {
@@ -278,6 +281,7 @@ public class NotificationsTab extends TabActivity{
 			} else {
 				Log.v(TAG, "Error");
 			}
+			dialog.dismiss();
 		}
 		@Override
 		public boolean onCreateOptionsMenu(Menu menu) {
@@ -288,6 +292,7 @@ public class NotificationsTab extends TabActivity{
 		@Override
 		public boolean onOptionsItemSelected(MenuItem item) {
 			if (item.getItemId() == 0) {
+				loading();
 				JSONObject toServer = new JSONObject();
 				JSONObject data = new JSONObject();
 				try {
@@ -324,6 +329,7 @@ public class NotificationsTab extends TabActivity{
 					Log.v(TAG, "Cause: "+ e.getCause());
 				}
 			}
+			dialog.dismiss();
 		}
 		public void CallbackGroup(String res, Boolean error) {
 			Log.v(TAG, "Callback: " + res);
@@ -336,5 +342,9 @@ public class NotificationsTab extends TabActivity{
 					Log.v(TAG, "Cause: "+ e.getCause());
 				}
 			}
+			dialog.dismiss();
+		}
+		public void loading() {
+			dialog = ProgressDialog.show(this, "Loading", "Waiting for server");
 		}
 }

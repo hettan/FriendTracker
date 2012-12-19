@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -105,5 +106,44 @@ public class Setting extends PreferenceActivity implements OnSharedPreferenceCha
     	catch (Exception e) {
     			
     	}
+    }
+    public void init() {
+    	Log.v(TAG,"intit launch");
+    	//Initiate the local App settings
+    	//Updateinterval
+    	SharedPreferences appPref = PreferenceManager.getDefaultSharedPreferences(this);
+    	int tempi = 6666;
+		String temps = appPref.getString("updates_interval", "1000");
+		try {
+		    tempi = Integer.parseInt(temps);
+		} catch(NumberFormatException nfe) {
+			Log.v(TAG,"fucked int parse");
+		}
+		Config.USER_POSITION_UPDATE_INTERVAL = tempi;
+		
+		//Visibility
+		Boolean bool = appPref.getBoolean("set_visibility", true);
+		JSONObject toServer = new JSONObject();
+		JSONObject data = new JSONObject();
+		try {
+			data.put("username", Config.USERNAME);
+			data.put("visible",bool);
+			toServer.put("type", "setVisible");
+			toServer.put("data", data);
+			Log.v(TAG,"qewqeweqeqweqweqew");
+		} catch (Exception e) {
+			
+		}
+		String toSend = toServer.toString();
+		try {
+	        @SuppressWarnings("rawtypes")
+			Class[] params = {String.class, Boolean.class};
+	        Log.v(TAG,"asdsadsadasdsadsad");
+			ConnectionData connData = new ConnectionData(Setting.class.getMethod("Callback", params), this, toSend);
+			new ConnectionHandler().execute(connData);
+		}
+		catch(Exception e) {
+			Log.v(TAG, "Error: " + e.toString());
+		}
     }
 }
