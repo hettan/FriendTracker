@@ -64,7 +64,7 @@ public class Register extends Activity {
 				
 				if(filled) {
 					if(pass1.contentEquals(pass2)) {
-						if(pass1.length() > 3) {
+						if(pass1.length() >= 3) {
 							if(matchFound) {
 								JSONObject toServer = new JSONObject();
 								JSONObject data = new JSONObject();
@@ -90,15 +90,19 @@ public class Register extends Activity {
 								}
 							} else {
 								errortxt.setText("Email is invalid");
+								dialog.dismiss();
 							} 
 						} else {
 							errortxt.setText("Password has to be atleast 3 characters long");
+							dialog.dismiss();
 						}
 					} else {
 						errortxt.setText("Passwords does not match");
+						dialog.dismiss();
 					}
 				} else {
 					errortxt.setText("Please fill in all fields");
+					dialog.dismiss();
 				}
 			}
 		});

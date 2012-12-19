@@ -168,6 +168,32 @@ public class Map extends MapActivity {
 		catch(Exception e) {
 			Log.v(TAG, "Error: " + e.toString());
 		}
+		
+		Location loc = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		point = new GeoPoint((int)(loc.getLatitude()*1E6), (int)(loc.getLongitude()*1E6));
+		JSONObject toServer = new JSONObject();
+		JSONObject data = new JSONObject();
+		try {
+			data.put("lat", (int)(loc.getLatitude()*1E6));
+			data.put("lon", (int)(loc.getLongitude()*1E6));
+			data.put("username", Config.USERNAME);
+			toServer.put("type", "setPos");
+			toServer.put("data", data);
+		} catch (Exception e) {
+			
+		}
+		String toSend = toServer.toString();
+		try {
+            @SuppressWarnings("rawtypes")
+			Class[] params = {String.class, Boolean.class};
+			
+			ConnectionData connData = new ConnectionData(MainActivity.class.getMethod("Callback", params), me, toSend);
+
+			new ConnectionHandler().execute(connData);
+		}
+		catch(Exception e) {
+			Log.v(TAG, "Error: " + e.toString());
+		}
 		h.postDelayed(myRunnable, Config.USER_POSITION_UPDATE_INTERVAL);
 		}
 	};
@@ -351,6 +377,7 @@ public class Map extends MapActivity {
 				Log.v(TAG, "eeee: " + e.toString());
 				Log.v(TAG, "eeee: " + e.getCause());
 			}
+			mapView.invalidate();
 				
 		} else {
 			Log.v(TAG, "Error Friends Position");
