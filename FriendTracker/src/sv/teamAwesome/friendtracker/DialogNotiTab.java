@@ -7,7 +7,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
-public class DialogAct extends FragmentActivity implements ShowPopUp.NoticeDialogListener{
+public class DialogNotiTab extends FragmentActivity implements ShowPopUp.NoticeDialogListener{
 	private static final String TAG = "DiaAct";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class DialogAct extends FragmentActivity implements ShowPopUp.NoticeDialo
             @SuppressWarnings("rawtypes")
 			Class[] params = {String.class, Boolean.class};
             
-			ConnectionData connData = new ConnectionData(FriendsTab.class.getMethod("CallbackRem", params),Config.temp, toSend);
+			ConnectionData connData = new ConnectionData(NotificationsTab.class.getMethod("CallbackGroup", params),Config.temp, toSend);
 			new ConnectionHandler().execute(connData);
 		} catch(Exception e) {
 			Log.v(TAG, "Error: " + e.toString());

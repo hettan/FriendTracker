@@ -2,8 +2,6 @@ package sv.teamAwesome.friendtracker;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -69,7 +67,6 @@ public class Map extends MapActivity {
 		
 		listener = new LocationListener() {
 			public void onLocationChanged(Location location) {
-				Log.v(TAG, "OnlocationChange");
 				point = new GeoPoint((int)(location.getLatitude()*1E6), (int)(location.getLongitude()*1E6));
 				if(FirstLoc) {
 					control.animateTo(point);
@@ -118,26 +115,20 @@ public class Map extends MapActivity {
 			public boolean onSingleTap(MotionEvent event) {
 				GeoPoint RP = mapView.getProjection().fromPixels((int) event.getX(), (int) event.getY());
 				new PointerOverlay(drawable, mapView);
-				Log.v(TAG, "setPoint: " + setPoint);
 				if(setPoint) {
 					// POPUP
 					
 					Intent go = new Intent(getBaseContext(),PointText.class);
 					go.putExtra("lat", (int)RP.getLatitudeE6());
 					go.putExtra("lon", (int)RP.getLongitudeE6());
-					Log.v(TAG, "Lat Map: " + (int)RP.getLatitudeE6());
-					Log.v(TAG, "Lon Map: " + (int)RP.getLongitudeE6());
 					startActivity(go);
-
-					// SKICKA RP TILL SERVER
 					
+					// SKICKA RP TILL SERVER
 					setPoint = false;
 				}
 				return true;
 			}
 		});
-		
-		//manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.USER_POSITION_UPDATE_INTERVAL, 0, listener);
 		
 		myLocation = new MyLocationOverlay(this, mapView);
 		mapView.getOverlays().add(myLocation);
@@ -149,14 +140,10 @@ public class Map extends MapActivity {
 			Intent GPS = new Intent(this,DialogStartGPS.class);
 			startActivity(GPS);
 		}
-		Log.v(TAG, "Innan Timer..");
-		
-		
 	}
 	
 	public Runnable myRunnable = new Runnable() {
 		public void run() {
-		Log.v(TAG, "Updating...");
 		Log.v(TAG, "timer= " + Config.USER_POSITION_UPDATE_INTERVAL);
 		JSONObject toServer2 = new JSONObject();
 		JSONObject data2 = new JSONObject();
@@ -244,24 +231,19 @@ public class Map extends MapActivity {
 			}
 		}
 		if(item.getItemId() == 4) {
-			Log.v(TAG, "Inside Item 4");
 			Intent goDia = new Intent(getBaseContext(), DialogMapGroups.class);
 			startActivity(goDia);
-			Log.v(TAG, "After Item 4");
 		}
 		return true;
 	}
 	public void Callback(String res, Boolean error) {
-		Log.v(TAG, "Callback: " + res);
 		if(!error) {
 			Log.v(TAG, "Status Updated");
-
 		} else {
 			Log.v(TAG, "Status Not Updated");
 		}
 	}
 	public void CallbackFriends(String res, Boolean error) {
-		Log.v(TAG, "Callback: " + res);
 		List<GeoPoint> fPos = new ArrayList<GeoPoint>();
 		List<String> fUser = new ArrayList<String>();
 		List<GeoPoint> gPos = new ArrayList<GeoPoint>();
@@ -271,7 +253,6 @@ public class Map extends MapActivity {
 		mapOverlays.clear();
 		mapOverlays.add(myLocation);
 		if(!error) {
-			Log.v(TAG, "Friends Positions");
 			try {
 				JSONObject data =  new JSONObject(res);
 				

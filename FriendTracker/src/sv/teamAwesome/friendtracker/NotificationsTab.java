@@ -26,8 +26,8 @@ import android.widget.TabHost.TabContentFactory;
 public class NotificationsTab extends TabActivity{
 	private static final String TAG = "NOT";
 	private static final String LIST1_TAB_TAG = "All";
-	private static final String LIST2_TAB_TAG = "FriendRequests";
-	private static final String LIST3_TAB_TAG = "GroupRequests";
+	private static final String LIST2_TAB_TAG = "Friend";
+	private static final String LIST3_TAB_TAG = "Group";
 	private static final String LIST4_TAB_TAG = "Buzz";
 	
 	TabHost tabHost;
@@ -94,7 +94,7 @@ public class NotificationsTab extends TabActivity{
         	
 		tabAll.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				HashMap<String,String> item = (HashMap<String,String>) tabFriendReq.getAdapter().getItem(position);
+				HashMap<String,String> item = (HashMap<String,String>) tabAll.getAdapter().getItem(position);
 				if (item.get("Info").equals("group")) {
 					Intent goDia = new Intent(getBaseContext(), DialogAcceptGroup.class);
 					String groupID = listGroup.get(position).get("groupID");
@@ -104,7 +104,7 @@ public class NotificationsTab extends TabActivity{
 					startActivity(goDia);
 				}
 				else {
-					Intent goDia = new Intent(getBaseContext(), DialogAct.class);
+					Intent goDia = new Intent(getBaseContext(), DialogNotiTab.class);
 					goDia.putExtra("item", item.get("Header"));
 					Config.temp = me;
 					//Config.itemPos = position;
@@ -114,10 +114,12 @@ public class NotificationsTab extends TabActivity{
 		});
 		tabFriendReq.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Intent goDia = new Intent(getBaseContext(), DialogAct.class);
+				Intent goDia = new Intent(getBaseContext(), DialogNotiTab.class);
 				
 				@SuppressWarnings("unchecked")
 				HashMap<String,String> item = (HashMap<String,String>) tabFriendReq.getAdapter().getItem(position);
+				Log.v(TAG, "pos:"+position);
+				Log.v(TAG, "header: "+item.get("Header"));
 				goDia.putExtra("item", item.get("Header"));
 				Config.temp = me;
 				//Config.itemPos = position;
