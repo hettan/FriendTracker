@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -37,7 +36,6 @@ public class FriendsTab extends TabActivity {
 	  private ArrayAdapter<String> lv3;
 	  private ProgressDialog dialog;
 
-	  private int itemPos;
 	  final Object me = this;
 	  
     @Override
