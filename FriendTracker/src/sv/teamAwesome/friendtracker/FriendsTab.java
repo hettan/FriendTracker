@@ -6,6 +6,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -34,6 +35,7 @@ public class FriendsTab extends TabActivity {
 	  private ArrayAdapter<String> lv1;
 	  private ArrayAdapter<String> lv2;
 	  private ArrayAdapter<String> lv3;
+	  private ProgressDialog dialog;
 
 	  private int itemPos;
 	  final Object me = this;
@@ -42,7 +44,9 @@ public class FriendsTab extends TabActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.friends);
- 
+        
+        dialog = ProgressDialog.show(this, "Loading", "Waiting for server");
+        
         tabHost = (TabHost)findViewById(android.R.id.tabhost);
         listView1 = (ListView) findViewById(R.id.list1);
         listView2 = (ListView) findViewById(R.id.list2);
@@ -196,6 +200,7 @@ public class FriendsTab extends TabActivity {
 		} else {
 			Log.v(TAG, "Error");
 		}
+        dialog.dismiss();
 	}
 
 	public void CallbackRem(String res, Boolean error) {
